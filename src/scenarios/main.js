@@ -312,6 +312,78 @@ rainWindow.group.position.y = 1.7;
 indoor.add(rainWindow.group);
 
 // ---------------------------------------------------------------------------
+// Rooftop cooling fan
+// ---------------------------------------------------------------------------
+const rooftop = new THREE.Group();
+rooftop.name = 'scenario-rooftop';
+rooftop.visible = false;
+scene.add(rooftop);
+addBox(rooftop, 8.4, 0.18, 6.4, M.concrete, 0, -0.09, -0.2);
+addBox(rooftop, 8.6, 0.58, 0.16, M.concrete, 0, 0.28, -3.38);
+addBox(rooftop, 8.6, 0.58, 0.16, M.concrete, 0, 0.28, 3.0);
+for (const x of [-4.25, 4.25]) addBox(rooftop, 0.16, 0.58, 6.4, M.concrete, x, 0.28, -0.2);
+for (const x of [-3.2, -1.1, 1.1, 3.2]) {
+  add(rooftop, new THREE.CylinderGeometry(0.025, 0.025, 0.75, 10), M.steel, x, 0.37, 2.82, 0, 0, 0, false);
+  add(rooftop, new THREE.CylinderGeometry(0.025, 0.025, 0.75, 10), M.steel, x, 0.37, -3.22, 0, 0, 0, false);
+}
+add(rooftop, new THREE.BoxGeometry(3.2, 0.055, 0.08), M.safety, 0, 0.72, 2.82, 0, 0, 0, false);
+add(rooftop, new THREE.BoxGeometry(3.2, 0.055, 0.08), M.safety, 0, 0.72, -3.22, 0, 0, 0, false);
+// Rooftop plant silhouettes.
+for (const [x, z, w, h, d] of [[-3.0, -4.6, 1.6, 0.7, 1.0], [-1.2, -4.9, 2.0, 1.1, 1.0], [2.9, -4.7, 1.8, 0.6, 1.1], [4.5, -4.8, 1.2, 1.4, 1.0]]) {
+  addBox(rooftop, w, h, d, M.dark, x, h / 2, z, 0, false);
+}
+addBox(rooftop, 2.4, 0.95, 1.3, M.paint, -1.4, 0.48, -2.3);
+addBox(rooftop, 2.5, 0.08, 1.4, M.dark, -1.4, 0.99, -2.3);
+add(rooftop, new THREE.CylinderGeometry(0.19, 0.19, 0.7, 24), M.steel, 2.1, 0.35, -2.1, 0, 0, 0, false);
+add(rooftop, new THREE.TorusGeometry(0.2, 0.025, 8, 28), M.steel, 2.1, 0.7, -2.1, Math.PI / 2, 0, 0, false);
+// Fan and motor skid.
+addBox(rooftop, 1.75, 0.03, 0.5, M.steel, 0.1, 0.015, 0.1);
+conveyor.visible = false;
+fan.visible = true;
+fan.scale.setScalar(1.55);
+fan.position.set(0.75, 0, 0.1);
+rooftop.add(fan);
+const roofGuard = addBox(rooftop, 0.32, 0.1, 0.2, M.dark, 0.26, 0.155, 0.1);
+const rainRooftop = makeRain(600, 9, 7);
+rooftop.add(rainRooftop.group);
+
+// ---------------------------------------------------------------------------
+// Water treatment mixing tank
+// ---------------------------------------------------------------------------
+const water = new THREE.Group();
+water.name = 'scenario-water';
+water.visible = false;
+scene.add(water);
+add(water, new THREE.PlaneGeometry(24, 24), M.grass, 0, -0.02, 0, -Math.PI / 2, 0, 0, false);
+addBox(water, 4.4, 0.07, 2.3, M.concrete, 0, 0.035, 0.2);
+const tankMat = new THREE.MeshStandardMaterial({ color: 0x27434a, metalness: 0.55, roughness: 0.4, side: THREE.DoubleSide });
+const tank = add(water, new THREE.CylinderGeometry(0.62, 0.66, 0.5, 40, 1, true), tankMat, 0.62, 0.25, 0.18, 0, 0, 0, false);
+add(water, new THREE.TorusGeometry(0.63, 0.025, 8, 40), M.steel, 0.62, 0.5, 0.18, Math.PI / 2, 0, 0, false);
+const waterSurface = add(water, new THREE.CircleGeometry(0.6, 40), new THREE.MeshPhysicalMaterial({
+  color: 0x1f5863, metalness: 0.35, roughness: 0.12, transparent: true, opacity: 0.7, side: THREE.DoubleSide,
+}), 0.62, 0.43, 0.18, -Math.PI / 2, 0, 0, false);
+const mixerImpeller = new THREE.Group();
+mixerImpeller.position.set(0.62, 0.3, 0.18);
+water.add(mixerImpeller);
+add(mixerImpeller, new THREE.CylinderGeometry(0.035, 0.035, 0.08, 16), M.steel, 0, 0.1, 0, 0, 0, Math.PI / 2);
+for (let i = 0; i < 4; i++) {
+  const a = (i / 4) * TAU;
+  add(mixerImpeller, new THREE.BoxGeometry(0.02, 0.36, 0.045), M.steel, 0, Math.cos(a) * 0.14, Math.sin(a) * 0.14, a, 0, 0);
+}
+add(water, new THREE.CylinderGeometry(0.045, 0.045, 0.55, 20), M.steel, 0.28, 0.3, 0.18, 0, 0, Math.PI / 2, false);
+add(water, new THREE.CylinderGeometry(0.16, 0.16, 0.045, 20), M.steel, 0.62, 0.62, 0.18, 0, 0, 0, false);
+addBox(water, 1.8, 0.035, 0.55, M.steel, -0.1, 0.017, 0.18);
+addCyl(water, 0.028, 0.028, 0.62, M.dark, -0.25, 0.145, 0.18, 0, 0, Math.PI / 2);
+addBox(water, 0.3, 0.1, 0.2, M.dark, -0.22, 0.15, 0.18);
+add(water, new THREE.CylinderGeometry(0.075, 0.075, 0.8, 20), M.steel, 1.35, 0.4, 0.18, 0, 0, 0, false);
+add(water, new THREE.CylinderGeometry(0.075, 0.075, 1.1, 20), M.steel, 1.35, 0.4, -0.5, 0, 0, Math.PI / 2, false);
+for (const [x, z] of [[-1.45, 1.0], [1.55, 1.0], [-1.45, -0.75], [1.55, -0.75]]) {
+  add(water, new THREE.BoxGeometry(0.05, 0.8, 0.05), M.safety, x, 0.4, z, 0, 0, 0, false);
+}
+const rainWater = makeRain(700, 10, 7);
+water.add(rainWater.group);
+
+// ---------------------------------------------------------------------------
 // Motor placement per scenario
 // ---------------------------------------------------------------------------
 function placeMotor(group, x, z) {
@@ -338,6 +410,20 @@ const SCENARIOS = {
     description: '室内装配线。电机通过皮带驱动输送机，完成箱体转运。窗外天气与昼夜变化，室内照明维持稳定班次。',
     camera: { pos: [2.35, 1.85, 3.35], target: [0.1, 0.3, 0.1], fov: 36 },
     metricA: ['THROUGHPUT', 'pcs/h'],
+  },
+  rooftop: {
+    code: 'SCN-03',
+    status: 'COOLING / CONTINUOUS',
+    description: '屋顶冷却。电机驱动轴流风机，为屋顶空调机组排热。高处的风、日晒和降雨直接改变风机负载与环境温度。',
+    camera: { pos: [2.65, 2.25, 4.3], target: [0.12, 0.32, 0.02], fov: 37 },
+    metricA: ['AIRFLOW', 'm³/h'],
+  },
+  water: {
+    code: 'SCN-04',
+    status: 'MIXING / TREATMENT',
+    description: '水处理搅拌。电机经联轴器驱动侧入式搅拌器，使药剂与水体均匀混合。搅拌轴、叶轮与水面持续运动。',
+    camera: { pos: [2.8, 2.15, 4.2], target: [0.16, 0.32, 0.1], fov: 37 },
+    metricA: ['MIXER', 'rpm'],
   },
 };
 
@@ -380,14 +466,22 @@ function setScenario(next) {
   });
   outdoor.visible = next === 'outdoor';
   indoor.visible = next === 'indoor';
+  rooftop.visible = next === 'rooftop';
+  water.visible = next === 'water';
   pump.visible = next === 'outdoor';
   conveyor.visible = next === 'indoor';
+  fan.visible = next === 'rooftop';
   if (next === 'outdoor') {
     placeMotor(outdoor, -0.22, 0.18);
     pump.position.set(0.95, 0, 0.18);
-  } else {
+  } else if (next === 'indoor') {
     placeMotor(indoor, -0.62, 0.28);
     conveyor.position.set(0.65, 0, 0.28);
+  } else if (next === 'rooftop') {
+    placeMotor(rooftop, -0.32, 0.1);
+    fan.position.set(0.62, 0, 0.1);
+  } else {
+    placeMotor(water, -0.58, 0.18);
   }
   const cfg = SCENARIOS[next];
   ui.code.textContent = cfg.code;
@@ -399,7 +493,13 @@ function setScenario(next) {
   camera.position.set(...cfg.camera.pos);
   camera.fov = cfg.camera.fov;
   camera.updateProjectionMatrix();
-  showToast(next === 'outdoor' ? '户外泵站 · 天气与昼夜已接入' : '室内产线 · 窗外天气与室内班次已接入');
+  const toastCopy = {
+    outdoor: '户外泵站 · 天气与昼夜已接入',
+    indoor: '室内产线 · 窗外天气与室内班次已接入',
+    rooftop: '屋顶冷却 · 风机负载跟随天气',
+    water: '水处理搅拌 · 叶轮与水面持续运行',
+  };
+  showToast(toastCopy[next]);
   updateTelemetry(0);
 }
 
@@ -523,8 +623,10 @@ function updateSkyAndLights(dt) {
     p.visible = rain > 0.02 || weatherMix.overcast > 0.5;
     p.material.opacity = 0.14 + rain * 0.62;
   });
-  rainOutdoor.update(dt, rain > 0.025);
-  rainWindow.update(dt, rain > 0.025);
+  rainOutdoor.update(dt, rain > 0.025 && scenario === 'outdoor');
+  rainRooftop.update(dt, rain > 0.025 && scenario === 'rooftop');
+  rainWater.update(dt, rain > 0.025 && scenario === 'water');
+  rainWindow.update(dt, rain > 0.025 && scenario === 'indoor');
   M.glass.opacity = 0.12 + overcast * 0.12;
   M.water.opacity = 0.2 + rain * 0.5;
 }
@@ -550,8 +652,19 @@ function updateTelemetry(dt) {
   const rain = weatherMix.rain;
   const day = clamp(Math.sin(((simMinutes / 60 - 6) / 12) * Math.PI) * 3);
   const isOutdoor = scenario === 'outdoor';
-  const ambient = isOutdoor ? 19 + day * 11 - overcast * 1.5 - rain * 2 : 25 + day * 3 - overcast * 0.8;
-  const load = isOutdoor ? 71 + Math.sin(performance.now() * 0.0003) * 4 + (1 - day) * 2 : 64 + Math.sin(performance.now() * 0.0004) * 3;
+  const isIndoor = scenario === 'indoor';
+  const isRooftop = scenario === 'rooftop';
+  const isWater = scenario === 'water';
+  let ambient = isIndoor ? 25 + day * 3 - overcast * 0.8 : 19 + day * 11 - overcast * 1.5 - rain * 2;
+  if (isRooftop) ambient = 16 + day * 14 - overcast * 1.8 - rain * 2.5;
+  if (isWater) ambient = 18 + day * 9 - overcast * 1.4 - rain * 1.8;
+  const load = isIndoor
+    ? 64 + Math.sin(performance.now() * 0.0004) * 3
+    : isRooftop
+      ? 58 + Math.sin(performance.now() * 0.00036) * 4 + (1 - day) * 1.5
+      : isWater
+        ? 72 + Math.sin(performance.now() * 0.00032) * 4
+        : 71 + Math.sin(performance.now() * 0.0003) * 4 + (1 - day) * 2;
   const current = 8.8 + load * 0.036;
   if (dt > 0) {
     ui.load.textContent = String(Math.round(load));
@@ -559,8 +672,12 @@ function updateTelemetry(dt) {
     ui.current.textContent = current.toFixed(1);
     if (isOutdoor) {
       ui.a.textContent = String(Math.round(40 + (100 - load) * 0.22 + Math.sin(performance.now() * 0.0005) * 1.2));
-    } else {
+    } else if (isIndoor) {
       ui.a.textContent = String(Math.round(1150 + (100 - load) * 8 + Math.sin(performance.now() * 0.0007) * 22));
+    } else if (isRooftop) {
+      ui.a.textContent = String(Math.round(16000 + (100 - load) * 110 + Math.sin(performance.now() * 0.0006) * 120));
+    } else {
+      ui.a.textContent = String(Math.round(128 + (100 - load) * 0.7 + Math.sin(performance.now() * 0.0008) * 2));
     }
   }
 }
@@ -624,8 +741,11 @@ function animate(now) {
   weatherMix.rain += (targetWeather.rain - weatherMix.rain) * Math.min(1, dt * 1.8);
   updateSkyAndLights(dt);
 
-  spinAngle = (spinAngle + dt * (scenario === 'outdoor' ? 5.2 : 4.2)) % TAU;
+  spinAngle = (spinAngle + dt * (scenario === 'outdoor' ? 5.2 : scenario === 'water' ? 3.0 : 4.2)) % TAU;
   motor.setSpin(spinAngle);
+  mixerImpeller.rotation.x += dt * 3.2;
+  waterSurface.rotation.z += dt * 0.35;
+  waterSurface.scale.setScalar(1 + Math.sin(now * 0.002) * 0.008);
   apps.update(dt, now / 1000);
   updateTelemetry(dt);
   controls.update();
