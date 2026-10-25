@@ -451,7 +451,36 @@ function makeConveyor() {
     const r = cyl(g, 0.036, 0.036, 0.56, M.steel, x, 0.58, 0, Math.PI / 2, 0, Math.PI / 2, true, 14);
     rollers.push(r);
   }
-  box(g, 2.25, 0.014, 0.52, M.darkSteel, 0, 0.555, 0);
+  // Powered roller conveyor: side guides, chain drive and take-up bearings.
+  for (const z of [-0.27, 0.27]) box(g, 2.2, 0.045, 0.045, M.blueLight, 0, 0.73, z, 0, 0, 0, false);
+  const sprocketA = new THREE.Group();
+  const sprocketB = new THREE.Group();
+  sprocketA.position.set(-1.08, 0.58, 0.34);
+  sprocketB.position.set(-1.13, 0.42, 0.39);
+  for (const sp of [sprocketA, sprocketB]) {
+    cyl(sp, 0.065, 0.065, 0.025, M.darkSteel, 0, 0, 0, Math.PI / 2, 0, 0, false, 18);
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * TAU;
+      box(sp, 0.018, 0.018, 0.03, M.steel, Math.cos(a) * 0.068, Math.sin(a) * 0.068, 0, 0, 0, 0, false);
+    }
+    g.add(sp);
+  }
+  const chainPoints = [];
+  for (let i = 0; i < 20; i++) {
+    const a = (i / 20) * TAU;
+    chainPoints.push(new THREE.Vector3(-1.08 + Math.cos(a) * 0.075, 0.58 + Math.sin(a) * 0.075, 0.35));
+  }
+  for (let i = 0; i < 20; i++) {
+    const a = Math.PI + (i / 20) * TAU;
+    chainPoints.push(new THREE.Vector3(-1.13 + Math.cos(a) * 0.075, 0.42 + Math.sin(a) * 0.075, 0.35));
+  }
+  chainPoints.push(chainPoints[0]);
+  const chain = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(chainPoints),
+    new THREE.LineBasicMaterial({ color: 0x272b29 }),
+  );
+  g.add(chain);
+  addLabel(g, 'CHAIN DRIVE / GUARD', 0.34, 0.06, -1.13, 0.52, 0.42);
   // Drive side: gearbox, motor and coupling guard.
   box(g, 0.32, 0.26, 0.3, M.blue, -1.13, 0.34, 0.46);
   const motor = makeMotor(0.6);
@@ -459,7 +488,12 @@ function makeConveyor() {
   motor.rotation.y = Math.PI / 2;
   g.add(motor);
   box(g, 0.34, 0.1, 0.16, M.yellow, -1.03, 0.28, 0.55);
-  addLabel(g, 'LINE B  /  1.2 m·s⁻¹', 0.34, 0.065, 0.42, 0.68, 0.345);
+  addLabel(g, 'LINE B  /  1.2 m·s⁻¹', 0.34, 0.065, 0.42, 0.8, 0.275);
+  // Take-up bearing blocks at the non-drive end.
+  for (const z of [-0.3, 0.3]) {
+    box(g, 0.12, 0.1, 0.08, M.darkSteel, 1.08, 0.5, z);
+    box(g, 0.16, 0.02, 0.02, M.steel, 1.08, 0.56, z, 0, 0, 0, false);
+  }
   // E-stop, pull cord and drive guard are the safety details visible on a real line.
   box(g, 0.09, 0.13, 0.08, M.yellow, -1.24, 0.78, 0.39);
   box(g, 0.055, 0.055, 0.012, new THREE.MeshBasicMaterial({ color: 0xb34034 }), -1.24, 0.8, 0.346, 0, 0, 0, false);
@@ -472,7 +506,7 @@ function makeConveyor() {
     const p = new THREE.Group();
     box(p, 0.2, 0.18, 0.2, M.cardboard, 0, 0.09, 0);
     box(p, 0.14, 0.015, 0.14, M.rubber, 0, 0.19, 0);
-    p.position.set(-0.75 + i * 0.72, 0.68, 0);
+    p.position.set(-0.75 + i * 0.72, 0.72, 0);
     g.add(p);
     packages.push(p);
   }
@@ -686,9 +720,9 @@ class ReferenceScene {
     }
     if (this.type === 'conveyor') {
       const { packages, rollers } = this.model.userData;
-      rollers.forEach((r) => { r.rotation.y += dt * 5; });
+      rollers.forEach((r) => { r.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), dt * 5); });
       packages.forEach((p) => {
-        p.position.x += dt * 0.32;
+        p.position.x += dt * 0.36;
         if (p.position.x > 1.05) p.position.x = -1.1;
       });
     }
