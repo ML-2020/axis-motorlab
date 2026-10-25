@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 const $$ = (s) => [...document.querySelectorAll(s)];
+const TAU = Math.PI * 2;
 
 const metal = (color, metalness = 0.65, roughness = 0.4) => new THREE.MeshStandardMaterial({ color, metalness, roughness });
 const paint = (color, roughness = 0.48) => new THREE.MeshStandardMaterial({ color, metalness: 0.25, roughness });
@@ -17,6 +18,11 @@ const M = {
   concrete: new THREE.MeshStandardMaterial({ color: 0x92968c, roughness: 0.92 }),
   water: new THREE.MeshPhysicalMaterial({ color: 0x1f5962, metalness: 0.25, roughness: 0.12, transparent: true, opacity: 0.8, side: THREE.DoubleSide }),
   rubber: new THREE.MeshStandardMaterial({ color: 0x171918, roughness: 0.86 }),
+  earth: new THREE.MeshStandardMaterial({ color: 0x675c40, roughness: 0.96 }),
+  paddy: new THREE.MeshPhysicalMaterial({ color: 0x2d5b4d, metalness: 0.1, roughness: 0.22, transparent: true, opacity: 0.72, side: THREE.DoubleSide }),
+  rice: new THREE.MeshStandardMaterial({ color: 0x5b7b42, roughness: 0.9 }),
+  riceHead: new THREE.MeshStandardMaterial({ color: 0x9aa05f, roughness: 0.85 }),
+  leaf: new THREE.MeshStandardMaterial({ color: 0x466e4c, roughness: 0.9 }),
   cardboard: new THREE.MeshStandardMaterial({ color: 0x9a7b50, roughness: 0.9 }),
   terminal: new THREE.MeshStandardMaterial({ color: 0x31332f, metalness: 0.35, roughness: 0.5 }),
   nameplate: new THREE.MeshStandardMaterial({ color: 0xd8c69b, metalness: 0.2, roughness: 0.5 }),
@@ -147,6 +153,75 @@ function pipeRun(parent, x1, y1, z1, x2, y2, z2, radius = 0.045, material = M.st
   const m = cyl(parent, radius, radius, d.length(), material, (x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2, 0, 0, 0, true, 12);
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
   return m;
+}
+
+function makePaddyStation(scene) {
+  const g = new THREE.Group();
+  // Paddy field: earth base, shallow water, raised bunds and rice rows.
+  add(g, new THREE.PlaneGeometry(13, 11), M.earth, 0, -0.015, 0, -Math.PI / 2, 0, 0, false);
+  add(g, new THREE.PlaneGeometry(10.5, 8.4), M.paddy, 0, 0.002, 0, -Math.PI / 2, 0, 0, false);
+  add(g, new THREE.BoxGeometry(3.0, 0.075, 2.0), M.concrete, 0, 0.037, 0.05);
+  add(g, new THREE.BoxGeometry(3.12, 0.1, 2.1), M.concrete, 0, 0.045, 0.05, 0, 0, 0, false);
+  for (const [x, z, w, d] of [[-2.4, 2.8, 4.0, 0.22], [2.5, 2.8, 4.0, 0.22], [0, -2.8, 10.0, 0.22], [-2.7, 0, 0.22, 5.6], [2.7, 0, 0.22, 5.6]]) {
+    box(g, w, 0.18, d, M.earth, x, 0.09, z, 0, 0, 0, false);
+  }
+  // Rice plants: two instanced meshes keep the paddy dense without a draw-call explosion.
+  const riceCount = 560;
+  const riceStalks = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.007, 0.011, 0.4, 3), M.rice, riceCount);
+  const riceHeads = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.012, 0.025, 0.14, 4), M.riceHead, riceCount);
+  const dummy = new THREE.Object3D();
+  let planted = 0;
+  for (let attempts = 0; attempts < 3000 && planted < riceCount; attempts++) {
+    const x = (Math.random() - 0.5) * 9.2;
+    const z = (Math.random() - 0.5) * 7.0;
+    if (Math.abs(x) < 1.9 && Math.abs(z) < 1.5) continue;
+    if (z > 2.4 && Math.abs(x) < 1.6) continue;
+    const s = 0.75 + Math.random() * 0.55;
+    dummy.position.set(x, 0.2 * s + 0.01, z);
+    dummy.rotation.set(0, Math.random() * TAU, 0);
+    dummy.scale.set(0.8, s, 0.8);
+    dummy.updateMatrix();
+    riceStalks.setMatrixAt(planted, dummy.matrix);
+    dummy.position.y = 0.39 * s;
+    dummy.scale.set(0.8, 0.8, 0.8);
+    dummy.updateMatrix();
+    riceHeads.setMatrixAt(planted, dummy.matrix);
+    planted++;
+  }
+  riceStalks.castShadow = false;
+  riceHeads.castShadow = false;
+  const riceGroup = new THREE.Group();
+  riceGroup.add(riceStalks, riceHeads);
+  g.add(riceGroup);
+  g.userData.rice = { stalks: riceStalks, heads: riceHeads, group: riceGroup };
+  // A short irrigation canal on the field side and suction strainer.
+  add(g, new THREE.PlaneGeometry(1.3, 7.8), M.paddy, 3.45, 0.006, -0.2, -Math.PI / 2, 0, 0, false);
+  add(g, new THREE.CylinderGeometry(0.11, 0.14, 0.28, 16), M.steel, -1.55, 0.16, 0.55, 0, 0, 0, true, 18);
+  for (let i = 0; i < 6; i++) {
+    box(g, 0.36, 0.018, 0.018, M.steel, -1.55, 0.06 + i * 0.035, 0.55, 0, 0, 0, false);
+  }
+  pipeRun(g, -1.05, 0.28, 0.55, -1.5, 0.16, 0.55, 0.06);
+  // Discharge line leaves the pump, rises over the bund and runs into the paddy.
+  pipeRun(g, 0.9, 0.52, 0.05, 1.35, 0.82, 0.05, 0.07);
+  pipeRun(g, 1.35, 0.82, 0.05, 2.85, 0.82, 0.05, 0.07);
+  pipeRun(g, 2.85, 0.82, 0.05, 2.85, 0.16, 0.05, 0.07);
+  for (const x of [1.35, 2.1]) box(g, 0.06, 0.82, 0.06, M.steel, x, 0.41, 0.05, 0, 0, 0, false);
+  // A small open shelter and a distant tree line frame the paddy without hiding the pump.
+  box(g, 2.1, 0.12, 1.5, M.wallDark, -2.65, 1.85, -2.3);
+  for (const x of [-3.5, -1.8]) box(g, 0.1, 1.8, 0.1, M.steel, x, 0.9, -2.3, 0, 0, 0, false);
+  box(g, 2.2, 0.1, 0.12, M.steel, -2.65, 1.75, -1.55, 0, 0, 0, false);
+  for (const [x, z, s] of [[-4.8, -3.2, 1.2], [-5.3, 0.4, 1.0], [4.7, -2.8, 1.1], [5.2, 1.2, 0.9]]) {
+    const t = new THREE.Group();
+    t.position.set(x, 0, z);
+    t.scale.setScalar(s);
+    cyl(t, 0.07, 0.1, 1.1, M.wood, 0, 0.55, 0, 0, 0, 0, false, 7);
+    add(t, new THREE.IcosahedronGeometry(0.55, 1), M.leaf, 0, 1.2, 0, 0, 0, 0, false);
+    g.add(t);
+  }
+  addLabel(g, 'PADDY IRRIGATION / P-01', 1.2, 0.23, -2.65, 1.55, -1.48);
+  addLabel(g, 'SUCTION STRAINER', 0.6, 0.14, -1.55, 0.36, 0.68);
+  scene.userData.rice = g.userData.rice;
+  scene.add(g);
 }
 
 function makePumpRoom(scene) {
@@ -325,7 +400,7 @@ function makePumpSet() {
   add(g, new THREE.CylinderGeometry(0.055, 0.055, 0.04, 16), M.steel, 0.14, 0.42, 0);
   add(g, new THREE.CircleGeometry(0.045, 20), M.nameplate, 0.14, 0.445, 0, -Math.PI / 2, 0, 0, false);
   g.add(pump);
-  addLabel(g, 'PUMP P-04  /  42 m³·h⁻¹', 0.28, 0.055, -0.44, 0.32, 0.225);
+  addLabel(g, 'PUMP P-04  /  90 m³·h⁻¹', 0.28, 0.055, -0.44, 0.32, 0.225);
   // Discharge gate-valve handwheel and flange bolts.
   add(pump, new THREE.TorusGeometry(0.095, 0.014, 7, 20), M.yellow, 0.02, 0.41, 0, Math.PI / 2, 0, 0, false);
   for (let i = 0; i < 8; i++) {
@@ -550,13 +625,13 @@ class ReferenceScene {
 
   build() {
     if (this.type === 'pump') {
-      makePumpRoom(this.scene);
+      makePaddyStation(this.scene);
       this.model = makePumpSet();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
-      this.camera.position.set(2.15, 1.48, 3.1);
+      this.camera.position.set(2.35, 1.5, 3.15);
       this.camera.lookAt(0, 0.42, 0);
-      this.camera.fov = 37;
+      this.camera.fov = 38;
     } else if (this.type === 'conveyor') {
       makeConveyorHall(this.scene);
       this.model = makeConveyor();
@@ -605,6 +680,9 @@ class ReferenceScene {
         b.position.y = 0.4 + ((this.time * 0.00012 + i / 6) % 1) * 0.38;
         b.material.opacity = 0.3 + Math.sin(this.time * 0.003 + i) * 0.25;
       });
+      if (this.scene.userData.rice) {
+        this.scene.userData.rice.group.rotation.z = Math.sin(this.time * 0.0007) * 0.008;
+      }
     }
     if (this.type === 'conveyor') {
       const { packages, rollers } = this.model.userData;

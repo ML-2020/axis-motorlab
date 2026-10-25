@@ -12,8 +12,8 @@ const revealTargets = $$('.section-head, .application-card, .method-head, .metho
 revealTargets.forEach((el) => el.classList.add('is-visible'));
 
 const values = {
-  'pump-flow': { base: 42, variance: 1.4, digits: 0 },
-  'pump-current': { base: 11.2, variance: 0.15, digits: 1 },
+  'pump-flow': { base: 90, variance: 2.2, digits: 0 },
+  'pump-current': { base: 9.8, variance: 0.2, digits: 1 },
   'conveyor-belt': { base: 1.2, variance: 0.02, digits: 1 },
   'conveyor-rate': { base: 1400, variance: 18, digits: 0 },
   'conveyor-current': { base: 11.0, variance: 0.15, digits: 1 },

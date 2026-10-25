@@ -1,0 +1,10 @@
+﻿import { chromium } from 'playwright-core';
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const page=await browser.newPage({viewport:{width:1600,height:1100}});
+const errors=[]; page.on('pageerror',e=>errors.push('pageerror: '+e.message)); page.on('console',m=>{if(m.type()==='error') errors.push('console: '+m.text())});
+await page.goto('http://127.0.0.1:5181/scenarios/',{waitUntil:'networkidle',timeout:60000});
+await page.waitForTimeout(2600);
+console.log('IMAGES',await page.evaluate(()=>document.images.length),'CANVAS',await page.locator('canvas.scene3d').count(),'ERRORS',JSON.stringify(errors));
+await page.screenshot({path:'screenshots/integration/paddy-hero.png'});
+await page.screenshot({path:'screenshots/integration/paddy-full.png',fullPage:true});
+await browser.close();
