@@ -117,9 +117,11 @@ function pallet(x, z) {
   for (const dx of [-0.2, 0, 0.2]) for (const dz of [-0.15, 0.15]) {
     add(g, new THREE.BoxGeometry(0.08, 0.045, 0.08), darkSteel, dx, 0.006, dz);
   }
-  add(g, roundedBox(0.36, 0.3, 0.34, 0.008, 2), crateMat, -0.08, 0.2, 0);
-  add(g, roundedBox(0.3, 0.24, 0.28, 0.006, 2), paint, 0.16, 0.17, 0.03);
-  add(g, new THREE.BoxGeometry(0.02, 0.31, 0.02), safety, -0.08, 0.2, 0.18);
+  // Separate footprints on the pallet: no interpenetrating cartons.
+  add(g, roundedBox(0.28, 0.3, 0.3, 0.007, 2), crateMat, -0.14, 0.2, 0);
+  add(g, roundedBox(0.24, 0.22, 0.24, 0.006, 2), paint, 0.17, 0.16, -0.02);
+  add(g, roundedBox(0.18, 0.12, 0.18, 0.005, 2), crateMat, -0.14, 0.41, 0.02);
+  add(g, new THREE.BoxGeometry(0.02, 0.31, 0.02), safety, -0.14, 0.2, 0.155);
   g.position.set(x, 0, z);
   return g;
 }
