@@ -53,13 +53,16 @@
           <div class="eyebrow"><span></span> FOUR APPLICATIONS / 四种负载</div>
           <h2>同一台电机，<br>四种工作现场。</h2>
         </div>
-        <p>泵、输送机、风机与搅拌器代表流体、物料、空气与混合负载。四组现场同时呈现，不以切换标签代替真实场景。</p>
+        <p>现场照片用于识别设备结构；前景设备由数字模型重建，四组场景同时运行。</p>
       </div>
 
       <div class="application-grid">
         <article class="application-card app-pump" data-app="pump">
           <div class="visual">
-            <img class="kenburns" src="/media/applications/pump.jpg" alt="离心泵与电机泵组" />
+            <div class="backdrop" style="background-image:url('/media/applications/pump.jpg')"></div>
+            <canvas class="scene3d" data-scene="pump" aria-label="离心泵与电机数字模型"></canvas>
+            <img class="ref-thumb" src="/media/applications/pump.jpg" alt="参考照片：离心泵与电机泵组" />
+            <span class="ref-caption">REFERENCE / PUMP SET</span>
             <div class="grade"></div>
             <div class="visual-top"><span>01 / FLUID TRANSFER</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:32%;top:57%"><span>MOTOR</span></div>
@@ -84,7 +87,10 @@
 
         <article class="application-card app-conveyor" data-app="conveyor">
           <div class="visual">
-            <img class="kenburns reverse" src="/media/applications/conveyor.jpg" alt="工厂输送线" />
+            <div class="backdrop" style="background-image:url('/media/applications/conveyor.jpg')"></div>
+            <canvas class="scene3d" data-scene="conveyor" aria-label="输送机数字模型"></canvas>
+            <img class="ref-thumb" src="/media/applications/conveyor.jpg" alt="参考照片：工厂输送线" />
+            <span class="ref-caption">REFERENCE / CONVEYOR</span>
             <div class="grade"></div>
             <div class="visual-top"><span>02 / MATERIAL HANDLING</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:24%;top:47%"><span>DRIVE</span></div>
@@ -108,7 +114,10 @@
 
         <article class="application-card app-cooling" data-app="cooling">
           <div class="visual monochrome">
-            <img class="kenburns" src="/media/applications/cooling.jpg" alt="屋顶冷却塔风机" />
+            <div class="backdrop" style="background-image:url('/media/applications/cooling.jpg')"></div>
+            <canvas class="scene3d" data-scene="cooling" aria-label="冷却塔风机数字模型"></canvas>
+            <img class="ref-thumb" src="/media/applications/cooling.jpg" alt="参考照片：冷却塔风机" />
+            <span class="ref-caption">REFERENCE / FAN</span>
             <div class="grade"></div>
             <div class="visual-top"><span>03 / AIR MOVEMENT</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:52%;top:55%"><span>AXIAL FAN</span></div>
@@ -132,7 +141,10 @@
 
         <article class="application-card app-water" data-app="water">
           <div class="visual">
-            <img class="kenburns reverse" src="/media/applications/water.jpg" alt="水处理厂沉淀池" />
+            <div class="backdrop" style="background-image:url('/media/applications/water.jpg')"></div>
+            <canvas class="scene3d" data-scene="water" aria-label="水处理搅拌数字模型"></canvas>
+            <img class="ref-thumb" src="/media/applications/water.jpg" alt="参考照片：水处理厂沉淀池" />
+            <span class="ref-caption">REFERENCE / BASIN</span>
             <div class="grade"></div>
             <div class="visual-top"><span>04 / MIXING</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:25%;top:70%"><span>MIXER / TANK</span></div>
