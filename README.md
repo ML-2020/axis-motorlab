@@ -23,7 +23,15 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 
 ## 应用场景档案
 
-`/scenarios/` 现在只做一个深案例：**连续稻田灌溉 / 卧式端吸离心泵组**。参考照片只用于研究，不显示在网站中；页面由单个 Three.js 场景、物理工况计算和控制台组成。
+`/scenarios/` 现在只做一个深案例：**连续稻田灌溉 / 卧式端吸离心泵组**。参考照片只用于研究，不显示在网站中；页面使用 **Blender 4.2 建模并导出 glTF** 的泵站资产，Three.js 负责运行交互、工况计算和剖视控制。
+
+### 资产管线
+
+- Blender 脚本：`scripts/build-paddy-blender.py`；
+- 源场景：`blender/paddy_pump_station.blend`；
+- Web 资产：`public/models/paddy_pump_station.glb`；
+- 建模内容：泵组、电机、联轴器护罩、吸入滤网、出口阀、管道、混凝土泵台、田埂、稻株、灌渠、棚架和树木；
+- 命名对象：`PumpCasing`、`PumpSuction`、`PumpDischarge`、`Impeller`、`ValveWheel`、`GaugeNeedle`，用于网页端剖视和动画。
 
 ### 使用类型与工况
 
