@@ -5,6 +5,9 @@
 一个以 `Three.js` 构建的工业电机展示网站：程序化建模 22 个可独立拆解的部件，提供完整的滚动驱动分解动画、部件图鉴、X-RAY 运行原理可视化，以及依据公开标准与厂商样本整理的技术档案。
 
 - **本地地址：** <http://127.0.0.1:5180/>
+- **线上地址：** <https://axis-motorlab.pages.dev/>
+- **Blender 短片：** <https://axis-motorlab.pages.dev/blender/>
+- **GitHub：** <https://github.com/ML-2020/axis-motorlab>
 - **机型：** YE3-132S-4 · 5.5 kW · 4 极 · 380 V / 50 Hz · IE3 · IP55 · IC411 · IM B3 · S1
 - **建模依据：** GB/T 28575-2020、GB 18613-2020、GB/T 1032-2023、IEC 60034 / IEC 60072-1 等，以及 Wolong、WNM、Siemens 等公开样本。详见 [建模说明](docs/literature.md)。
 - **站内说明页：** <http://127.0.0.1:5181/docs/literature.html>（UTF-8 HTML 版本，由 `scripts/build-literature.mjs` 生成）。
@@ -115,8 +118,10 @@ npm run preview   # http://127.0.0.1:5181/
 ## 验证
 
 - `npm run build` 通过（Vite）。
-- Playwright 交互回归覆盖：加载、自动分解、滑块、标注开关、标注跳转部件、部件高亮、聚焦、运行/停止、X-RAY、曲线渲染、无水平溢出。
-- 已在 `1600×960`、`1366×768`、`390×844` 视口和 `prefers-reduced-motion` 环境下检查。
+- Playwright 交互回归 18/18 通过：加载、自动分解、滑块、标注开关、标注跳转部件、部件高亮、聚焦、运行/停止、X-RAY、曲线渲染、无水平溢出、无控制台错误。
+- 已检查 `1600×960`、`1366×768`、`390×844` 视口和 `prefers-reduced-motion` 环境。
+- `/blender/` 页面视频可播放（readyState 4 / 7.5 s），工程包与静帧均可下载。
+- Cloudflare Pages 生产部署已验证 200：首页、Blender 页、MP4、ZIP、sitemap、robots。
 
 运行回归测试（需要本机 Chrome，且先启动 `npm run dev`）：
 

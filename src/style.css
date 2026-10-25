@@ -3045,6 +3045,17 @@ body[data-chapter="specs"] .stage {
   font-size: 7px;
   letter-spacing: 0.06em;
 }
+.footer-meta a {
+  color: var(--dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+  pointer-events: auto;
+}
+.footer-meta a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
 .back-top {
   color: var(--dim);
   font-family: var(--font-mono);
