@@ -62,6 +62,42 @@ button { font: inherit; }
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   isolation: isolate;
+  background: #0b0e0b;
+}
+.hero-blueprint {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse at 72% 38%, rgba(117, 144, 125, .2), transparent 36%),
+    linear-gradient(112deg, #141a15, #090c09 62%, #111812);
+}
+.hero-blueprint::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 79px, rgba(194, 206, 177, .055) 79px 80px),
+    repeating-linear-gradient(0deg, transparent 0 79px, rgba(194, 206, 177, .045) 79px 80px);
+  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 100%);
+}
+.hero-blueprint::after {
+  content: "";
+  position: absolute;
+  right: 8%;
+  top: 18%;
+  width: min(48vw, 680px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(190, 204, 177, .16);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 40px rgba(190, 204, 177, .025),
+    0 0 0 120px rgba(190, 204, 177, .018);
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 33%, rgba(190, 204, 177, .08) 33.2% 33.5%, transparent 33.7%),
+    linear-gradient(90deg, transparent 49.8%, rgba(190, 204, 177, .1) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, rgba(190, 204, 177, .1) 50%, transparent 50.2%);
+  transform: rotate(-12deg);
 }
 .hero-image { position: absolute; inset: 0; z-index: -2; }
 .hero-image img {
@@ -307,6 +343,15 @@ h1 em { color: var(--accent); font-style: normal; }
 .metrics em { margin-left: 3px; color: var(--dim); font-family: var(--mono); font-size: 6px; font-style: normal; }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 13px; }
 .tags span { padding: 3px 6px; border: 1px solid var(--line); color: var(--dim); font-size: 7px; }
+.mech-note {
+  margin-top: 10px;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 6px;
+  line-height: 1.65;
+  letter-spacing: .035em;
+}
+.mech-note span { display: inline-block; min-width: 57px; color: var(--accent); margin-right: 5px; }
 .application-card:hover .visual img { filter: saturate(.95) contrast(1.05) brightness(.9); }
 
 .method { padding: 30px var(--gut) 52px; border-top: 1px solid var(--line); }
@@ -318,6 +363,7 @@ h1 em { color: var(--accent); font-style: normal; }
 .method-grid b { color: var(--accent); font-family: var(--mono); font-size: 7px; font-weight: 400; }
 .method-grid h3 { margin-top: 16px; font-size: 15px; font-weight: 500; }
 .method-grid p { margin-top: 8px; color: var(--muted); font-size: 9px; line-height: 1.8; }
+.method-disclaimer { margin-top: 15px; color: var(--faint); font-family: var(--mono); font-size: 6px; line-height: 1.7; letter-spacing: .03em; }
 
 .references { display: grid; grid-template-columns: 190px 1fr; gap: 28px; padding: 22px var(--gut) 26px; border-top: 1px solid var(--line); }
 .references > span { color: var(--faint); font-family: var(--mono); font-size: 6px; letter-spacing: .09em; }

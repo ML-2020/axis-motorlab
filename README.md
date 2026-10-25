@@ -23,7 +23,7 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 
 ## 应用场景档案
 
-`/scenarios/` 是与主站叙事分开的独立页面，以 **“电机使用场景”** 为主题。现场照片用于识别设备结构与比例，前景设备由 Three.js 数字模型重建；每张卡片右上角保留参考缩略图，避免把实拍照片当成 3D 场景。
+`/scenarios/` 是与主站叙事分开的独立页面，以 **“电机使用场景”** 为主题。参考照片只用于研究设备结构，不在网站中展示；前景设备、环境和载荷关系由 Three.js 数字模型重建。
 
 四张场景卡在同一页面并列展示，四个模型和相机同时渲染：
 
@@ -38,17 +38,9 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 
 ![Application Archive](screenshots/final/21-scenario-lab.png)
 
-### 图片授权
+### 工程资料
 
-场景照片来自 Wikimedia Commons，页面内保留来源与授权链接：
-
-- [泵组 · Bitjungle / CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Centrifugal_pumps.jpg)
-- [输送线 · falco / CC0](https://commons.wikimedia.org/wiki/File:Conveyor_system_in_a_factory.jpg)
-- [冷却塔风机 · Steve Johnson / CC BY 2.0](https://commons.wikimedia.org/wiki/File:Cooling_tower_fan.jpg)
-- [水处理池 · Saiphani02 / CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Krishnapuram_water_treatment_plant_tank.jpg)
-- [麦田 · W.carter / CC0](https://commons.wikimedia.org/wiki/File:Tree_and_wheat_field_in_R%C3%B6e_1.jpg)
-
-工程布置参考泵、输送机、冷却塔风机和水处理搅拌机的典型安装资料：
+模型按典型安装关系建立，参考泵、输送机、冷却塔风机和水处理搅拌机的公开资料：
 
 - [Goulds 泵安装与运行手册](http://www.gouldspumps.com/ittgp/medialibrary/goulds/website/Literature/Instruction%20and%20Operation%20Manuals/Alphabetical/IOM-ICM-ICMP-en-us-2024-02_A4.pdf)
 - [输送机驱动系统专利](https://patents.google.com/patent/US6817467B2/en)
@@ -88,7 +80,6 @@ npm run preview   # http://127.0.0.1:5181/
 │  └─ scenarios/                 # 应用场景档案：photo.js / photo.css
 ├─ scenarios/index.html          # /scenarios/ 页面
 ├─ public/
-│  ├─ media/applications/        # 授权场景照片
 │  ├─ blender/                   # Blender 短片页、视频、静帧、工程包
 │  ├─ docs/                      # 建模说明
 │  └─ sitemap.xml
@@ -100,6 +91,6 @@ npm run preview   # http://127.0.0.1:5181/
 
 - Playwright 交互回归：18/18 通过；
 - 主站桌面/移动端无控制台错误、无横向溢出；
-- `/scenarios/` 四张场景卡、五张授权图片正常加载；
+- `/scenarios/` 四张场景卡、四个 WebGL 画布正常渲染；页面不加载参考照片；
 - 移动端 390 px 无横向溢出；
 - Cloudflare Pages 生产地址可访问。

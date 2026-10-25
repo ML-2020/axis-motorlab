@@ -22,9 +22,7 @@
 
   <main>
     <section class="hero">
-      <div class="hero-image">
-        <img src="/media/applications/wheat.jpg" alt="麦田与树木" />
-      </div>
+      <div class="hero-blueprint" aria-hidden="true"></div>
       <div class="hero-shade"></div>
       <div class="hero-inner">
         <div class="eyebrow"><span></span> APPLICATION ARCHIVE / 应用档案 001—004</div>
@@ -44,7 +42,6 @@
         <span>03 屋顶冷却</span>
         <span>04 水处理搅拌</span>
       </div>
-      <div class="hero-credit">WHEAT FIELD · W. CARTER / CC0</div>
     </section>
 
     <section class="applications" id="applications">
@@ -53,7 +50,7 @@
           <div class="eyebrow"><span></span> FOUR APPLICATIONS / 四种负载</div>
           <h2>同一台电机，<br>四种工作现场。</h2>
         </div>
-        <p>现场照片用于识别设备结构；前景设备由数字模型重建，四组场景同时运行。</p>
+        <p>参考照片只用于研究设备结构，不在网站中展示。四组场景均由数字模型、程序化材质和现场尺度重建。</p>
       </div>
 
       <div class="rated-strip">
@@ -64,10 +61,7 @@
       <div class="application-grid">
         <article class="application-card app-pump" data-app="pump">
           <div class="visual">
-            <div class="backdrop" style="background-image:url('/media/applications/pump.jpg')"></div>
             <canvas class="scene3d" data-scene="pump" aria-label="离心泵与电机数字模型"></canvas>
-            <img class="ref-thumb" src="/media/applications/pump.jpg" alt="参考照片：离心泵与电机泵组" />
-            <span class="ref-caption">REFERENCE / PUMP SET</span>
             <div class="grade"></div>
             <div class="visual-top"><span>01 / FLUID TRANSFER</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:32%;top:57%"><span>MOTOR</span></div>
@@ -87,15 +81,14 @@
               <div><span>CURRENT</span><b data-live="pump-current">11.2</b><em>A</em></div>
             </div>
             <div class="tags"><span>离心泵</span><span>联轴器</span><span>灌溉管网</span></div>
+            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 联轴器 → 泵轴；泵组重量 → 公共底座 → 混凝土基础</div>
+            <div class="mech-note"><span>MOUNTING</span>IEC 132S · 轴高 132 mm · 轴伸 Ø38 mm · 联轴器护罩 · 地脚 M12</div>
           </div>
         </article>
 
         <article class="application-card app-conveyor" data-app="conveyor">
           <div class="visual">
-            <div class="backdrop" style="background-image:url('/media/applications/conveyor.jpg')"></div>
             <canvas class="scene3d" data-scene="conveyor" aria-label="输送机数字模型"></canvas>
-            <img class="ref-thumb" src="/media/applications/conveyor.jpg" alt="参考照片：工厂输送线" />
-            <span class="ref-caption">REFERENCE / CONVEYOR</span>
             <div class="grade"></div>
             <div class="visual-top"><span>02 / MATERIAL HANDLING</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:24%;top:47%"><span>DRIVE</span></div>
@@ -114,15 +107,14 @@
               <div><span>CURRENT</span><b data-live="conveyor-current">11.0</b><em>A</em></div>
             </div>
             <div class="tags"><span>皮带输送</span><span>减速驱动</span><span>包装线</span></div>
+            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 减速机 → 驱动滚筒 → 输送带张力</div>
+            <div class="mech-note"><span>LAYOUT</span>带宽约 500 mm · 速度 1.2 m/s · 驱动侧护罩 · 急停拉绳 · 张紧行程</div>
           </div>
         </article>
 
         <article class="application-card app-cooling" data-app="cooling">
           <div class="visual monochrome">
-            <div class="backdrop" style="background-image:url('/media/applications/cooling.jpg')"></div>
             <canvas class="scene3d" data-scene="cooling" aria-label="冷却塔风机数字模型"></canvas>
-            <img class="ref-thumb" src="/media/applications/cooling.jpg" alt="参考照片：冷却塔风机" />
-            <span class="ref-caption">REFERENCE / FAN</span>
             <div class="grade"></div>
             <div class="visual-top"><span>03 / AIR MOVEMENT</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:52%;top:55%"><span>AXIAL FAN</span></div>
@@ -141,15 +133,14 @@
               <div><span>CURRENT</span><b data-live="cooling-current">11.0</b><em>A</em></div>
             </div>
             <div class="tags"><span>轴流风机</span><span>冷却塔</span><span>排热</span></div>
+            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 直驱/皮带 → 风叶；轴向推力 → 轴承 → 塔体支架</div>
+            <div class="mech-note"><span>LAYOUT</span>风机直径约 1.2 m · 风量 20,000 m³/h · 风机护罩 · 检修开关 · 振动监测点</div>
           </div>
         </article>
 
         <article class="application-card app-water" data-app="water">
           <div class="visual">
-            <div class="backdrop" style="background-image:url('/media/applications/water.jpg')"></div>
             <canvas class="scene3d" data-scene="water" aria-label="水处理搅拌数字模型"></canvas>
-            <img class="ref-thumb" src="/media/applications/water.jpg" alt="参考照片：水处理厂沉淀池" />
-            <span class="ref-caption">REFERENCE / BASIN</span>
             <div class="grade"></div>
             <div class="visual-top"><span>04 / MIXING</span><span class="live"><i></i>RUNNING</span></div>
             <div class="hotspot" style="left:25%;top:70%"><span>MIXER / TANK</span></div>
@@ -164,10 +155,12 @@
             <p>电机经侧入式联轴器驱动搅拌叶轮。中心/侧入式驱动、桥架、刮臂、进出水管与检修栏杆共同构成处理池设备。</p>
             <div class="metrics">
               <div><span>MIXER</span><b data-live="water-rpm">148</b><em>rpm</em></div>
-              <div><span>VOLUME</span><b>12</b><em>m³</em></div>
+              <div><span>BASIN Ø</span><b>2.4</b><em>m</em></div>
               <div><span>CURRENT</span><b data-live="water-current">11.5</b><em>A</em></div>
             </div>
             <div class="tags"><span>侧入式搅拌</span><span>加药</span><span>水处理</span></div>
+            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 侧入轴 → 叶轮；径向载荷 → 轴承座 → 池壁/桥架</div>
+            <div class="mech-note"><span>LAYOUT</span>池径约 2.4 m · 叶轮转速 148 r/min · 机械密封 · 桥架/栏杆高度 1.1 m</div>
           </div>
         </article>
       </div>
@@ -183,18 +176,12 @@
         <div><b>02</b><h3>读负载特性</h3><p>泵与风机接近平方转矩，输送机与搅拌器接近恒转矩；启动方式、惯量和环境温度会改变实际负载率。</p></div>
         <div><b>03</b><h3>读环境边界</h3><p>户外潮湿、屋顶风雪、室内班次与水处理湿气，分别对应不同的防护、防腐和维护要求。</p></div>
       </div>
+      <p class="method-disclaimer">页面展示安装关系、载荷路径与运行状态，用于解释性模拟；未进行结构强度、基础振动、热平衡或选型计算。</p>
     </section>
 
     <section class="references">
-      <span>IMAGE CREDITS / 图片来源</span>
-      <div class="credit-list">
-        <a href="https://commons.wikimedia.org/wiki/File:Centrifugal_pumps.jpg" target="_blank" rel="noreferrer">泵组 · Bitjungle / CC BY-SA 4.0</a>
-        <a href="https://commons.wikimedia.org/wiki/File:Conveyor_system_in_a_factory.jpg" target="_blank" rel="noreferrer">输送线 · falco / CC0</a>
-        <a href="https://commons.wikimedia.org/wiki/File:Cooling_tower_fan.jpg" target="_blank" rel="noreferrer">冷却塔风机 · Steve Johnson / CC BY 2.0</a>
-        <a href="https://commons.wikimedia.org/wiki/File:Krishnapuram_water_treatment_plant_tank.jpg" target="_blank" rel="noreferrer">水处理池 · Saiphani02 / CC BY-SA 4.0</a>
-        <a href="https://commons.wikimedia.org/wiki/File:Tree_and_wheat_field_in_R%C3%B6e_1.jpg" target="_blank" rel="noreferrer">麦田 · W.carter / CC0</a>
-      </div>
-      <p>工程布置参考泵、输送机、冷却塔风机和水处理搅拌机的典型安装资料；页面为解释性应用模拟，不作为施工或选型依据。</p>
+      <span>ENGINEERING REFERENCES / 工程资料</span>
+      <p>参考照片仅用于研究结构，不在站内展示。模型布置参考泵、输送机、冷却塔风机和水处理搅拌机的典型安装资料；页面为解释性应用模拟，不作为施工或选型依据。</p>
       <div class="credit-list doc-list">
         <a href="https://www.changli-electric.com/low-voltage-motors/ye3-series-three-phase-asynchronous-motors.html" target="_blank" rel="noreferrer">YE3 系列应用范围</a>
         <a href="http://www.gouldspumps.com/ittgp/medialibrary/goulds/website/Literature/Instruction%20and%20Operation%20Manuals/Alphabetical/IOM-ICM-ICMP-en-us-2024-02_A4.pdf" target="_blank" rel="noreferrer">泵组安装 / 联轴器护罩</a>
