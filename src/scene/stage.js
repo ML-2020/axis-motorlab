@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { clamp, lerp, makeCanvasTexture, PI2 } from '../model/utils.js';
 import { Motor } from '../model/motor.js';
+import { createApplications } from '../model/applications.js';
 
 const GHOST_IDS = new Set([
   'stator-frame',
@@ -192,6 +193,12 @@ export class Stage {
 
     this.motor.root.position.y = 0.132;
     this.scene.add(this.motor.root);
+
+    // Application vignettes share the same stage and appear only in the
+    // applications chapter: pump skid, conveyor and axial fan.
+    this.applications = createApplications();
+    if (this.isNarrow) this.applications.root.scale.setScalar(0.88);
+    this.scene.add(this.applications.root);
   }
 
   setupLights() {
@@ -575,6 +582,7 @@ export class Stage {
     this.camera.updateProjectionMatrix();
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, this.isNarrow ? 1.5 : 1.8));
     this.renderer.setSize(width, height, false);
+    if (this.applications) this.applications.root.scale.setScalar(this.isNarrow ? 0.88 : 1);
     const preset = this.getPresets()[this.currentPreset] || this.getPresets().hero;
     this.applyPreset(this.currentPreset, true);
   }
@@ -601,6 +609,7 @@ export class Stage {
         explode: { pos: [1.2, 1.9, 7.35], target: [0, 0.58, 0], fov: 40, autoRotate: false },
         parts: { pos: [1.2, 1.9, 7.2], target: [0, 0.22, 0], fov: 40, autoRotate: false },
         operation: { pos: [1.9, 1.05, 2.4], target: [0, 0.36, 0], fov: 34, autoRotate: false },
+        applications: { pos: [3.4, 2.28, 4.9], target: [0.04, 0.27, -0.12], fov: 40, autoRotate: false },
         data: { pos: [3.8, 2.2, 4.8], target: [0, 0.32, 0], fov: 38, autoRotate: false },
       };
     }
@@ -610,6 +619,7 @@ export class Stage {
       explode: { pos: [1.08, 1.48, 3.82], target: [-0.13, 0.6, 0], fov: 31, autoRotate: false },
       parts: { pos: [1.14, 1.54, 3.92], target: [-0.06, 0.6, 0], fov: 31, autoRotate: false },
       operation: { pos: [2.05, 1.02, 2.32], target: [-0.08, 0.25, 0], fov: 30, autoRotate: false },
+      applications: { pos: [3.2, 2.05, 4.35], target: [0.1, 0.27, -0.16], fov: 35, autoRotate: false },
       data: { pos: [3.8, 2.0, 4.2], target: [0, 0.3, 0], fov: 34, autoRotate: false },
     };
   }
@@ -619,6 +629,7 @@ export class Stage {
     const preset = this.getPresets()[name] || this.getPresets().hero;
     this.autoRotateWanted = !!preset.autoRotate;
     this.mode = name;
+    if (this.applications) this.applications.root.visible = name === 'applications';
     if (immediate) {
       this.camera.position.set(...preset.pos);
       this.controls.target.set(...preset.target);
@@ -744,6 +755,10 @@ export class Stage {
 
   update(dt, elapsed) {
     this.effectsTime += dt;
+
+    if (this.applications?.root.visible) {
+      this.applications.update(dt, elapsed);
+    }
 
     if (this.cameraTween) {
       const tw = this.cameraTween;

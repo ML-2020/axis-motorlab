@@ -2227,6 +2227,111 @@ body[data-chapter="anatomy"] .hotspot-layer {
 }
 
 /* --------------------------------------------------------------------------
+   Applications
+-------------------------------------------------------------------------- */
+.applications-section {
+  height: 100svh;
+  min-height: 700px;
+}
+.applications-copy {
+  position: absolute;
+  left: var(--gutter);
+  top: 16vh;
+  width: min(470px, 40vw);
+}
+.applications-copy h2 {
+  margin-top: 28px;
+  font-size: clamp(36px, 3.6vw, 58px);
+}
+.applications-copy p {
+  max-width: 400px;
+  margin-top: 23px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 2;
+}
+.application-index {
+  width: min(430px, 100%);
+  margin-top: 29px;
+  border-top: 1px solid var(--line);
+}
+.application-item {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.application-item > span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+}
+.application-item b {
+  display: block;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.application-item em {
+  display: block;
+  margin-top: 3px;
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 6px;
+  font-style: normal;
+  letter-spacing: 0.12em;
+}
+.application-item small {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.application-note {
+  margin-top: 22px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.08em;
+}
+.application-stamp {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  width: 230px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+}
+.application-stamp b {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 400;
+}
+.application-stamp i {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 4px;
+  background: linear-gradient(90deg, transparent, var(--line-strong));
+}
+.application-stamp i:nth-of-type(2) { width: 70%; }
+.application-stamp i:nth-of-type(3) { width: 45%; }
+.application-mobile-strip { display: none; }
+
+/* --------------------------------------------------------------------------
    Operation
 -------------------------------------------------------------------------- */
 .operation-section {
@@ -3305,6 +3410,51 @@ body[data-chapter="specs"] .stage-corners {
   .plant-record { grid-template-columns: 1fr; }
   .plant-table { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .plant-tag { min-height: 210px; }
+  .applications-copy {
+    top: 104px;
+    width: min(590px, calc(100% - 2 * var(--gutter)));
+  }
+  .applications-copy h2 { font-size: clamp(32px, 4.6vw, 48px); }
+  .applications-copy p { max-width: 540px; font-size: 11px; line-height: 1.9; }
+  .application-index {
+    display: none;
+  }
+  .application-mobile-strip {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .application-mobile-strip span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 0 0;
+    border-right: 1px solid var(--line);
+  }
+  .application-mobile-strip span:last-child { border-right: 0; }
+  .application-mobile-strip i {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 7px;
+    font-style: normal;
+  }
+  .application-mobile-strip b {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+  }
+  .application-mobile-strip em {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 6px;
+    font-style: normal;
+    letter-spacing: 0.1em;
+  }
+  .application-stamp { display: none; }
   .anatomy-copy { width: min(420px, 52vw); }
   .parts-heading { position: relative; left: auto; top: auto; width: auto; padding: 110px var(--gutter) 0; }
   .parts-heading p { display: none; }
@@ -3583,6 +3733,13 @@ body[data-chapter="specs"] .stage-corners {
   .brand-text strong { font-size: 15px; }
   .brand-mark { width: 25px; height: 29px; }
   .top-link { display: none; }
+  .applications-copy { top: 86px; }
+  .applications-copy h2 { font-size: 30px; }
+  .applications-copy p { display: none; }
+  .application-index { margin-top: 16px; gap: 6px; }
+  .application-item { padding: 8px; }
+  .application-item b { font-size: 11px; }
+  .application-item em { display: none; }
   .hero-hazard { height: 16px; padding: 0 18px; font-size: 5px; letter-spacing: 0.1em; }
   .hero-hazard span:last-child { display: none; }
   .blender-feature-copy h3 { font-size: 32px; }
