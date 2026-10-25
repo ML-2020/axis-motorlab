@@ -212,7 +212,7 @@ outdoor.name = 'scenario-outdoor';
 scene.add(outdoor);
 
 // Ground, pad and wet patches.
-add(outdoor, new THREE.PlaneGeometry(34, 34), M.grass, 0, -0.02, 0, -Math.PI / 2, 0, 0, false);
+const meadow = add(outdoor, new THREE.PlaneGeometry(34, 34), M.grass, 0, -0.02, 0, -Math.PI / 2, 0, 0, false);
 add(outdoor, roundedBox(2.6, 0.075, 1.7, 0.01, 2), M.concrete, 0.2, 0.035, 0.15);
 const puddles = [];
 for (const [x, z, sx, sz] of [[-1.15, 1.1, 0.55, 0.26], [1.55, 1.42, 0.36, 0.18], [0.1, 1.78, 0.6, 0.22], [1.15, -0.82, 0.32, 0.15]]) {
@@ -221,27 +221,17 @@ for (const [x, z, sx, sz] of [[-1.15, 1.1, 0.55, 0.26], [1.55, 1.42, 0.36, 0.18]
   puddles.push(p);
 }
 
-// Fence, distant warehouse, light pole.
-for (const x of [-4, -2, 0, 2, 4]) {
-  add(outdoor, new THREE.BoxGeometry(0.07, 1.5, 0.07), M.steel, x, 0.75, -5.1, 0, 0, 0, false);
+// A low farm fence, a yard light and a distant farm instead of an industrial wall.
+for (const x of [-4.8, -3.0, -1.2, 0.6, 2.4, 4.2]) {
+  add(outdoor, new THREE.BoxGeometry(0.06, 0.9, 0.06), M.wood, x, 0.45, -5.1, 0, 0, 0, false);
 }
-for (const y of [0.45, 1.13]) {
-  add(outdoor, new THREE.BoxGeometry(8.2, 0.035, 0.035), M.steel, 0, y, -5.1, 0, 0, 0, false);
-}
-add(outdoor, new THREE.BoxGeometry(8.2, 0.05, 0.04), M.safety, 0, 1.42, -5.1, 0, 0, 0, false);
-for (const [x, z, w, h, d] of [[-4.8, -8, 2.4, 1.6, 1.1], [-2.2, -8.8, 2.8, 2.2, 1.3], [2.0, -8.4, 3.0, 2.0, 1.5], [5.0, -7.4, 2.2, 1.3, 1.0]]) {
-  addBox(outdoor, w, h, d, M.dark, x, h / 2, z, 0, false);
-  for (let i = 0; i < 3; i++) add(outdoor, new THREE.PlaneGeometry(w * 0.12, h * 0.09), new THREE.MeshBasicMaterial({ color: 0x6e9da3, transparent: true, opacity: 0.25 }), x - w * 0.27 + i * w * 0.27, h * 0.62, z + d / 2 + 0.006, 0, 0, 0, false);
+for (const y of [0.36, 0.72]) {
+  add(outdoor, new THREE.BoxGeometry(9.2, 0.045, 0.045), M.wood, -0.3, y, -5.1, 0, 0, 0, false);
 }
 add(outdoor, new THREE.CylinderGeometry(0.06, 0.075, 3.2, 16), M.steel, 3.2, 1.6, -4.8, 0, 0, 0, false);
 add(outdoor, new THREE.BoxGeometry(0.9, 0.045, 0.08), M.steel, 2.82, 3.15, -4.8, 0, 0, 0, false);
 add(outdoor, new THREE.BoxGeometry(0.3, 0.08, 0.18), new THREE.MeshBasicMaterial({ color: 0xe8c17f, toneMapped: false }), 2.45, 3.12, -4.8, 0, 0, 0, false);
 add(outdoor, new THREE.CylinderGeometry(0.12, 0.16, 0.07, 20), M.dark, 3.2, 0.035, -4.8, 0, 0, 0, false);
-for (let i = 0; i < 7; i++) {
-  const x = -4.8 + i * 1.5;
-  const bush = add(outdoor, new THREE.DodecahedronGeometry(0.24 + (i % 3) * 0.06, 0), M.grass, x, 0.14, -5.8 - (i % 2) * 0.4, 0, 0, 0, false);
-  bush.scale.y = 0.6;
-}
 
 const pumpGuard = addBox(outdoor, 0.22, 0.1, 0.16, M.dark, 0.5, 0.16, 0.18);
 pump.position.set(0.95, 0, 0.18);
@@ -256,6 +246,163 @@ addCyl(outdoor, 0.035, 0.045, 0.18, M.steel, 0.98, 0.145, 0.18, 0, 0, Math.PI / 
 // Rain field outdoors.
 const rainOutdoor = makeRain(900, 12, 8);
 outdoor.add(rainOutdoor.group);
+
+// ---------------------------------------------------------------------------
+// Arable landscape: wheat, trees, farm buildings, birds and a deer
+// ---------------------------------------------------------------------------
+const wheatMat = new THREE.MeshStandardMaterial({ color: 0x80934f, roughness: 0.92 });
+const wheatHeadMat = new THREE.MeshStandardMaterial({ color: 0xbba75f, roughness: 0.8 });
+const wheatGroup = new THREE.Group();
+const WHEAT_COUNT = 1180;
+const wheatStalks = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.007, 0.013, 0.33, 3, 1), wheatMat, WHEAT_COUNT);
+const wheatHeads = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.017, 0.035, 0.13, 5), wheatHeadMat, WHEAT_COUNT);
+const wheatDummy = new THREE.Object3D();
+let wheatPlaced = 0;
+for (let attempts = 0; attempts < 6000 && wheatPlaced < WHEAT_COUNT; attempts++) {
+  const x = (Math.random() - 0.5) * 18;
+  const z = (Math.random() - 0.5) * 13;
+  if (Math.abs(x - 0.2) < 2.05 && Math.abs(z - 0.15) < 1.4) continue;
+  if (Math.abs(x - 3.2) < 1.0 && Math.abs(z + 4.8) < 0.8) continue;
+  const s = 0.72 + Math.random() * 0.56;
+  const ry = Math.random() * TAU;
+  wheatDummy.position.set(x, 0.165 * s, z);
+  wheatDummy.rotation.set(0, ry, 0);
+  wheatDummy.scale.set(0.8 + (s - 0.72) * 0.25, s, 0.8 + (s - 0.72) * 0.25);
+  wheatDummy.updateMatrix();
+  wheatStalks.setMatrixAt(wheatPlaced, wheatDummy.matrix);
+  wheatDummy.position.y = 0.33 * s + 0.055;
+  wheatDummy.scale.set(0.8, 0.8, 0.8);
+  wheatDummy.updateMatrix();
+  wheatHeads.setMatrixAt(wheatPlaced, wheatDummy.matrix);
+  wheatPlaced++;
+}
+wheatStalks.castShadow = false;
+wheatStalks.receiveShadow = true;
+wheatHeads.castShadow = false;
+wheatGroup.add(wheatStalks, wheatHeads);
+outdoor.add(wheatGroup);
+
+const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x4d3d2c, roughness: 0.95 });
+const treeLeafMat = new THREE.MeshStandardMaterial({ color: 0x3d6a4b, roughness: 0.9 });
+const snowCapMat = new THREE.MeshStandardMaterial({ color: 0xe9f0ed, roughness: 0.8 });
+const treeGroup = new THREE.Group();
+const treeData = [];
+for (const [x, z, s] of [[-5.6, -1.2, 1.15], [-6.1, 2.6, 0.92], [5.7, -1.6, 1.0], [6.1, 2.2, 0.82], [-4.8, -4.9, 0.74], [4.9, -4.7, 0.88]]) {
+  const tree = new THREE.Group();
+  tree.position.set(x, 0, z);
+  tree.scale.setScalar(s);
+  add(tree, new THREE.CylinderGeometry(0.055, 0.09, 0.85, 7), treeTrunkMat, 0, 0.42, 0, 0, 0, 0, false);
+  const crown = add(tree, new THREE.IcosahedronGeometry(0.52, 1), treeLeafMat, 0, 1.05, 0, 0, 0, 0, false);
+  crown.scale.set(1, 1.15, 0.9);
+  add(tree, new THREE.IcosahedronGeometry(0.34, 0), treeLeafMat, 0.25, 1.36, 0.1, 0, 0, 0, false);
+  add(tree, new THREE.IcosahedronGeometry(0.3, 0), treeLeafMat, -0.28, 1.24, -0.12, 0, 0, 0, false);
+  const snow = add(tree, new THREE.DodecahedronGeometry(0.45, 0), snowCapMat, 0, 1.6, 0, 0, 0, 0, false);
+  snow.scale.set(1, 0.28, 0.8);
+  snow.visible = false;
+  tree.userData.snow = snow;
+  tree.userData.baseRot = 0;
+  treeData.push(tree);
+  treeGroup.add(tree);
+}
+outdoor.add(treeGroup);
+
+// Flowers appear in spring; snow patches appear in winter and snowfall.
+const flowerGroup = new THREE.Group();
+const flowerColors = [0xe8c36a, 0xc17b82, 0xd7d2aa, 0xa9c1a0];
+for (let i = 0; i < 26; i++) {
+  const f = add(flowerGroup, new THREE.SphereGeometry(0.035, 5, 4), new THREE.MeshBasicMaterial({ color: flowerColors[i % flowerColors.length] }), (Math.random() - 0.5) * 13, 0.11 + Math.random() * 0.04, (Math.random() - 0.5) * 9, 0, 0, 0, false);
+  f.scale.set(1, 0.7, 1);
+}
+outdoor.add(flowerGroup);
+
+const snowPatchGroup = new THREE.Group();
+for (let i = 0; i < 18; i++) {
+  const x = (Math.random() - 0.5) * 13;
+  const z = (Math.random() - 0.5) * 9;
+  if (Math.abs(x - 0.2) < 1.9 && Math.abs(z - 0.15) < 1.2) continue;
+  const patch = add(snowPatchGroup, new THREE.DodecahedronGeometry(0.18 + Math.random() * 0.18, 0), snowCapMat, x, 0.055, z, 0, 0, 0, false);
+  patch.scale.set(1.4, 0.16, 0.9);
+}
+outdoor.add(snowPatchGroup);
+
+// Distant farm: barn, silos and a small wind turbine.
+const barn = new THREE.Group();
+barn.position.set(-3.4, 0, -10.2);
+addBox(barn, 2.6, 1.45, 1.7, M.wood, 0, 0.72, 0);
+add(barn, new THREE.BoxGeometry(2.9, 0.18, 2.0), M.dark, 0, 1.53, 0, 0, 0, 0.42, false);
+addBox(barn, 0.5, 0.6, 0.05, M.dark, 0, 0.62, 0.88, 0, false);
+addBox(barn, 0.4, 0.28, 0.02, new THREE.MeshBasicMaterial({ color: 0xd9c48e }), 0, 0.92, 0.91, 0, false);
+outdoor.add(barn);
+for (const [x, z, h] of [[4.4, -10.2, 2.4], [5.2, -10.5, 2.8]]) {
+  add(outdoor, new THREE.CylinderGeometry(0.3, 0.34, h, 12), M.concrete, x, h / 2, z, 0, 0, 0, false);
+  add(outdoor, new THREE.ConeGeometry(0.34, 0.24, 12), M.dark, x, h + 0.12, z, 0, 0, 0, false);
+}
+const turbine = new THREE.Group();
+turbine.position.set(-6.2, 0, -12.5);
+add(turbine, new THREE.CylinderGeometry(0.045, 0.07, 3.5, 8), M.steel, 0, 1.75, 0, 0, 0, 0, false);
+add(turbine, new THREE.BoxGeometry(0.18, 0.12, 0.18), M.dark, 0, 3.55, 0, 0, 0, 0, false);
+const turbineRotor = new THREE.Group();
+turbineRotor.position.set(0, 3.55, 0.12);
+for (let i = 0; i < 3; i++) {
+  const blade = add(turbineRotor, new THREE.BoxGeometry(0.05, 0.85, 0.025), M.steel, 0, 0.45, 0, 0, 0, 0, false);
+  blade.rotation.z = (i / 3) * TAU;
+}
+turbine.add(turbineRotor);
+outdoor.add(turbine);
+
+// Birds circling above the wheat.
+const birdGroup = new THREE.Group();
+const birds = [];
+const birdMat = new THREE.MeshBasicMaterial({ color: 0x1b2528 });
+for (let i = 0; i < 7; i++) {
+  const bird = new THREE.Group();
+  const left = add(bird, new THREE.BoxGeometry(0.14, 0.012, 0.025), birdMat, -0.07, 0, 0, 0, 0, 0.22, false);
+  const right = add(bird, new THREE.BoxGeometry(0.14, 0.012, 0.025), birdMat, 0.07, 0, 0, 0, 0, -0.22, false);
+  bird.userData = { phase: i * 0.9, radius: 2.6 + i * 0.45, y: 3.2 + (i % 3) * 0.55, left, right };
+  birds.push(bird);
+  birdGroup.add(bird);
+}
+outdoor.add(birdGroup);
+
+// A low-poly deer grazing at the edge of the field.
+const deer = new THREE.Group();
+deer.position.set(-2.6, 0, -3.45);
+deer.rotation.y = 0.42;
+deer.scale.setScalar(0.78);
+const deerMat = new THREE.MeshStandardMaterial({ color: 0x7f5d3f, roughness: 0.92 });
+const deerDark = new THREE.MeshStandardMaterial({ color: 0x4e3828, roughness: 0.95 });
+const deerBody = add(deer, new THREE.SphereGeometry(0.32, 8, 6), deerMat, 0, 0.55, 0);
+deerBody.scale.set(1.25, 0.72, 0.66);
+for (const [x, z] of [[-0.22, -0.13], [0.22, -0.13], [-0.22, 0.13], [0.22, 0.13]]) {
+  add(deer, new THREE.CylinderGeometry(0.022, 0.028, 0.45, 5), deerDark, x, 0.24, z);
+}
+const deerNeck = new THREE.Group();
+deerNeck.position.set(0.35, 0.62, 0);
+add(deerNeck, new THREE.CylinderGeometry(0.05, 0.075, 0.36, 6), deerMat, 0.05, 0.14, 0, 0, 0, -0.35);
+add(deerNeck, new THREE.SphereGeometry(0.1, 6, 5), deerMat, 0.14, 0.3, 0);
+add(deerNeck, new THREE.ConeGeometry(0.035, 0.18, 5), deerMat, 0.2, 0.4, 0, 0, 0, -0.3);
+for (const s of [-1, 1]) {
+  add(deerNeck, new THREE.CylinderGeometry(0.012, 0.012, 0.3, 4), deerDark, 0.1, 0.48, 0.08 * s, 0.35, 0, 0.15 * s);
+  add(deerNeck, new THREE.CylinderGeometry(0.012, 0.012, 0.2, 4), deerDark, 0.08, 0.58, 0.14 * s, 0.5, 0, 0.5 * s);
+}
+deer.add(deerNeck);
+outdoor.add(deer);
+
+// A small rabbit at the edge of the wheat; it keeps the scale human.
+const rabbit = new THREE.Group();
+rabbit.position.set(1.85, 0, 2.35);
+rabbit.rotation.y = -0.65;
+rabbit.scale.setScalar(0.55);
+const rabbitBody = add(rabbit, new THREE.SphereGeometry(0.14, 6, 5), deerMat, 0, 0.16, 0);
+rabbitBody.scale.set(1.25, 0.8, 0.85);
+add(rabbit, new THREE.SphereGeometry(0.09, 6, 5), deerMat, 0.14, 0.24, 0);
+add(rabbit, new THREE.ConeGeometry(0.025, 0.22, 4), deerDark, 0.12, 0.38, 0.05, 0, 0, -0.2);
+add(rabbit, new THREE.ConeGeometry(0.025, 0.22, 4), deerDark, 0.16, 0.38, -0.03, 0, 0, 0.2);
+outdoor.add(rabbit);
+
+// 3D snowfall only for the outdoor scene; the page also carries a CSS snow layer.
+const snowOutdoor = makeSnow(650, 13, 9, 8);
+outdoor.add(snowOutdoor.group);
 
 // ---------------------------------------------------------------------------
 // Indoor assembly line
@@ -400,7 +547,7 @@ const SCENARIOS = {
   outdoor: {
     code: 'SCN-01',
     status: 'PUMPING / CONTINUOUS',
-    description: '户外泵站。离心泵从低位水池取水，经出口管路送入管网。天气、湿度与昼夜温差影响环境温度与电机负载。',
+    description: '麦田泵站。离心泵从低位水池取水，经出口管路送入管网。麦浪、树木、鸟群与季节天气共同构成现场环境。',
     camera: { pos: [2.4, 2.0, 4.0], target: [0.2, 0.27, 0.12], fov: 37 },
     metricA: ['FLOW', 'm³/h'],
   },
@@ -427,15 +574,23 @@ const SCENARIOS = {
   },
 };
 
+const SEASONS = {
+  spring: { ground: 0x4e6c4b, wheat: 0x759d58, head: 0x9dbb72, tree: 0x5d8751, patch: false },
+  summer: { ground: 0x3b5947, wheat: 0x80934f, head: 0xbba75f, tree: 0x3d6a4b, patch: false },
+  autumn: { ground: 0x665b3c, wheat: 0xa5823f, head: 0xc9a75d, tree: 0x9b6138, patch: false },
+  winter: { ground: 0x929e9a, wheat: 0x7f795f, head: 0x948c6d, tree: 0x59635c, patch: true },
+};
+
 let scenario = 'outdoor';
+let season = 'summer';
 let simMinutes = 9 * 60 + 30;
 let timeMode = 'timelapse';
 let weather = 'clear';
 let spinAngle = 0;
 let last = performance.now();
 let toastTimer = null;
-const targetWeather = { overcast: 0, rain: 0 };
-const weatherMix = { overcast: 0, rain: 0 };
+const targetWeather = { overcast: 0, rain: 0, snow: 0, wind: 0.05 };
+const weatherMix = { overcast: 0, rain: 0, snow: 0, wind: 0.05 };
 
 const ui = {
   clock: $('#clock'),
@@ -464,6 +619,7 @@ function setScenario(next) {
     btn.classList.toggle('active', on);
     btn.setAttribute('aria-selected', String(on));
   });
+  $$('.module-card').forEach((card) => card.classList.toggle('active', card.dataset.module === next));
   outdoor.visible = next === 'outdoor';
   indoor.visible = next === 'indoor';
   rooftop.visible = next === 'rooftop';
@@ -494,7 +650,7 @@ function setScenario(next) {
   camera.fov = cfg.camera.fov;
   camera.updateProjectionMatrix();
   const toastCopy = {
-    outdoor: '户外泵站 · 天气与昼夜已接入',
+    outdoor: '麦田泵站 · 风、雪、季节与昼夜已接入',
     indoor: '室内产线 · 窗外天气与室内班次已接入',
     rooftop: '屋顶冷却 · 风机负载跟随天气',
     water: '水处理搅拌 · 叶轮与水面持续运行',
@@ -562,14 +718,68 @@ function makeRain(count, spreadX, spreadZ, height = 8) {
   };
 }
 
+function makeSnow(count, spreadX, spreadZ, height = 8) {
+  const positions = new Float32Array(count * 3);
+  const flakes = [];
+  for (let i = 0; i < count; i++) {
+    const x = (Math.random() - 0.5) * spreadX * 2;
+    const y = Math.random() * height;
+    const z = (Math.random() - 0.5) * spreadZ * 2;
+    positions.set([x, y, z], i * 3);
+    flakes.push({ x, y, z, speed: 0.9 + Math.random() * 1.6, drift: (Math.random() - 0.5) * 0.35 });
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0xf3f8f6,
+    size: 0.045,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    sizeAttenuation: true,
+  });
+  const group = new THREE.Points(geo, material);
+  group.frustumCulled = false;
+  return {
+    group,
+    update(dt, visible, wind = 0) {
+      material.opacity = visible ? 0.9 : 0;
+      if (!visible) return;
+      const attr = group.geometry.getAttribute('position');
+      for (let i = 0; i < flakes.length; i++) {
+        const p = flakes[i];
+        p.y -= p.speed * dt;
+        p.x += p.drift * dt + wind * dt * 0.65;
+        if (p.y < 0.02) {
+          p.y = height;
+          p.x = (Math.random() - 0.5) * spreadX * 2;
+          p.z = (Math.random() - 0.5) * spreadZ * 2;
+        }
+        attr.array[i * 3] = p.x;
+        attr.array[i * 3 + 1] = p.y;
+        attr.array[i * 3 + 2] = p.z;
+      }
+      attr.needsUpdate = true;
+    },
+  };
+}
+
 function weatherTargets() {
-  targetWeather.overcast = weather === 'overcast' ? 1 : weather === 'rain' ? 0.86 : 0;
-  targetWeather.rain = weather === 'rain' ? 1 : 0;
+  const isRain = weather === 'rain';
+  const isSnow = weather === 'snow';
+  const isWind = weather === 'wind';
+  targetWeather.overcast = weather === 'overcast' ? 1 : isRain ? 0.86 : isSnow ? 0.8 : isWind ? 0.16 : 0;
+  targetWeather.rain = isRain ? 1 : 0;
+  targetWeather.snow = isSnow ? 1 : 0;
+  targetWeather.wind = isWind ? 1 : isSnow ? 0.42 : isRain ? 0.24 : 0.05;
+  if (snowPatchGroup) snowPatchGroup.visible = season === 'winter' || isSnow;
 }
 
 function updateSkyAndLights(dt) {
   const overcast = weatherMix.overcast;
   const rain = weatherMix.rain;
+  const snow = weatherMix.snow;
+  const wind = weatherMix.wind;
   const hour = simMinutes / 60;
   const sunAngle = ((hour - 6) / 12) * Math.PI;
   const elevation = Math.sin(sunAngle);
@@ -627,6 +837,7 @@ function updateSkyAndLights(dt) {
   rainRooftop.update(dt, rain > 0.025 && scenario === 'rooftop');
   rainWater.update(dt, rain > 0.025 && scenario === 'water');
   rainWindow.update(dt, rain > 0.025 && scenario === 'indoor');
+  snowOutdoor.update(dt, snow > 0.025 && scenario === 'outdoor', wind);
   M.glass.opacity = 0.12 + overcast * 0.12;
   M.water.opacity = 0.2 + rain * 0.5;
 }
@@ -687,7 +898,31 @@ function setWeather(next) {
   document.body.dataset.weather = next;
   weatherTargets();
   $$('.weather-buttons button').forEach((btn) => btn.classList.toggle('active', btn.dataset.weather === next));
-  showToast(`天气切换为 ${next === 'clear' ? '晴天' : next === 'rain' ? '降雨' : '阴天'}`);
+  const copy = {
+    clear: '晴天', overcast: '阴天', rain: '降雨', snow: '降雪', wind: '强风',
+  };
+  showToast(`天气切换为 ${copy[next] || next}`);
+}
+
+function applySeason(next) {
+  const cfg = SEASONS[next] || SEASONS.summer;
+  meadow.material.color.setHex(cfg.ground);
+  wheatMat.color.setHex(cfg.wheat);
+  wheatHeadMat.color.setHex(cfg.head);
+  treeLeafMat.color.setHex(cfg.tree);
+  wheatGroup.visible = next !== 'winter';
+  flowerGroup.visible = next === 'spring';
+  snowPatchGroup.visible = next === 'winter' || weather === 'snow';
+  treeData.forEach((tree) => { tree.userData.snow.visible = next === 'winter'; });
+  document.body.dataset.season = next;
+}
+
+function setSeason(next) {
+  season = next;
+  $$('.season-buttons button').forEach((btn) => btn.classList.toggle('active', btn.dataset.season === next));
+  applySeason(next);
+  const copy = { spring: '春季', summer: '夏季', autumn: '秋季', winter: '冬季' };
+  showToast(`季节切换为 ${copy[next] || next}`);
 }
 
 function setTimeMode(next) {
@@ -704,6 +939,11 @@ function setTimeMode(next) {
 // ---------------------------------------------------------------------------
 $$('.scenario-tab').forEach((btn) => btn.addEventListener('click', () => setScenario(btn.dataset.scenario)));
 $$('.weather-buttons button').forEach((btn) => btn.addEventListener('click', () => setWeather(btn.dataset.weather)));
+$$('.season-buttons button').forEach((btn) => btn.addEventListener('click', () => setSeason(btn.dataset.season)));
+$$('.module-enter').forEach((btn) => btn.addEventListener('click', () => {
+  setScenario(btn.dataset.target);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}));
 $('#mode-timelapse').addEventListener('click', () => setTimeMode('timelapse'));
 $('#mode-realtime').addEventListener('click', () => setTimeMode('realtime'));
 ui.slider.addEventListener('input', () => {
@@ -724,9 +964,32 @@ placeMotor(outdoor, -0.22, 0.18);
 pump.position.set(0.95, 0, 0.18);
 document.body.dataset.weather = 'clear';
 setScenario('outdoor');
+setSeason('summer');
 setTimeMode('timelapse');
 weatherTargets();
 updateClock();
+
+function animateNature(dt, now) {
+  const t = now * 0.001;
+  const wind = weatherMix.wind;
+  wheatGroup.rotation.z = Math.sin(t * 0.72) * 0.012 * (0.4 + wind * 2.8);
+  wheatGroup.rotation.x = Math.cos(t * 0.51) * 0.006 * (0.4 + wind * 2.0);
+  treeData.forEach((tree, i) => {
+    tree.rotation.z = Math.sin(t * (0.55 + i * 0.03) + i) * 0.018 * (0.3 + wind * 2.5);
+  });
+  birds.forEach((bird, i) => {
+    const p = bird.userData;
+    const a = t * (0.18 + wind * 0.2) + p.phase;
+    bird.position.set(Math.cos(a) * p.radius, p.y + Math.sin(a * 1.8 + i) * 0.22, -0.5 + Math.sin(a) * p.radius * 0.55);
+    bird.rotation.y = -a + Math.PI / 2;
+    const flap = Math.sin(t * 7 + p.phase) * 0.3;
+    p.left.rotation.z = 0.22 + flap;
+    p.right.rotation.z = -0.22 - flap;
+  });
+  turbineRotor.rotation.z += dt * (0.35 + wind * 4.2);
+  deerNeck.rotation.z = Math.sin(t * 1.3) * 0.035;
+  flowerGroup.rotation.y = Math.sin(t * 0.3) * 0.01;
+}
 
 function animate(now) {
   requestAnimationFrame(animate);
@@ -739,7 +1002,10 @@ function animate(now) {
   }
   weatherMix.overcast += (targetWeather.overcast - weatherMix.overcast) * Math.min(1, dt * 1.8);
   weatherMix.rain += (targetWeather.rain - weatherMix.rain) * Math.min(1, dt * 1.8);
+  weatherMix.snow += (targetWeather.snow - weatherMix.snow) * Math.min(1, dt * 1.8);
+  weatherMix.wind += (targetWeather.wind - weatherMix.wind) * Math.min(1, dt * 1.4);
   updateSkyAndLights(dt);
+  animateNature(dt, now);
 
   spinAngle = (spinAngle + dt * (scenario === 'outdoor' ? 5.2 : scenario === 'water' ? 3.0 : 4.2)) % TAU;
   motor.setSpin(spinAngle);
