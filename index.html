@@ -108,10 +108,16 @@
           </div>
 
           <div class="hero-readout" aria-hidden="true">
-            <div class="readout-head"><span>LIVE ASSEMBLY</span><span>AX-3D-04</span></div>
-            <div class="readout-row"><span>SHAFT AXIS</span><b>Z</b></div>
+            <div class="readout-head"><span>PLANT 04 / LINE B</span><span>ANDON</span></div>
+            <div class="andon-row">
+              <span class="andon-stack"><i class="red"></i><i class="amber"></i><i class="green active"></i></span>
+              <b>RUNNING</b>
+            </div>
+            <div class="readout-row"><span>WORK ORDER</span><b>WO-2410-118</b></div>
+            <div class="readout-row"><span>STATION</span><b>04-B12</b></div>
+            <div class="readout-row"><span>SHIFT</span><b>A / 06–14</b></div>
+            <div class="readout-row"><span>OEE</span><b>96.4%</b></div>
             <div class="readout-row"><span>PARTS</span><b>22 / 22</b></div>
-            <div class="readout-row"><span>GEOMETRY</span><b>ENG. RECON</b></div>
             <div class="readout-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
           </div>
         </div>
@@ -127,6 +133,11 @@
         <div class="hero-side-note" aria-hidden="true">
           <span>三相鼠笼式异步电动机</span>
           <span>THREE-PHASE SQUIRREL-CAGE INDUCTION MOTOR</span>
+        </div>
+
+        <div class="hero-hazard" aria-hidden="true">
+          <span>CAUTION · ROTATING SHAFT · PLANT 04 / LINE B</span>
+          <span>SAFETY ZONE · KEEP CLEAR</span>
         </div>
       </section>
 
@@ -371,6 +382,37 @@
             <div class="dimension-note">A/B/C/D/E/F/G/H/K 依据 GB/T 28575-2020 与 IEC 60072-1；总体尺寸为带风扇罩与接线盒的典型外形。</div>
           </div>
 
+          <div class="spec-sheet plant-sheet" id="plant-record">
+            <div class="spec-sheet-head">
+              <span>06 / PLANT RECORD</span>
+              <span>产线档案 · 示意数据</span>
+            </div>
+            <div class="plant-record">
+              <div class="plant-table">
+                <div class="plant-cell"><span>PLANT / LINE</span><b>04 / B</b></div>
+                <div class="plant-cell"><span>STATION</span><b>04-B12</b></div>
+                <div class="plant-cell"><span>WORK ORDER</span><b>WO-2410-118</b></div>
+                <div class="plant-cell"><span>SHIFT</span><b>A · 06:00–14:00</b></div>
+                <div class="plant-cell"><span>OEE</span><b>96.4<small>%</small></b></div>
+                <div class="plant-cell"><span>UPTIME</span><b>18:42<small>h</small></b></div>
+                <div class="plant-cell"><span>UNITS</span><b>1,284</b></div>
+                <div class="plant-cell"><span>SCRAP</span><b>0.4<small>%</small></b></div>
+                <div class="plant-cell"><span>LAST PM</span><b>2026-09-18</b></div>
+                <div class="plant-cell"><span>NEXT PM</span><b>2027-03-18</b></div>
+              </div>
+              <aside class="plant-tag">
+                <div class="andon-card">
+                  <div class="andon-label"><span class="andon-stack"><i class="red"></i><i class="amber"></i><i class="green active"></i></span><b>LINE B / RUNNING</b></div>
+                  <p>ANDON STATUS · 产线正常</p>
+                </div>
+                <div class="asset-barcode" aria-hidden="true"></div>
+                <span class="asset-code">ASSET AX-132S-0091</span>
+                <span class="asset-meta">5.5 kW · 6308-2Z · IM B3</span>
+                <span class="asset-note">SIMULATED LINE DATA / 仅作界面示意</span>
+              </aside>
+            </div>
+          </div>
+
           <div class="spec-sheet evidence-sheet">
             <div class="spec-sheet-head">
               <span>05 / REFERENCES</span>
@@ -394,7 +436,7 @@
               <span class="blender-play" aria-hidden="true">▶</span>
             </a>
             <div class="blender-feature-copy">
-              <span class="blender-kicker">06 / BLENDER FILM</span>
+              <span class="blender-kicker">07 / BLENDER FILM</span>
               <h3>镜头里的电机，<br />完整展开。</h3>
               <p>
                 独立的 Blender 场景：22 个命名部件、真实的材质与灯光、7.5 秒爆炸动画。

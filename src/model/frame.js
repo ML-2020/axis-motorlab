@@ -69,7 +69,7 @@ export function buildStatorFrame(kit) {
     const a = (i / finCount) * PI2;
     const normalized = Math.atan2(Math.sin(a), Math.cos(a));
     const topGap = Math.abs(normalized) < 0.34;
-    const bottomGap = Math.abs(Math.abs(normalized) - Math.PI) < 0.33;
+    const bottomGap = Math.abs(Math.abs(normalized) - Math.PI) < 0.55;
     const plateGap = Math.abs(normalized - Math.PI / 2) < 0.22;
     const plateGap2 = Math.abs(normalized + Math.PI / 2) < 0.22;
     if (topGap || bottomGap || plateGap || plateGap2) continue;
@@ -202,7 +202,10 @@ export function buildEndshield(kit, { front = false } = {}) {
   const steel = kit.get('steel');
   const zinc = kit.get('zinc');
   const outward = front ? 1 : -1;
-  const boltRadius = 0.124;
+  // The shield OD is kept just above the frame OD and above the floor plane.
+  // The previous 138 mm radius put the lower rim 6 mm below the floor when
+  // the shaft centre is 132 mm.
+  const boltRadius = 0.114;
   const centerHole = 0.0468;
 
   // Bearing bore plus ventilation apertures and four through-bolts.
@@ -212,7 +215,7 @@ export function buildEndshield(kit, { front = false } = {}) {
     holes.push({ x: Math.cos(a) * boltRadius, y: Math.sin(a) * boltRadius, r: 0.0052 });
   }
 
-  const plate = plateExtrudeZ({ outer: 0.138, depth: 0.028, holes, bevel: 0.0022, segments: 96 }, paint);
+  const plate = plateExtrudeZ({ outer: 0.127, depth: 0.028, holes, bevel: 0.0022, segments: 96 }, paint);
   shadowed(plate);
   g.add(plate);
 
