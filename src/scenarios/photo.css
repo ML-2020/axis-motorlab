@@ -138,6 +138,22 @@ h1 em { color: var(--accent); font-style: normal; }
 .section-head h2 { margin-top: 14px; font-size: clamp(34px, 4.2vw, 63px); line-height: .97; font-weight: 530; letter-spacing: -.065em; }
 .section-head > p { max-width: 370px; color: var(--muted); font-size: 10px; line-height: 1.85; text-align: right; }
 .application-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.rated-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: rgba(12, 16, 12, .45);
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: 6.5px;
+  letter-spacing: .06em;
+}
+.rated-strip > span { color: var(--accent); }
+.rated-strip b { color: var(--muted); font-weight: 400; }
 .application-card { min-width: 0; border: 1px solid var(--line); background: #0e120e; overflow: hidden; }
 .visual {
   position: relative;
@@ -309,6 +325,8 @@ h1 em { color: var(--accent); font-style: normal; }
 .credit-list a { color: var(--muted); font-family: var(--mono); font-size: 6px; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
 .credit-list a:hover { color: var(--accent); }
 .references p { grid-column: 2; color: var(--faint); font-size: 8.5px; line-height: 1.7; }
+.doc-list { grid-column: 2; margin-top: 8px; }
+.doc-list a { color: var(--dim); }
 
 .footer { display: flex; justify-content: space-between; gap: 20px; padding: 0 var(--gut) 26px; color: var(--faint); font-family: var(--mono); font-size: 6px; letter-spacing: .07em; }
 .footer a { color: var(--dim); }

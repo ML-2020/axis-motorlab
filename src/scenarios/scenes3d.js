@@ -68,6 +68,41 @@ const corrugatedMap = canvasTexture(256, 256, (ctx, w, h) => {
     ctx.fillRect(x + 5, 0, 1, h);
   }
 }, 3, 1);
+function labelTexture(text, bg = '#d8c99f', fg = '#20221f', sub = '') {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 192;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.strokeStyle = 'rgba(25,28,25,.5)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(8, 8, c.width - 16, c.height - 16);
+  ctx.fillStyle = fg;
+  ctx.font = '700 42px "Archivo", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(text, c.width / 2, 78);
+  if (sub) {
+    ctx.font = '500 22px "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(25,28,25,.86)';
+    ctx.fillText(sub, c.width / 2, 120);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function addLabel(parent, text, w, h, x, y, z, ry = 0, bg = '#d8c99f') {
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, h),
+    new THREE.MeshBasicMaterial({ map: labelTexture(text, bg), side: THREE.DoubleSide }),
+  );
+  m.position.set(x, y, z);
+  m.rotation.y = ry;
+  parent.add(m);
+  return m;
+}
+
 const floorMap = canvasTexture(256, 256, (ctx, w, h) => {
   ctx.fillStyle = '#535a53';
   ctx.fillRect(0, 0, w, h);
@@ -144,6 +179,8 @@ function makePumpRoom(scene) {
   for (let i = 0; i < 6; i++) box(g, 0.72, 0.005, 0.02, M.steel, -2.8, 0.02, -0.05 + i * 0.06, 0, 0, 0, false);
   box(g, 0.24, 0.04, 0.15, M.sign, 2.7, 1.55, -2.95);
   box(g, 0.04, 0.04, 0.4, M.darkSteel, 2.7, 1.75, -2.8);
+  addLabel(g, 'PUMP ROOM / P-04', 1.15, 0.24, -2.25, 2.55, -2.98);
+  addLabel(g, 'CAUTION / ROTATING SHAFT', 0.65, 0.15, 2.0, 2.3, -2.98);
   scene.add(g);
 }
 
@@ -180,6 +217,7 @@ function makeConveyorHall(scene) {
   box(g, 0.8, 0.06, 0.4, M.sign, 3.5, 0.97, -2.5);
   for (const [x, z] of [[-1.7, 1.9], [2.4, 1.9]]) box(g, 0.34, 0.55, 0.4, M.wood, x, 0.275, z, 0, 0, 0);
   for (const x of [-2.2, 2.2]) box(g, 0.012, 0.003, 4.2, M.yellow, x, 0.008, 0.2, 0, 0, 0, false);
+  addLabel(g, 'PACKAGING LINE B / DRIVE 5.5 kW', 1.4, 0.24, 0, 2.85, -3.3);
   scene.add(g);
 }
 
@@ -198,6 +236,7 @@ function makeRoof(scene) {
   box(g, 2.0, 0.08, 1.3, M.steel, -3.6, 1.02, -2.4);
   box(g, 1.25, 0.75, 0.9, M.wallDark, 3.8, 0.375, -1.8);
   box(g, 1.4, 0.06, 1.0, M.steel, 3.8, 0.76, -1.8);
+  addLabel(g, 'ROOF PLANT / CT-02', 0.9, 0.2, -3.6, 0.55, -1.82);
   for (const x of [-4.5, 4.5]) {
     cyl(g, 0.12, 0.12, 0.8, M.steel, x, 0.4, -3.4, 0, 0, 0, true, 14);
     add(g, new THREE.TorusGeometry(0.13, 0.018, 6, 16), M.darkSteel, x, 0.8, -3.4, Math.PI / 2, 0, 0, false);
@@ -215,6 +254,7 @@ function makeTreatmentDeck(scene) {
   box(g, 4.0, 0.12, 1.35, M.steel, -3.8, 1.23, -3.8);
   box(g, 2.6, 1.5, 1.4, M.wall, 3.3, 0.75, -3.9);
   box(g, 2.8, 0.12, 1.55, M.steel, 3.3, 1.53, -3.9);
+  addLabel(g, 'WATER TREATMENT / BASIN 02', 1.45, 0.23, 3.3, 1.2, -3.18);
   for (const [x, z] of [[-2.1, 2.7], [2.1, 2.7], [-2.1, -2.2], [2.1, -2.2]]) {
     box(g, 0.06, 0.85, 0.06, M.steel, x, 0.43, z, 0, 0, 0, false);
   }
@@ -254,6 +294,8 @@ function makeMotor(scale = 1) {
   cyl(g, 0.022, 0.022, 0.23, M.steel, 0.56, 0, 0, 0, 0, Math.PI / 2, true, 16);
   box(g, 0.22, 0.08, 0.16, M.terminal, 0.22, 0.19, 0);
   box(g, 0.22, 0.012, 0.16, M.terminal, 0.22, 0.235, 0);
+  addLabel(g, 'YE3-132S-4', 0.17, 0.055, 0.22, 0.125, 0.178);
+  addLabel(g, '5.5 kW  ·  1440 r/min', 0.19, 0.038, 0.22, 0.085, 0.18);
   box(g, 0.12, 0.045, 0.085, M.nameplate, 0.23, 0.13, 0.172, 0, 0, 0, false);
   for (const x of [0.07, 0.33]) {
     for (const z of [-0.13, 0.13]) {
@@ -280,9 +322,16 @@ function makePumpSet() {
   cyl(pump, 0.08, 0.08, 0.26, M.green, 0, 0.24, 0, 0, 0, 0, true, 18);
   add(pump, new THREE.TorusGeometry(0.095, 0.022, 8, 20), M.greenDark, 0, 0.38, 0, Math.PI / 2, 0, 0);
   cyl(pump, 0.06, 0.06, 0.2, M.greenDark, 0.22, 0.17, 0, 0, 0, Math.PI / 2, true, 16);
-  add(pump, new THREE.CylinderGeometry(0.055, 0.055, 0.04, 16), M.steel, 0.14, 0.42, 0);
-  add(pump, new THREE.CircleGeometry(0.045, 20), M.nameplate, 0.14, 0.445, 0, -Math.PI / 2, 0, 0, false);
+  add(g, new THREE.CylinderGeometry(0.055, 0.055, 0.04, 16), M.steel, 0.14, 0.42, 0);
+  add(g, new THREE.CircleGeometry(0.045, 20), M.nameplate, 0.14, 0.445, 0, -Math.PI / 2, 0, 0, false);
   g.add(pump);
+  addLabel(g, 'PUMP P-04  /  42 m³·h⁻¹', 0.28, 0.055, -0.44, 0.32, 0.225);
+  // Discharge gate-valve handwheel and flange bolts.
+  add(pump, new THREE.TorusGeometry(0.095, 0.014, 7, 20), M.yellow, 0.02, 0.41, 0, Math.PI / 2, 0, 0, false);
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    add(pump, new THREE.CylinderGeometry(0.012, 0.012, 0.035, 6), M.darkSteel, -0.43, Math.cos(a) * 0.105, Math.sin(a) * 0.105, 0, 0, Math.PI / 2, false);
+  }
   // Motor, coupling and guard.
   const motor = makeMotor(0.92);
   motor.position.set(0.42, 0.24, 0);
@@ -335,6 +384,13 @@ function makeConveyor() {
   motor.rotation.y = Math.PI / 2;
   g.add(motor);
   box(g, 0.34, 0.1, 0.16, M.yellow, -1.03, 0.28, 0.55);
+  addLabel(g, 'LINE B  /  1.2 m·s⁻¹', 0.34, 0.065, 0.42, 0.68, 0.345);
+  // E-stop, pull cord and drive guard are the safety details visible on a real line.
+  box(g, 0.09, 0.13, 0.08, M.yellow, -1.24, 0.78, 0.39);
+  box(g, 0.055, 0.055, 0.012, new THREE.MeshBasicMaterial({ color: 0xb34034 }), -1.24, 0.8, 0.346, 0, 0, 0, false);
+  for (const x of [-1.45, -0.75, 0, 0.75, 1.45]) box(g, 0.02, 0.6, 0.02, M.darkSteel, x, 0.95, 0.42, 0, 0, 0, false);
+  add(g, new THREE.CylinderGeometry(0.007, 0.007, 3.0, 5), M.yellow, 0, 1.24, 0.42, 0, 0, Math.PI / 2, false);
+  box(g, 0.46, 0.2, 0.3, M.darkSteel, -1.13, 0.33, 0.44);
   // Cardboard boxes moving on the belt.
   const packages = [];
   for (let i = 0; i < 3; i++) {
@@ -391,6 +447,16 @@ function makeCoolingTower() {
   box(g, 0.34, 0.5, 0.02, M.darkSteel, -0.55, 0.6, 0.615);
   box(g, 0.05, 0.16, 0.025, M.nameplate, -0.55, 0.6, 0.63);
   box(g, 0.35, 0.28, 0.24, M.blue, 0.55, 0.25, 0.7);
+  addLabel(g, 'COOLING TOWER  /  CT-02', 0.55, 0.07, 0, 0.96, 0.615);
+  // Service switch, ladder and a small VFD cabinet.
+  box(g, 0.22, 0.3, 0.15, M.wallDark, -0.92, 0.42, 0.45);
+  box(g, 0.06, 0.055, 0.012, new THREE.MeshBasicMaterial({ color: 0xb34034 }), -0.92, 0.52, 0.37, 0, 0, 0, false);
+  addLabel(g, 'FAN  /  20 000 m³·h⁻¹', 0.4, 0.055, 0.54, 0.6, 0.715);
+  for (const s of [-1, 1]) {
+    for (let i = 0; i < 7; i++) box(g, 0.025, 0.025, 0.015, M.steel, 0.98, 0.25 + i * 0.13, -0.15 + s * 0.2, 0, 0, 0, false);
+  }
+  box(g, 0.025, 0.9, 0.025, M.steel, 0.98, 0.58, -0.32, 0, 0, 0, false);
+  box(g, 0.025, 0.9, 0.025, M.steel, 0.98, 0.58, 0.05, 0, 0, 0, false);
   g.userData = { fan: blades };
   g.scale.setScalar(0.95);
   return g;
@@ -429,6 +495,13 @@ function makeWaterBasin() {
   // Center gearbox and drive.
   box(g, 0.36, 0.22, 0.28, M.blue, 0, 0.72, 0);
   box(g, 0.42, 0.06, 0.34, M.darkSteel, 0, 0.84, 0);
+  addLabel(g, 'BASIN 02  /  12 m³', 0.55, 0.07, 0, 0.45, 1.25);
+  // Inlet pipe, handwheel and a short access ladder.
+  cyl(g, 0.045, 0.045, 0.7, M.steel, -1.35, 0.35, 0.5, 0, 0, Math.PI / 2, true, 12);
+  add(g, new THREE.TorusGeometry(0.09, 0.012, 6, 18), M.yellow, -1.02, 0.55, 0.5, Math.PI / 2, 0, 0, false);
+  for (let i = 0; i < 6; i++) box(g, 0.02, 0.02, 0.3, M.steel, 1.35, 0.15 + i * 0.13, 0.1, 0, 0, 0, false);
+  for (const z of [-0.05, 0.25]) box(g, 0.02, 0.8, 0.02, M.steel, 1.35, 0.4, z, 0, 0, 0, false);
+  for (let i = 0; i < 7; i++) box(g, 0.02, 0.02, 0.32, M.steel, 1.35, 0.1 + i * 0.11, 0.1, 0, 0, 0, false);
   g.userData = { bridge, water: g.children.find((o) => o.material === M.water) };
   return g;
 }
