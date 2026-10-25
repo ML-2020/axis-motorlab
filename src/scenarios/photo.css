@@ -147,6 +147,19 @@ h1 em { color: var(--accent); font-style: normal; }
     radial-gradient(ellipse at 50% 34%, #29332b 0%, #141a15 52%, #090c09 100%);
   isolation: isolate;
 }
+.app-pump .visual,
+.app-conveyor .visual {
+  background:
+    linear-gradient(180deg, #2d3430, #0b0f0c 72%);
+}
+.app-cooling .visual {
+  background:
+    linear-gradient(180deg, #8099a0 0%, #c2c8bb 56%, #6f776c 100%);
+}
+.app-water .visual {
+  background:
+    linear-gradient(180deg, #a9b8b4 0%, #d4d3c2 48%, #737e6c 100%);
+}
 .visual::before {
   content: "";
   position: absolute;

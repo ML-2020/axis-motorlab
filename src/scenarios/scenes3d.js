@@ -21,7 +21,66 @@ const M = {
   terminal: new THREE.MeshStandardMaterial({ color: 0x31332f, metalness: 0.35, roughness: 0.5 }),
   nameplate: new THREE.MeshStandardMaterial({ color: 0xd8c69b, metalness: 0.2, roughness: 0.5 }),
   grille: new THREE.MeshStandardMaterial({ color: 0x3e4645, metalness: 0.55, roughness: 0.35 }),
+  wall: new THREE.MeshStandardMaterial({ color: 0x6a7069, metalness: 0.18, roughness: 0.78 }),
+  wallDark: new THREE.MeshStandardMaterial({ color: 0x424a45, metalness: 0.22, roughness: 0.8 }),
+  floor: new THREE.MeshStandardMaterial({ color: 0x5c615b, roughness: 0.88 }),
+  glass: new THREE.MeshPhysicalMaterial({ color: 0x9fb7b8, metalness: 0.05, roughness: 0.08, transparent: true, opacity: 0.22, side: THREE.DoubleSide }),
+  sign: new THREE.MeshBasicMaterial({ color: 0xc79a3c }),
+  light: new THREE.MeshBasicMaterial({ color: 0xffe4b8, toneMapped: false }),
 };
+
+// Subtle procedural textures keep the modular environment from reading as flat primitives.
+function canvasTexture(w, h, paint, repeatX = 1, repeatY = 1) {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  paint(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeatX, repeatY);
+  return t;
+}
+const concreteMap = canvasTexture(256, 256, (ctx, w, h) => {
+  ctx.fillStyle = '#72766d';
+  ctx.fillRect(0, 0, w, h);
+  for (let i = 0; i < 1300; i++) {
+    const v = 90 + Math.random() * 80;
+    ctx.fillStyle = `rgba(${v},${v + 3},${v - 4},${0.1 + Math.random() * 0.16})`;
+    const s = 0.5 + Math.random() * 2.4;
+    ctx.fillRect(Math.random() * w, Math.random() * h, s, s);
+  }
+  for (let i = 0; i < 14; i++) {
+    ctx.strokeStyle = `rgba(45,48,43,${0.06 + Math.random() * 0.05})`;
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * w, Math.random() * h);
+    ctx.lineTo(Math.random() * w, Math.random() * h);
+    ctx.stroke();
+  }
+}, 4, 4);
+const corrugatedMap = canvasTexture(256, 256, (ctx, w, h) => {
+  ctx.fillStyle = '#5c625c';
+  ctx.fillRect(0, 0, w, h);
+  for (let x = 0; x < w; x += 12) {
+    ctx.fillStyle = x % 24 === 0 ? 'rgba(255,250,230,.1)' : 'rgba(0,0,0,.14)';
+    ctx.fillRect(x, 0, 5, h);
+    ctx.fillStyle = 'rgba(0,0,0,.08)';
+    ctx.fillRect(x + 5, 0, 1, h);
+  }
+}, 3, 1);
+const floorMap = canvasTexture(256, 256, (ctx, w, h) => {
+  ctx.fillStyle = '#535a53';
+  ctx.fillRect(0, 0, w, h);
+  for (let i = 0; i < 600; i++) {
+    const v = 55 + Math.random() * 60;
+    ctx.fillStyle = `rgba(${v},${v + 4},${v - 3},.18)`;
+    ctx.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 3, 1 + Math.random() * 3);
+  }
+}, 5, 5);
+M.floor = new THREE.MeshStandardMaterial({ map: floorMap, color: 0xa8ada2, roughness: 0.85 });
+M.wall = new THREE.MeshStandardMaterial({ map: corrugatedMap, color: 0x9aa09a, roughness: 0.72, metalness: 0.2 });
+M.wallDark = new THREE.MeshStandardMaterial({ map: corrugatedMap, color: 0x606862, roughness: 0.78, metalness: 0.2 });
+M.concrete = new THREE.MeshStandardMaterial({ map: concreteMap, color: 0xb0b2a7, roughness: 0.9 });
 
 function add(parent, geo, material, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, cast = true) {
   const m = new THREE.Mesh(geo, material);
@@ -36,8 +95,141 @@ const box = (p, w, h, d, m, x, y, z, rx = 0, ry = 0, rz = 0, cast = true) => add
 const cyl = (p, r1, r2, h, m, x, y, z, rx = 0, ry = 0, rz = 0, cast = true, seg = 20) => add(p, new THREE.CylinderGeometry(r1, r2, h, seg), m, x, y, z, rx, ry, rz, cast);
 
 // ---------------------------------------------------------------------------
-// Reference-driven machinery: black finned motor
+// Modular reference-driven environments
 // ---------------------------------------------------------------------------
+function addLamp(parent, x, y, z, cool = false) {
+  box(parent, 0.62, 0.035, 0.12, M.darkSteel, x, y + 0.11, z, 0, 0, 0, false);
+  box(parent, 0.56, 0.012, 0.08, M.light, x, y + 0.075, z, 0, 0, 0, false);
+  const l = new THREE.PointLight(cool ? 0xcfe6e3 : 0xffd6a1, 11, 6, 2);
+  l.position.set(x, y - 0.02, z);
+  parent.add(l);
+}
+
+function pipeRun(parent, x1, y1, z1, x2, y2, z2, radius = 0.045, material = M.steel) {
+  const a = new THREE.Vector3(x1, y1, z1);
+  const b = new THREE.Vector3(x2, y2, z2);
+  const d = b.clone().sub(a);
+  const m = cyl(parent, radius, radius, d.length(), material, (x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2, 0, 0, 0, true, 12);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+  return m;
+}
+
+function makePumpRoom(scene) {
+  const g = new THREE.Group();
+  add(g, new THREE.PlaneGeometry(10, 9), M.floor, 0, 0.002, 0, -Math.PI / 2, 0, 0, false);
+  box(g, 9.4, 3.5, 0.18, M.wall, 0, 1.75, -3.1);
+  for (const x of [-4.1, 4.1]) box(g, 0.18, 3.5, 7.2, M.wallDark, x, 1.75, 0.2);
+  box(g, 9.4, 0.18, 7.2, M.wallDark, 0, 3.48, 0.2);
+  for (const x of [-3.1, 0, 3.1]) box(g, 0.16, 3.3, 0.16, M.darkSteel, x, 1.65, -2.95);
+  box(g, 9, 0.18, 0.2, M.darkSteel, 0, 2.95, -2.95);
+  pipeRun(g, -3.9, 1.45, -2.86, 3.9, 1.45, -2.86, 0.07);
+  pipeRun(g, -3.9, 1.05, -2.78, 3.9, 1.05, -2.78, 0.045);
+  for (let x = -3.2; x <= 3.3; x += 1.1) {
+    add(g, new THREE.TorusGeometry(0.09, 0.018, 6, 16), M.darkSteel, x, 1.45, -2.78, 0, Math.PI / 2, 0, false);
+    add(g, new THREE.TorusGeometry(0.065, 0.014, 6, 16), M.darkSteel, x, 1.05, -2.7, 0, Math.PI / 2, 0, false);
+  }
+  box(g, 8.6, 0.08, 0.42, M.darkSteel, 0, 2.35, -2.82);
+  for (let x = -4; x <= 4; x += 0.3) box(g, 0.035, 0.07, 0.36, M.steel, x, 2.4, -2.82, 0, 0, 0, false);
+  box(g, 1.1, 1.5, 0.42, M.wallDark, 3.4, 0.75, -2.72);
+  box(g, 0.06, 0.62, 0.26, M.sign, 3.4, 0.72, -2.49);
+  box(g, 0.06, 0.3, 0.3, M.darkSteel, 3.4, 1.12, -2.49);
+  addLamp(g, -1.7, 3.0, -1.3);
+  addLamp(g, 1.5, 3.0, -1.3);
+  addLamp(g, 0, 3.0, 1.1, true);
+  for (const x of [-1.8, 1.8]) {
+    box(g, 0.015, 0.003, 3.0, M.yellow, x, 0.008, 0.8, 0, 0, 0, false);
+  }
+  for (let i = 0; i < 4; i++) box(g, 0.01, 0.003, 0.55, M.yellow, -2.7 + i * 1.8, 0.009, 0.8, 0, 0, 0, false);
+  box(g, 0.8, 0.012, 0.5, M.darkSteel, -2.8, 0.012, 0.1, 0, 0, 0, false);
+  for (let i = 0; i < 6; i++) box(g, 0.72, 0.005, 0.02, M.steel, -2.8, 0.02, -0.05 + i * 0.06, 0, 0, 0, false);
+  box(g, 0.24, 0.04, 0.15, M.sign, 2.7, 1.55, -2.95);
+  box(g, 0.04, 0.04, 0.4, M.darkSteel, 2.7, 1.75, -2.8);
+  scene.add(g);
+}
+
+function makeConveyorHall(scene) {
+  const g = new THREE.Group();
+  add(g, new THREE.PlaneGeometry(11, 9), M.floor, 0, 0.002, 0, -Math.PI / 2, 0, 0, false);
+  box(g, 10, 3.5, 0.18, M.wall, 0, 1.75, -3.4);
+  for (const x of [-4.8, 4.8]) box(g, 0.18, 3.5, 8, M.wallDark, x, 1.75, 0);
+  // Window bands on the back wall.
+  for (const x of [-2.6, 0, 2.6]) {
+    const pane = add(g, new THREE.PlaneGeometry(1.7, 1.15), M.glass, x, 2.1, -3.3, 0, 0, 0, false);
+    pane.userData.window = true;
+    box(g, 1.8, 0.05, 0.06, M.darkSteel, x, 2.7, -3.3);
+    box(g, 1.8, 0.05, 0.06, M.darkSteel, x, 1.5, -3.3);
+  }
+  // A single rear truss leaves the top of the frame open and readable.
+  for (const z of [-2.9]) {
+    box(g, 9.6, 0.13, 0.22, M.steel, 0, 3.15, z);
+    for (const x of [-4.2, 4.2]) box(g, 0.18, 3.0, 0.18, M.steel, x, 1.5, z);
+    for (let x = -3.8; x < 3.9; x += 0.95) {
+      box(g, 0.05, 0.75, 0.05, M.steel, x, 3.35, z, 0, 0, 0.62, false);
+      box(g, 0.05, 0.75, 0.05, M.steel, x + 0.45, 3.35, z, 0, 0, -0.62, false);
+    }
+  }
+  for (const x of [-2.6, 0, 2.6]) addLamp(g, x, 3.05, 0.2);
+  // Racking on the left and pallets at the back.
+  for (const z of [-2.1, -0.9]) {
+    for (const x of [-3.5, -2.3]) box(g, 0.06, 1.45, 0.06, M.steel, x, 0.72, z, 0, 0, 0, false);
+    for (const y of [0.45, 0.95, 1.42]) box(g, 1.15, 0.05, 0.08, M.steel, -2.9, y, z, 0, 0, 0, false);
+    box(g, 0.7, 0.35, 0.48, M.cardboard, -2.9, 0.7, z, 0, 0, 0);
+    box(g, 0.62, 0.3, 0.42, M.cardboard, -3.8, 0.7, z, 0, 0, 0);
+  }
+  box(g, 1.2, 0.95, 0.55, M.darkSteel, 3.5, 0.475, -2.5);
+  box(g, 0.8, 0.06, 0.4, M.sign, 3.5, 0.97, -2.5);
+  for (const [x, z] of [[-1.7, 1.9], [2.4, 1.9]]) box(g, 0.34, 0.55, 0.4, M.wood, x, 0.275, z, 0, 0, 0);
+  for (const x of [-2.2, 2.2]) box(g, 0.012, 0.003, 4.2, M.yellow, x, 0.008, 0.2, 0, 0, 0, false);
+  scene.add(g);
+}
+
+function makeRoof(scene) {
+  const g = new THREE.Group();
+  add(g, new THREE.PlaneGeometry(12, 10), M.concrete, 0, 0.002, 0, -Math.PI / 2, 0, 0, false);
+  box(g, 10.5, 0.65, 0.2, M.concrete, 0, 0.325, -4.2);
+  box(g, 10.5, 0.65, 0.2, M.concrete, 0, 0.325, 4.2);
+  for (const x of [-5.15, 5.15]) box(g, 0.2, 0.65, 8.4, M.concrete, x, 0.325, 0);
+  for (const x of [-4.5, -1.5, 1.5, 4.5]) {
+    box(g, 0.035, 0.8, 0.035, M.steel, x, 0.4, 3.9, 0, 0, 0, false);
+    box(g, 0.035, 0.8, 0.035, M.steel, x, 0.4, -3.9, 0, 0, 0, false);
+  }
+  for (const z of [-3.9, 3.9]) box(g, 9.2, 0.04, 0.04, M.steel, 0, 0.8, z, 0, 0, 0, false);
+  box(g, 1.8, 1.0, 1.1, M.wallDark, -3.6, 0.5, -2.4);
+  box(g, 2.0, 0.08, 1.3, M.steel, -3.6, 1.02, -2.4);
+  box(g, 1.25, 0.75, 0.9, M.wallDark, 3.8, 0.375, -1.8);
+  box(g, 1.4, 0.06, 1.0, M.steel, 3.8, 0.76, -1.8);
+  for (const x of [-4.5, 4.5]) {
+    cyl(g, 0.12, 0.12, 0.8, M.steel, x, 0.4, -3.4, 0, 0, 0, true, 14);
+    add(g, new THREE.TorusGeometry(0.13, 0.018, 6, 16), M.darkSteel, x, 0.8, -3.4, Math.PI / 2, 0, 0, false);
+  }
+  for (const [x, z, h] of [[-4.8, -5.6, 3.2], [-2.8, -6.2, 4.2], [0.5, -6.6, 2.8], [3.0, -6.0, 3.8], [5.4, -5.5, 2.6]]) {
+    box(g, 1.15, h, 1.0, M.wallDark, x, h / 2, z, 0, 0, 0, false);
+  }
+  scene.add(g);
+}
+
+function makeTreatmentDeck(scene) {
+  const g = new THREE.Group();
+  add(g, new THREE.PlaneGeometry(12, 10), M.concrete, 0, 0.002, 0, -Math.PI / 2, 0, 0, false);
+  box(g, 3.8, 1.2, 1.2, M.wallDark, -3.8, 0.6, -3.8);
+  box(g, 4.0, 0.12, 1.35, M.steel, -3.8, 1.23, -3.8);
+  box(g, 2.6, 1.5, 1.4, M.wall, 3.3, 0.75, -3.9);
+  box(g, 2.8, 0.12, 1.55, M.steel, 3.3, 1.53, -3.9);
+  for (const [x, z] of [[-2.1, 2.7], [2.1, 2.7], [-2.1, -2.2], [2.1, -2.2]]) {
+    box(g, 0.06, 0.85, 0.06, M.steel, x, 0.43, z, 0, 0, 0, false);
+  }
+  for (const z of [2.7, -2.2]) box(g, 4.3, 0.045, 0.045, M.steel, 0, 0.85, z, 0, 0, 0, false);
+  for (const x of [-2.1, 2.1]) box(g, 0.045, 0.045, 4.9, M.steel, x, 0.85, 0.25, 0, 0, 0, false);
+  pipeRun(g, -3.5, 0.65, -3.1, -1.1, 0.48, -1.2, 0.08);
+  pipeRun(g, 3.0, 0.7, -3.1, 1.4, 0.5, -1.3, 0.06);
+  for (const [x, z] of [[-1.8, 1.8], [1.9, 1.2], [-1.6, -1.4], [1.3, 2.0]]) {
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      box(g, 0.018, 0.7 + Math.random() * 0.5, 0.018, M.green, x + Math.cos(a) * 0.18, 0.35, z + Math.sin(a) * 0.18, 0, 0, 0.08, false);
+    }
+  }
+  scene.add(g);
+}
 function makeMotor(scale = 1) {
   const g = new THREE.Group();
   const bodyR = 0.17;
@@ -252,13 +444,13 @@ class ReferenceScene {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.4));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.14;
+    this.renderer.toneMappingExposure = 1.28;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(36, 4 / 3, 0.02, 20);
-    this.scene.add(new THREE.HemisphereLight(0xcdd8cb, 0x28251c, 0.85));
-    this.scene.add(new THREE.AmbientLight(0xb7b9a7, 0.42));
+    this.scene.add(new THREE.HemisphereLight(0xcdd8cb, 0x28251c, 0.95));
+    this.scene.add(new THREE.AmbientLight(0xb7b9a7, 0.52));
     const key = new THREE.DirectionalLight(0xffe2b9, 3.2);
     key.position.set(2.5, 4, 3);
     key.castShadow = true;
@@ -285,33 +477,37 @@ class ReferenceScene {
 
   build() {
     if (this.type === 'pump') {
+      makePumpRoom(this.scene);
       this.model = makePumpSet();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
-      this.camera.position.set(1.55, 1.05, 2.15);
-      this.camera.lookAt(0, 0.36, 0);
-      this.camera.fov = 35;
+      this.camera.position.set(2.15, 1.48, 3.1);
+      this.camera.lookAt(0, 0.42, 0);
+      this.camera.fov = 37;
     } else if (this.type === 'conveyor') {
+      makeConveyorHall(this.scene);
       this.model = makeConveyor();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
-      this.camera.position.set(2.5, 1.55, 2.65);
-      this.camera.lookAt(0, 0.5, 0);
-      this.camera.fov = 36;
+      this.camera.position.set(2.65, 1.72, 3.25);
+      this.camera.lookAt(0, 0.52, 0);
+      this.camera.fov = 38;
     } else if (this.type === 'cooling') {
+      makeRoof(this.scene);
       this.model = makeCoolingTower();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
-      this.camera.position.set(1.8, 1.25, 2.55);
-      this.camera.lookAt(0, 0.65, 0);
-      this.camera.fov = 36;
+      this.camera.position.set(2.35, 1.55, 3.2);
+      this.camera.lookAt(0, 0.62, 0);
+      this.camera.fov = 38;
     } else {
+      makeTreatmentDeck(this.scene);
       this.model = makeWaterBasin();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
-      this.camera.position.set(2.3, 1.65, 2.9);
+      this.camera.position.set(2.7, 1.85, 3.45);
       this.camera.lookAt(0, 0.45, 0);
-      this.camera.fov = 38;
+      this.camera.fov = 39;
     }
     this.camera.updateProjectionMatrix();
   }
