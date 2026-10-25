@@ -3,252 +3,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#050809" />
-  <meta name="description" content="AXIS MOTORLAB 场景实验室：YE3-132S-4 电机在户外泵站与室内产线中的天气、昼夜、延时与实时运行模拟。" />
-  <title>AXIS MOTORLAB · 场景实验室 / 户外与室内环境模拟</title>
+  <meta name="theme-color" content="#0a0c0b" />
+  <meta name="description" content="AXIS MOTORLAB 电机使用场景模拟：YE3-132S-4 驱动泵、输送机、冷却风机与水处理搅拌器的四组实时三维场景。" />
+  <title>AXIS MOTORLAB · 电机使用场景模拟</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 </head>
-<body>
-  <div class="stage">
-    <canvas id="scenario-canvas" aria-label="电机应用环境三维模拟"></canvas>
-    <div class="stage-vignette" aria-hidden="true"></div>
-    <div class="stage-grain" aria-hidden="true"></div>
-  </div>
-  <div class="weather-fx" aria-hidden="true">
-    <div class="weather-rain-layer"></div>
-    <div class="weather-snow-layer"></div>
-    <div class="weather-wind-layer"></div>
-    <div class="weather-mist"></div>
-  </div>
-
+<body data-weather="clear" data-season="summer">
   <header class="topbar">
     <a class="brand" href="/" aria-label="返回 AXIS MOTORLAB 主站">
       <span class="brand-mark"><span>A</span></span>
-      <span class="brand-text"><strong>AXIS</strong><em>SCENARIO LAB</em></span>
+      <span class="brand-text"><strong>AXIS</strong><em>MOTORLAB / APPLICATION SIMULATION</em></span>
     </a>
     <div class="top-meta">
-      <span>ENVIRONMENT SIMULATION / YE3-132S-4</span>
+      <span>YE3-132S-4 / 5.5 kW / 4P</span>
       <a href="/">← 返回主站</a>
     </div>
   </header>
 
-  <main class="interface">
-    <section class="intro">
-      <div class="eyebrow"><span></span> APPLIED ENVIRONMENTS / 应用环境</div>
-      <h1>让电机，<br>进入<em>天气与时间</em>。</h1>
-      <p class="lede">
-        同一台 YE3-132S-4，进入麦田泵站、室内产线、屋顶冷却与水处理场景。
-        切换春夏秋冬、天气与时间，观察它在延时和实时运行中的状态。
-      </p>
-
-      <div class="scenario-tabs" role="tablist" aria-label="应用场景">
-        <button class="scenario-tab active" data-scenario="outdoor" role="tab" aria-selected="true">
-          <span class="tab-index">01</span>
-          <span class="tab-name">麦田泵站<em>WHEAT FIELD PUMP</em></span>
-          <span class="tab-mark">↗</span>
-        </button>
-        <button class="scenario-tab" data-scenario="indoor" role="tab" aria-selected="false">
-          <span class="tab-index">02</span>
-          <span class="tab-name">室内产线<em>INDOOR ASSEMBLY LINE</em></span>
-          <span class="tab-mark">↗</span>
-        </button>
-        <button class="scenario-tab" data-scenario="rooftop" role="tab" aria-selected="false">
-          <span class="tab-index">03</span>
-          <span class="tab-name">屋顶冷却<em>ROOFTOP COOLING</em></span>
-          <span class="tab-mark">↗</span>
-        </button>
-        <button class="scenario-tab" data-scenario="water" role="tab" aria-selected="false">
-          <span class="tab-index">04</span>
-          <span class="tab-name">水处理搅拌<em>WATER TREATMENT</em></span>
-          <span class="tab-mark">↗</span>
-        </button>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> APPLICATION SIMULATION / 应用模拟</div>
+        <h1>电机使用<br><em>场景模拟</em></h1>
+        <p class="hero-lede">
+          同一台 YE3-132S-4 三相异步电机，分别在泵站、输送线、屋顶风机与
+          水处理搅拌罐中连续运行。四个三维场景同时工作，观察负载、环境与
+          机械动作之间的关系。
+        </p>
+        <div class="hero-spec">
+          <span>5.5 kW</span><span>1440 r/min</span><span>IP55</span><span>IC411</span><span>IE3</span>
+        </div>
       </div>
 
-      <div class="scenario-copy">
-        <div class="copy-label"><span id="scenario-code">SCN-01</span><i></i><span id="scenario-status">PUMPING / CONTINUOUS</span></div>
-        <p id="scenario-description">麦田泵站。离心泵从低位水池取水，经出口管路送入管网。天气、季节与昼夜温差影响环境温度与电机负载。</p>
-      </div>
-      <a class="module-jump" href="#modules">全部应用模块 / ALL MODULES <span>↓</span></a>
+      <aside class="environment" aria-label="环境控制">
+        <div class="environment-head">
+          <span>ENVIRONMENT / 环境</span>
+          <span class="live-chip"><i></i>4 SCENES LIVE</span>
+        </div>
+        <div class="control-row">
+          <span class="control-label">WEATHER / 天气</span>
+          <div class="segmented weather-buttons" role="group" aria-label="天气">
+            <button data-weather="clear" class="active">晴</button>
+            <button data-weather="overcast">阴</button>
+            <button data-weather="rain">雨</button>
+            <button data-weather="snow">雪</button>
+            <button data-weather="wind">风</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <span class="control-label">SEASON / 季节</span>
+          <div class="segmented season-buttons" role="group" aria-label="季节">
+            <button data-season="spring">春</button>
+            <button data-season="summer" class="active">夏</button>
+            <button data-season="autumn">秋</button>
+            <button data-season="winter">冬</button>
+          </div>
+        </div>
+        <div class="control-row time-row">
+          <div class="time-label"><span class="control-label">TIME OF DAY / 时段</span><b id="clock">10:30</b></div>
+          <input id="time-slider" type="range" min="0" max="1439" value="630" aria-label="一天中的时段" />
+          <div class="time-foot"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span><button id="auto-time" class="auto-time">AUTO 昼夜</button></div>
+        </div>
+        <p class="environment-note">天气、季节与时段同步作用于四个场景；室外天气影响户外设备，室内场景通过窗户表现外部环境。</p>
+      </aside>
     </section>
 
-    <aside class="hud" aria-label="环境模拟控制">
-      <div class="hud-head">
-        <span>ENV CONTROL</span>
-        <span class="live-indicator"><i></i><b id="mode-label">TIME-LAPSE</b></span>
-      </div>
-
-      <div class="clock-panel">
-        <div class="clock-time" id="clock">14:00</div>
-        <div class="clock-meta"><span id="clock-date">OCT 26 / 2026</span><span id="sun-label">SUN / 42°</span></div>
-        <div class="clock-dial" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      </div>
-
-      <div class="control-block">
-        <span class="control-label">WEATHER / 天气</span>
-        <div class="weather-buttons" role="group" aria-label="天气">
-          <button data-weather="clear" class="active" aria-label="晴"><i class="weather-sun"></i>晴</button>
-          <button data-weather="overcast" aria-label="阴"><i class="weather-cloud"></i>阴</button>
-          <button data-weather="rain" aria-label="雨"><i class="weather-rain"></i>雨</button>
-          <button data-weather="snow" aria-label="雪"><i class="weather-snow"></i>雪</button>
-          <button data-weather="wind" aria-label="风"><i class="weather-wind"></i>风</button>
+    <section class="applications" aria-label="电机应用场景">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span></span> FOUR LOADS / 四类负载</div>
+          <h2>同一台电机，<br>四种工作现场。</h2>
         </div>
+        <p>泵、输送机、风机与搅拌器分别代表流体、物料、空气与混合负载。所有场景同时渲染，不作切换。</p>
       </div>
 
-      <div class="control-block season-block">
-        <span class="control-label">SEASON / 季节</span>
-        <div class="season-buttons" role="group" aria-label="季节">
-          <button data-season="spring">春 SPRING</button>
-          <button data-season="summer" class="active">夏 SUMMER</button>
-          <button data-season="autumn">秋 AUTUMN</button>
-          <button data-season="winter">冬 WINTER</button>
-        </div>
-      </div>
+      <div class="application-grid">
+        <article class="app-panel" data-app="pump">
+          <div class="panel-visual">
+            <canvas data-canvas="pump" aria-label="麦田泵站三维场景"></canvas>
+            <div class="panel-hud"><span>01 / FLUID TRANSFER</span><span class="live"><i></i>LIVE</span></div>
+            <div class="panel-weather"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title"><h3>麦田泵站</h3><span>SCN-01</span></div>
+            <p>离心泵从低位水池取水，经出口管路送入田间管网。电机与泵同轴，麦田、树木、农舍与天气共同构成现场。</p>
+            <div class="panel-metrics">
+              <div><span>FLOW</span><b>42</b><em>m³/h</em></div>
+              <div><span>HEAD</span><b>32</b><em>m</em></div>
+              <div><span>CURRENT</span><b>11.2</b><em>A</em></div>
+            </div>
+          </div>
+        </article>
 
-      <div class="control-block">
-        <div class="slider-head"><span class="control-label">TIME OF DAY / 时间</span><b id="time-readout">14:00</b></div>
-        <input id="time-slider" class="time-slider" type="range" min="0" max="1439" value="840" aria-label="一天中的时间" />
-        <div class="slider-ticks"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
-      </div>
+        <article class="app-panel" data-app="conveyor">
+          <div class="panel-visual">
+            <canvas data-canvas="conveyor" aria-label="室内产线三维场景"></canvas>
+            <div class="panel-hud"><span>02 / MATERIAL HANDLING</span><span class="live"><i></i>LIVE</span></div>
+            <div class="panel-weather"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title"><h3>室内产线</h3><span>SCN-02</span></div>
+            <p>电机通过联轴器与减速机构驱动皮带输送机，完成包装箱转运。窗外天气变化，室内维持稳定班次照明。</p>
+            <div class="panel-metrics">
+              <div><span>BELT</span><b>1.2</b><em>m/s</em></div>
+              <div><span>THROUGHPUT</span><b>1,400</b><em>pcs/h</em></div>
+              <div><span>CURRENT</span><b>11.0</b><em>A</em></div>
+            </div>
+          </div>
+        </article>
 
-      <div class="mode-switch" role="group" aria-label="时间模式">
-        <button id="mode-timelapse" class="active">延时 TIMELAPSE</button>
-        <button id="mode-realtime">实时 REAL-TIME</button>
-      </div>
+        <article class="app-panel" data-app="fan">
+          <div class="panel-visual">
+            <canvas data-canvas="fan" aria-label="屋顶冷却三维场景"></canvas>
+            <div class="panel-hud"><span>03 / AIR MOVEMENT</span><span class="live"><i></i>LIVE</span></div>
+            <div class="panel-weather"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title"><h3>屋顶冷却</h3><span>SCN-03</span></div>
+            <p>电机驱动轴流风机，为屋顶空调机组排热。高处的风、雨、雪与日晒直接改变风机负载和冷却效率。</p>
+            <div class="panel-metrics">
+              <div><span>AIRFLOW</span><b>20,000</b><em>m³/h</em></div>
+              <div><span>AIR TEMP</span><b>32</b><em>°C</em></div>
+              <div><span>CURRENT</span><b>11.0</b><em>A</em></div>
+            </div>
+          </div>
+        </article>
 
-      <div class="telemetry">
-        <div class="telemetry-head"><span>OPERATING POINT</span><span id="telemetry-state">RUNNING</span></div>
-        <div class="telemetry-grid">
-          <div><span>LOAD</span><b id="metric-load">78</b><em>%</em></div>
-          <div><span>AMBIENT</span><b id="metric-temp">26</b><em>°C</em></div>
-          <div><span id="metric-a-label">FLOW</span><b id="metric-a">42</b><em id="metric-a-unit">m³/h</em></div>
-          <div><span>CURRENT</span><b id="metric-current">11.2</b><em>A</em></div>
-        </div>
-        <div class="telemetry-note" id="telemetry-note">延时模拟 · 1 秒 ≈ 20 分钟</div>
+        <article class="app-panel" data-app="mixer">
+          <div class="panel-visual">
+            <canvas data-canvas="mixer" aria-label="水处理搅拌三维场景"></canvas>
+            <div class="panel-hud"><span>04 / MIXING</span><span class="live"><i></i>LIVE</span></div>
+            <div class="panel-weather"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title"><h3>水处理搅拌</h3><span>SCN-04</span></div>
+            <p>电机经侧入式联轴器驱动搅拌叶轮，使药剂与水体均匀混合。罐体、搅拌轴、水面与加药管路同时运行。</p>
+            <div class="panel-metrics">
+              <div><span>MIXER</span><b>148</b><em>rpm</em></div>
+              <div><span>VOLUME</span><b>12</b><em>m³</em></div>
+              <div><span>CURRENT</span><b>11.5</b><em>A</em></div>
+            </div>
+          </div>
+        </article>
       </div>
-    </aside>
+    </section>
+
+    <section class="reference-note">
+      <span>ENGINEERING REFERENCE</span>
+      <p>设备比例与安装方式参考泵、输送机、冷却塔风机和水处理搅拌机的典型工程布置；画面为解释性模拟，不作为施工或选型依据。</p>
+      <a href="/docs/literature.html">查看工程文献 ↗</a>
+    </section>
   </main>
 
-  <section class="module-gallery" id="modules" aria-label="典型应用模块">
-    <div class="module-head">
-      <div>
-        <div class="module-kicker">APPLICATION MODULES / 应用模块</div>
-        <h2>同一台电机，四种现场。</h2>
-      </div>
-      <p>每个模块对应一类典型负载。点击进入上方完整环境模拟，天气、季节与运行数据会同步切换。</p>
-    </div>
-    <div class="module-grid">
-      <article class="module-card active" data-module="outdoor">
-        <div class="module-screen">
-          <span class="module-tag">MODULE 01 / FLUID</span>
-          <span class="module-weather">CLEAR · SUMMER</span>
-          <svg viewBox="0 0 200 142" aria-hidden="true">
-            <path d="M15 106 H185" stroke="rgba(158,195,191,.18)" />
-            <path class="module-flow" d="M28 106 C64 106 72 64 104 64 H180" fill="none" stroke="#7cc9d2" stroke-width="1.3" />
-            <circle cx="69" cy="105" r="22" fill="#1c3133" stroke="#668e8d" stroke-width="1" />
-            <g class="module-rotor" transform-origin="69 105">
-              <path d="M69 90 L77 103 L69 105 L61 103 Z" fill="#e4a04d" />
-              <path d="M84 105 L71 113 L69 105 L71 97 Z" fill="#d18a46" />
-              <path d="M69 120 L61 107 L69 105 L77 107 Z" fill="#e4a04d" />
-              <path d="M54 105 L67 97 L69 105 L67 113 Z" fill="#d18a46" />
-            </g>
-            <circle cx="69" cy="105" r="4" fill="#050809" />
-            <text x="150" y="78">42 m³/h</text>
-            <text x="18" y="25">PUMP / CONTINUOUS</text>
-          </svg>
-        </div>
-        <div class="module-body">
-          <div class="module-title"><h3>麦田泵站</h3><span>SCN-01</span></div>
-          <p class="module-desc">离心泵、联轴器与管网。麦田、树木、鸟群与雪季环绕，天气和季节共同影响负载。</p>
-          <div class="module-metrics"><div><span>FLOW</span><b>42</b><em>m³/h</em></div><div><span>CURRENT</span><b>11.2</b><em>A</em></div></div>
-          <button class="module-enter" data-target="outdoor">进入完整模拟 <span>↗</span></button>
-        </div>
-      </article>
-
-      <article class="module-card" data-module="indoor">
-        <div class="module-screen">
-          <span class="module-tag">MODULE 02 / MATERIAL</span>
-          <span class="module-weather">SHIFT A · INDOOR</span>
-          <svg viewBox="0 0 200 142" aria-hidden="true">
-            <path d="M18 111 H180" stroke="#6a8583" stroke-width="1" />
-            <path class="module-belt" d="M24 99 H174" stroke="#8eaaa5" stroke-width="2" />
-            <path d="M30 111 V99 M168 111 V99" stroke="#3c5557" />
-            <g class="module-box-a"><rect x="30" y="82" width="17" height="15" rx="2" fill="#b38b58" /><path d="M39 82 V97" stroke="#6c5339" /></g>
-            <g class="module-box-b"><rect x="70" y="84" width="13" height="12" rx="2" fill="#2d666b" /><rect x="89" y="86" width="15" height="10" rx="2" fill="#b38b58" /></g>
-            <g class="module-box-a"><rect x="130" y="83" width="15" height="14" rx="2" fill="#2d666b" /></g>
-            <circle cx="39" cy="105" r="4" fill="#e4a04d" /><circle cx="71" cy="105" r="4" fill="#e4a04d" />
-            <text x="18" y="25">CONVEYOR / SHIFT A</text>
-          </svg>
-        </div>
-        <div class="module-body">
-          <div class="module-title"><h3>室内产线</h3><span>SCN-02</span></div>
-          <p class="module-desc">输送带、箱体与班次照明。窗外天气变化，室内产线保持稳定节拍。</p>
-          <div class="module-metrics"><div><span>THROUGHPUT</span><b>1,400</b><em>pcs/h</em></div><div><span>CURRENT</span><b>11.0</b><em>A</em></div></div>
-          <button class="module-enter" data-target="indoor">进入完整模拟 <span>↗</span></button>
-        </div>
-      </article>
-
-      <article class="module-card" data-module="rooftop">
-        <div class="module-screen">
-          <span class="module-tag">MODULE 03 / AIR</span>
-          <span class="module-weather">EXPOSED · ROOFTOP</span>
-          <svg viewBox="0 0 200 142" aria-hidden="true">
-            <path d="M25 112 H176 M40 112 V88 H160 V112" fill="none" stroke="rgba(158,195,191,.2)" />
-            <circle cx="96" cy="72" r="34" fill="#16282b" stroke="#547476" stroke-width="2" />
-            <g class="module-rotor module-blade-fast" transform-origin="96 72">
-              <path d="M96 72 L96 42 C108 46 112 58 106 70 Z" fill="#d8d2c1" />
-              <path d="M96 72 L126 72 C122 84 110 88 98 82 Z" fill="#b7b6ab" />
-              <path d="M96 72 L96 102 C84 98 80 86 86 74 Z" fill="#d8d2c1" />
-              <path d="M96 72 L66 72 C70 60 82 56 94 62 Z" fill="#b7b6ab" />
-              <circle cx="96" cy="72" r="5" fill="#e4a04d" />
-            </g>
-            <text x="18" y="25">AXIAL FAN / CONTINUOUS</text>
-            <text x="142" y="72">20,000</text>
-            <text x="142" y="80">m³/h</text>
-          </svg>
-        </div>
-        <div class="module-body">
-          <div class="module-title"><h3>屋顶冷却</h3><span>SCN-03</span></div>
-          <p class="module-desc">轴流风机、屋顶机组与城市背景。高处风、雪和日晒直接影响冷却负载。</p>
-          <div class="module-metrics"><div><span>AIRFLOW</span><b>20,000</b><em>m³/h</em></div><div><span>CURRENT</span><b>11.0</b><em>A</em></div></div>
-          <button class="module-enter" data-target="rooftop">进入完整模拟 <span>↗</span></button>
-        </div>
-      </article>
-
-      <article class="module-card" data-module="water">
-        <div class="module-screen">
-          <span class="module-tag">MODULE 04 / MIXING</span>
-          <span class="module-weather">TREATMENT · OUTDOOR</span>
-          <svg viewBox="0 0 200 142" aria-hidden="true">
-            <ellipse class="module-ripple" cx="104" cy="92" rx="42" ry="12" fill="none" stroke="#7cc9d2" stroke-width="1" />
-            <rect x="56" y="51" width="96" height="49" rx="20" fill="#102729" stroke="#547476" stroke-width="2" />
-            <ellipse class="module-tank-water" cx="104" cy="64" rx="39" ry="9" fill="#1d5961" opacity=".65" />
-            <path d="M104 38 V85" stroke="#9baba4" stroke-width="2" />
-            <g class="module-rotor module-rotor-slow" transform-origin="104 80">
-              <path d="M104 80 L104 66 M104 80 L116 87 M104 80 L92 87" stroke="#e4a04d" stroke-width="2" stroke-linecap="round" />
-            </g>
-            <circle cx="104" cy="38" r="10" fill="#263b3b" stroke="#7e9b95" />
-            <text x="18" y="25">MIXER / TREATMENT</text>
-            <text x="148" y="56">148</text>
-            <text x="148" y="64">rpm</text>
-          </svg>
-        </div>
-        <div class="module-body">
-          <div class="module-title"><h3>水处理搅拌</h3><span>SCN-04</span></div>
-          <p class="module-desc">搅拌罐、侧入式叶轮与水面。电机连续驱动，药剂与水体在罐内均匀混合。</p>
-          <div class="module-metrics"><div><span>MIXER</span><b>148</b><em>rpm</em></div><div><span>CURRENT</span><b>11.5</b><em>A</em></div></div>
-          <button class="module-enter" data-target="water">进入完整模拟 <span>↗</span></button>
-        </div>
-      </article>
-    </div>
-  </section>
-
   <footer class="footer">
-    <span>AXIS MOTORLAB / SCENARIO LAB</span>
-    <span>工程场景模拟 · 非真实天气或现场数据</span>
-    <a href="/blender/">Blender Film ↗</a>
+    <span>AXIS MOTORLAB / APPLICATION SIMULATION</span>
+    <span>YE3-132S-4 · S1 · IP55 · IM B3</span>
+    <a href="/">返回主站 ↗</a>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/src/scenarios/main.js"></script>
+  <script type="module" src="/src/scenarios/deck.js"></script>
 </body>
 </html>
