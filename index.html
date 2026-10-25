@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#050809" />
+    <meta
+      name="description"
+      content="AXIS MOTORLAB — YE3-132S-4 三相异步电动机交互式 3D 分解档案。22 个可拆解部件、完整分解动画、旋转磁场与风路可视化，以及独立的 Blender 爆炸短片。"
+    />
+    <title>AXIS MOTORLAB · YE3 三相异步电动机 3D 分解档案</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-chapter="hero" class="is-loading">
+    <div class="stage">
+      <canvas id="scene" aria-label="可交互的三相异步电动机 3D 模型"></canvas>
+      <div class="stage-vignette" aria-hidden="true"></div>
+      <div class="stage-noise" aria-hidden="true"></div>
+      <div class="stage-top-glow" aria-hidden="true"></div>
+      <div class="stage-corners" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="stage-scale" aria-hidden="true">
+        <span class="scale-rule"></span>
+        <span>0</span><span>250</span><span>500 mm</span>
+      </div>
+    </div>
+
+    <div class="loading-screen" id="loading-screen" aria-live="polite">
+      <div class="loader-bg" aria-hidden="true"></div>
+      <div class="loader-top">
+        <div class="loader-brand"><span class="brand-mark small" aria-hidden="true"></span> AXIS / MOTORLAB</div>
+        <div class="loader-code">DOC. AX-3D-2026 / REV. 04</div>
+      </div>
+      <div class="loader-center">
+        <div class="loader-eyebrow">ASSEMBLING DIGITAL TWIN</div>
+        <div class="loader-title">YE3<span>-132S-4</span></div>
+        <div class="loader-meta">5.5 kW · 4 POLES · IE3 · 22 COMPONENTS</div>
+        <div class="loader-track"><span id="loader-progress"></span></div>
+        <div class="loader-footer">
+          <span id="loader-status">初始化工程模型…</span>
+          <span id="loader-percent">00</span>
+        </div>
+      </div>
+      <div class="loader-bottom" aria-hidden="true">
+        <span>GB/T 28575-2020</span><span>IC411</span><span>IP55</span><span>IM B3</span>
+      </div>
+    </div>
+
+    <header class="topbar" id="topbar">
+      <a class="brand" href="#hero" data-scroll>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text"><strong>AXIS</strong><em>MOTORLAB</em></span>
+      </a>
+      <nav class="top-nav" aria-label="章节导航">
+        <a href="#anatomy" data-scroll data-nav="anatomy"><span>01</span>结构</a>
+        <a href="#explode" data-scroll data-nav="explode"><span>02</span>分解</a>
+        <a href="#parts" data-scroll data-nav="parts"><span>03</span>部件</a>
+        <a href="#operation" data-scroll data-nav="operation"><span>04</span>运行</a>
+        <a href="#specs" data-scroll data-nav="specs"><span>05</span>档案</a>
+      </nav>
+      <div class="top-actions">
+        <span class="live-tag"><i></i>REALTIME 3D</span>
+        <a class="top-link" href="/blender/" aria-label="打开 Blender 短片页面">BLENDER 短片 <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <aside class="chapter-rail" aria-label="页面进度">
+      <div class="rail-line"><span id="rail-progress"></span></div>
+      <ol>
+        <li data-rail="hero"><a href="#hero" data-scroll><span>00</span><em>概览</em></a></li>
+        <li data-rail="anatomy"><a href="#anatomy" data-scroll><span>01</span><em>结构</em></a></li>
+        <li data-rail="explode"><a href="#explode" data-scroll><span>02</span><em>分解</em></a></li>
+        <li data-rail="parts"><a href="#parts" data-scroll><span>03</span><em>部件</em></a></li>
+        <li data-rail="operation"><a href="#operation" data-scroll><span>04</span><em>运行</em></a></li>
+        <li data-rail="specs"><a href="#specs" data-scroll><span>05</span><em>档案</em></a></li>
+      </ol>
+    </aside>
+
+    <main id="content">
+      <section class="scene-section hero-section" id="hero" data-chapter="hero" data-stage="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow reveal">
+              <span class="eyebrow-line"></span>
+              <span>ENGINEERING VISUAL ARCHIVE / 001</span>
+            </div>
+            <h1 class="hero-title">
+              <span class="line"><span>把它拆开，</span></span>
+              <span class="line"><span>看见动力的<em>秩序</em>。</span></span>
+            </h1>
+            <p class="hero-lede">
+              <span class="lede-desktop">YE3-132S-4 高效三相异步电动机。以 GB/T 28575 与 IEC 60034 为建模依据，
+              将 <strong>22 个部件</strong>、<strong>36 槽定子</strong>与一条完整的冷却风路，
+              还原成可旋转、可拆解、可逐件阅读的三维工程档案。</span>
+              <span class="lede-mobile">YE3-132S-4 高效三相异步电动机。<strong>22 个部件</strong>、36 槽定子与完整冷却风路，还原为可旋转、可拆解的三维工程档案。</span>
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#explode" data-scroll data-autoplay="explode" id="start-explode">
+                <span class="button-play" aria-hidden="true"></span>
+                开始分解演示
+              </a>
+              <a class="button ghost" href="#parts" data-scroll>浏览部件图鉴 <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="hero-spec-line">
+              <span>IE3</span><i></i><span>IP55</span><i></i><span>IC411</span><i></i><span>S1</span><i></i><span>IM B3</span>
+            </div>
+          </div>
+
+          <div class="hero-readout" aria-hidden="true">
+            <div class="readout-head"><span>LIVE ASSEMBLY</span><span>AX-3D-04</span></div>
+            <div class="readout-row"><span>SHAFT AXIS</span><b>Z</b></div>
+            <div class="readout-row"><span>PARTS</span><b>22 / 22</b></div>
+            <div class="readout-row"><span>GEOMETRY</span><b>ENG. RECON</b></div>
+            <div class="readout-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+
+        <div class="hero-footer">
+          <div class="hero-stats" id="hero-stats"></div>
+          <div class="hero-scroll">
+            <span>向下滚动 · SCROLL TO DISASSEMBLE</span>
+            <i aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div class="hero-side-note" aria-hidden="true">
+          <span>三相鼠笼式异步电动机</span>
+          <span>THREE-PHASE SQUIRREL-CAGE INDUCTION MOTOR</span>
+        </div>
+      </section>
+
+      <section class="scene-section anatomy-section" id="anatomy" data-chapter="anatomy" data-stage="anatomy">
+        <div class="anatomy-copy">
+          <div class="section-tag"><span>01</span> STRUCTURE / 结构</div>
+          <h2>五种系统，<br />协同成一次<em>旋转</em>。</h2>
+          <p>
+            电机的可靠性不在某一个零件里，而在磁路、支承、冷却与电气接口之间的间隙与配合里。
+            将光标移到模型上，识别构成这台机器的五个系统。
+          </p>
+          <div class="system-index" id="system-index">
+            <span data-system="外部总成"><i>01</i>外部总成 <b></b></span>
+            <span data-system="定子总成"><i>02</i>定子总成 <b></b></span>
+            <span data-system="转子总成"><i>03</i>转子总成 <b></b></span>
+            <span data-system="支承总成"><i>04</i>支承总成 <b></b></span>
+            <span data-system="电气接口"><i>05</i>电气接口 <b></b></span>
+          </div>
+        </div>
+        <div class="anatomy-hint">
+          <span class="crosshair" aria-hidden="true"></span>
+          <span class="hint-desktop">拖动旋转 · 悬停识别 · 点击部件阅读档案</span>
+          <span class="hint-mobile">点击部件阅读档案 · 上下滑动继续</span>
+        </div>
+        <div class="anatomy-caption" aria-hidden="true">
+          <span>FIG. 01</span>
+          <span>整机装配态 / ASSEMBLED STATE</span>
+        </div>
+      </section>
+
+      <section class="scroll-section explode-section" id="explode" data-chapter="explode" data-stage="explode">
+        <div class="explode-sticky">
+          <div class="explode-hud">
+            <div class="explode-heading">
+              <div class="section-tag"><span>02</span> EXPLODED ASSEMBLY / 分解</div>
+              <h2>拆解一台电机，<br /><em>22</em> 个部件。</h2>
+            </div>
+            <div class="explode-stage-info">
+              <span class="stage-kicker" id="stage-kicker">STAGE 01 / 04</span>
+              <h3 id="stage-title">释放外部总成</h3>
+              <p id="stage-copy">风扇罩、冷却风扇与接线盒盖首先沿轴向脱离，露出机座散热筋与支承结构。</p>
+            </div>
+            <div class="explode-steps" id="explode-steps">
+              <div data-step="0" class="active"><i>01</i><span>外部总成</span></div>
+              <div data-step="1"><i>02</i><span>支承链</span></div>
+              <div data-step="2"><i>03</i><span>电磁核心</span></div>
+              <div data-step="3"><i>04</i><span>完整展开</span></div>
+            </div>
+          </div>
+
+          <div class="explode-count" aria-hidden="true">
+            <span id="explode-count">00</span><span>/ 22 PARTS</span>
+          </div>
+
+          <div class="explode-note">
+            <span>轴测分解视图</span>
+            <span>ISOMETRIC EXPLODED VIEW</span>
+          </div>
+
+          <div class="explode-controls">
+            <button class="icon-button" id="auto-play" type="button" aria-label="自动分解">
+              <span class="play-icon" aria-hidden="true"></span>
+            </button>
+            <div class="scrub">
+              <div class="scrub-label">
+                <span id="scrub-title">装配进度</span>
+                <b id="scrub-value">00%</b>
+              </div>
+              <input id="explode-range" type="range" min="0" max="1000" value="0" step="1" aria-label="分解进度" />
+            </div>
+            <button class="text-button" id="toggle-labels" type="button" aria-pressed="true">标注 ON</button>
+            <button class="text-button" id="reset-explode" type="button">复位</button>
+          </div>
+
+          <div class="explode-hint">
+            <span class="hint-desktop">滚动页面或拖动滑块控制分解 · 拖拽模型旋转视角</span>
+            <span class="hint-mobile">上下滑动控制分解 · 拖动滑块逐件查看</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene-section parts-section" id="parts" data-chapter="parts" data-stage="parts">
+        <div class="parts-heading">
+          <div class="section-tag"><span>03</span> COMPONENT INDEX / 部件图鉴</div>
+          <h2>逐件阅读<br /><em>工程细节</em>。</h2>
+          <p>从风扇罩到波形弹簧，22 个部件的材料、配合、功能与装配逻辑。</p>
+        </div>
+
+        <div class="parts-layout">
+          <aside class="parts-index" aria-label="部件列表">
+            <div class="parts-index-head">
+              <span>PARTS INDEX</span>
+              <b><span id="parts-visible-count">22</span> / 22</b>
+            </div>
+            <div class="parts-filters" id="parts-filters" role="group" aria-label="按系统筛选"></div>
+            <div class="parts-list" id="parts-list"></div>
+          </aside>
+
+          <div class="parts-stage-label" aria-hidden="true">
+            <span>FIG. 02</span>
+            <span>部件定位 / COMPONENT LOCUS</span>
+          </div>
+
+          <aside class="part-detail" id="part-detail" aria-live="polite">
+            <div class="part-detail-inner" id="part-detail-inner"></div>
+          </aside>
+        </div>
+
+        <div class="parts-hint">选择左侧部件 · 模型同步高亮 · 点击「聚焦部件」查看细节</div>
+      </section>
+
+      <section class="scroll-section operation-section" id="operation" data-chapter="operation" data-stage="operation">
+        <div class="operation-sticky">
+          <div class="operation-copy">
+            <div class="section-tag"><span>04</span> THE ROTATING FIELD / 运行原理</div>
+            <h2>看不见的磁场，<br />驱动看得见的<em>旋转</em>。</h2>
+            <p>
+              三相电流在定子绕组中形成 4 极旋转磁场，以同步转速 1500 r/min 扫过转子。
+              转差率 4% 让鼠笼导条持续切割磁通、产生转矩；后置风扇同时把冷却空气压入散热筋通道。
+            </p>
+            <div class="operation-switches" role="group" aria-label="运行控制">
+              <button class="toggle active" id="toggle-run" type="button" aria-pressed="true">
+                <span class="toggle-dot"></span>
+                运行
+                <em>RUNNING</em>
+              </button>
+              <button class="toggle active" id="toggle-xray" type="button" aria-pressed="true">
+                <span class="toggle-dot"></span>
+                透视
+                <em>X-RAY</em>
+              </button>
+            </div>
+            <div class="operation-legend">
+              <span><i class="legend-field"></i>定子旋转磁场</span>
+              <span><i class="legend-air"></i>冷却风路</span>
+              <span><i class="legend-copper"></i>铜绕组</span>
+            </div>
+          </div>
+
+          <div class="telemetry" aria-live="off">
+            <div class="telemetry-head">
+              <span>OPERATING POINT</span>
+              <span class="telemetry-status" id="telemetry-status"><i></i>RUNNING</span>
+            </div>
+            <div class="telemetry-main">
+              <div class="telemetry-speed">
+                <span id="telemetry-rpm">1440</span>
+                <small>r/min</small>
+              </div>
+              <span class="telemetry-sub">转差率 4.0%</span>
+            </div>
+            <div class="telemetry-grid">
+              <div><span>转矩</span><b id="telemetry-torque">36.5</b><em>N·m</em></div>
+              <div><span>效率</span><b id="telemetry-eff">89.6</b><em>%</em></div>
+              <div><span>电流</span><b id="telemetry-current">11.4</b><em>A</em></div>
+              <div><span>温升</span><b id="telemetry-temp">62</b><em>K</em></div>
+            </div>
+            <div class="telemetry-curve" aria-hidden="true">
+              <canvas id="telemetry-spark" width="420" height="80"></canvas>
+              <span>LOAD 100%</span>
+            </div>
+          </div>
+
+          <div class="operation-figure" aria-hidden="true">
+            <span>FIG. 03</span>
+            <span>4-POLE ROTATING FIELD / 50 Hz</span>
+          </div>
+          <div class="operation-note">数据为额定工况示意 · 非实时测量</div>
+        </div>
+      </section>
+
+      <section class="specs-section" id="specs" data-chapter="specs" data-stage="data">
+        <div class="specs-glow" aria-hidden="true"></div>
+        <div class="specs-container">
+          <div class="specs-intro">
+            <div class="section-tag"><span>05</span> TECHNICAL DOSSIER / 技术档案</div>
+            <h2>数据，是结构的<br /><em>另一种剖面</em>。</h2>
+            <p>
+              本档案以国家标准与公开样本为依据。机型外形与质量随厂商设计存在差异，
+              页面数值标注为典型值，仅用于工程可视化展示，不作为加工或验收依据。
+            </p>
+            <div class="specs-standard">MODEL / <strong id="spec-model">YE3-132S-4</strong> · STANDARD / <strong>GB/T 28575-2020</strong></div>
+          </div>
+
+          <div class="spec-sheet">
+            <div class="spec-sheet-head">
+              <span>01 / RATING PLATE</span>
+              <span>额定数据</span>
+            </div>
+            <div class="rating-layout">
+              <div class="rating-table" id="rating-table"></div>
+              <div class="nameplate-visual" id="nameplate-visual" aria-label="电动机铭牌信息">
+                <div class="nameplate-top">
+                  <span class="np-brand">AXIS</span>
+                  <span class="np-type">THREE-PHASE INDUCTION MOTOR</span>
+                </div>
+                <div class="np-model" id="np-model">YE3-132S-4</div>
+                <div class="np-grid">
+                  <span>5.5 <em>kW</em></span><span>380 <em>V</em></span><span>50 <em>Hz</em></span>
+                  <span>11.4 <em>A</em></span><span>1440 <em>r/min</em></span><span>cosφ 0.83</span>
+                </div>
+                <div class="np-bottom">IP55 · IC411 · IM B3 · S1 · IE3</div>
+                <div class="np-rivet r1"></div><div class="np-rivet r2"></div><div class="np-rivet r3"></div><div class="np-rivet r4"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-sheet curves-sheet">
+            <div class="spec-sheet-head">
+              <span>02 / PERFORMANCE CURVES</span>
+              <span>机械特性 · 典型值</span>
+            </div>
+            <div class="hscroll-hint">横向滑动查看完整图表 <span aria-hidden="true">→</span></div>
+            <div class="curves-layout">
+              <div class="chart-wrap" id="performance-chart"></div>
+              <div class="chart-notes">
+                <div class="chart-note"><i class="dot orange"></i><b>转矩 T/Tₙ</b><span>起动 2.1 倍，最大 2.3 倍，额定点 1.0 倍。</span></div>
+                <div class="chart-note"><i class="dot teal"></i><b>电流 I/Iₙ</b><span>直接起动电流约 6.8 倍额定，随转速上升快速回落。</span></div>
+                <div class="chart-note"><i class="dot ivory"></i><b>效率 η</b><span>额定负载附近达到 89.6%，符合 IE3 能效等级。</span></div>
+                <div class="chart-note"><i class="dot copper"></i><b>功率因数 cosφ</b><span>额定点 0.83，轻载时明显下降。</span></div>
+                <p class="chart-disclaimer">曲线为 5.5 kW / 4 极 IE3 机型的代表性数据，用于解释运行特性，不代表具体批次的出厂试验值。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-sheet notes-sheet">
+            <div class="spec-sheet-head">
+              <span>03 / DESIGN NOTES</span>
+              <span>电磁、热与支承设计注释</span>
+            </div>
+            <p class="notes-intro" id="notes-intro"></p>
+            <div class="design-notes" id="design-notes"></div>
+          </div>
+
+          <div class="spec-sheet dimensions-sheet">
+            <div class="spec-sheet-head">
+              <span>04 / DIMENSIONS</span>
+              <span>安装尺寸 · IM B3 · 132S</span>
+            </div>
+            <div class="hscroll-hint">横向滑动查看完整图纸 <span aria-hidden="true">→</span></div>
+            <div class="dimension-wrap" id="dimension-drawing"></div>
+            <div class="dimension-note">A/B/C/D/E/F/G/H/K 依据 GB/T 28575-2020 与 IEC 60072-1；总体尺寸为带风扇罩与接线盒的典型外形。</div>
+          </div>
+
+          <div class="spec-sheet evidence-sheet">
+            <div class="spec-sheet-head">
+              <span>05 / REFERENCES</span>
+              <span>建模依据与文献</span>
+            </div>
+            <div class="evidence-grid">
+              <div class="evidence-intro">
+                <p>
+                  几何比例来自 132S 机座的安装尺寸与典型外形；定子采用 36 槽、4 极、三相分布绕组；
+                  转子为 28 槽铸铝鼠笼；两端采用 6308 深沟球轴承，浮动端以波形弹簧预紧。
+                </p>
+                <a class="button ghost small" href="docs/literature.html" target="_blank" rel="noreferrer">阅读建模说明 <span aria-hidden="true">↗</span></a>
+              </div>
+              <div class="literature-list" id="literature-list"></div>
+            </div>
+          </div>
+
+          <div class="blender-feature" id="blender-film">
+            <a class="blender-feature-media" href="/blender/" aria-label="进入 Blender 爆炸短片">
+              <img src="/blender/renders/motor_exploded.png" alt="AXIS YE3-132S-4 Blender 爆炸视图" loading="lazy" />
+              <span class="blender-play" aria-hidden="true">▶</span>
+            </a>
+            <div class="blender-feature-copy">
+              <span class="blender-kicker">06 / BLENDER FILM</span>
+              <h3>镜头里的电机，<br />完整展开。</h3>
+              <p>
+                独立的 Blender 场景：22 个命名部件、真实的材质与灯光、7.5 秒爆炸动画。
+                从实时交互模型，到一段可以播放、下载和继续编辑的镜头。
+              </p>
+              <div class="blender-feature-actions">
+                <a class="button primary small" href="/blender/">进入 Blender 短片 <span aria-hidden="true">↗</span></a>
+                <a class="button ghost small" href="/blender/AXIS_YE3_Blender_Scene.zip" download>下载工程包</a>
+              </div>
+              <div class="blender-feature-meta">
+                <span>22 COMPONENTS</span><span>1920 × 1080 STILLS</span><span>7.5 S FILM</span><span>BLENDER 4.2 / EEVEE</span>
+              </div>
+            </div>
+          </div>
+
+          <footer class="site-footer">
+            <div class="footer-brand">
+              <span class="brand-mark" aria-hidden="true"></span>
+              <div><strong>AXIS MOTORLAB</strong><span>INDUSTRIAL MOTION OBSERVATORY</span></div>
+            </div>
+            <div class="footer-meta">
+              <span>工程可视化重建 · 非制造图纸</span>
+              <span>© 2026 AXIS MOTORLAB / DOC. AX-3D-2026</span>
+            </div>
+            <a class="back-top" href="#hero" data-scroll>返回顶部 ↑</a>
+          </footer>
+        </div>
+      </section>
+    </main>
+
+    <div class="hotspot-layer" id="hotspot-layer">
+      <svg class="hotspot-svg" id="hotspot-svg" aria-hidden="true"></svg>
+    </div>
+
+    <div class="callout-layer" id="callout-layer">
+      <svg class="callout-svg" id="callout-svg" aria-hidden="true"></svg>
+      <div class="callout-items" id="callout-items"></div>
+    </div>
+
+    <div class="hover-tip" id="hover-tip" aria-hidden="true">
+      <span class="hover-index" id="hover-index">01</span>
+      <span class="hover-name" id="hover-name">部件</span>
+      <em>点击查看</em>
+    </div>
+
+    <div class="selection-marker" id="selection-marker" aria-hidden="true">
+      <span class="selection-ring"></span>
+      <span class="selection-line"></span>
+      <span class="selection-card"><em>SELECTED / 已定位</em><b id="selection-name">部件</b></span>
+    </div>
+
+    <div class="part-toast" id="part-toast" aria-hidden="true">
+      <span class="part-toast-index" id="part-toast-index">01</span>
+      <div><b id="part-toast-name">部件</b><span id="part-toast-cat">分类</span></div>
+      <span class="part-toast-action" id="part-toast-action">查看档案 ↗</span>
+    </div>
+
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <div class="scroll-progress" aria-hidden="true"><span id="global-progress"></span></div>
+
+    <noscript>
+      <div class="noscript">请启用 JavaScript 以查看 AXIS MOTORLAB 的三维分解档案。</div>
+    </noscript>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

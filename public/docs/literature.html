@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070b0c" />
+  <meta name="description" content="AXIS MOTORLAB — YE3-132S-4 三相异步电动机 3D 模型的工程建模依据、参数取舍与文献来源。" />
+  <title>YE3-132S-4 工程建模依据 · AXIS MOTORLAB</title>
+  <style>
+    :root {
+      --bg: #070b0c;
+      --panel: #0b1214;
+      --ink: #e9e7df;
+      --muted: #a4b0af;
+      --dim: #6d7d7f;
+      --faint: #425255;
+      --line: rgba(157, 183, 184, 0.18);
+      --line-strong: rgba(157, 183, 184, 0.32);
+      --accent: #e4a04d;
+      --cyan: #7cc9d2;
+      --sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 78% 5%, rgba(35, 75, 81, 0.22), transparent 32rem),
+        linear-gradient(rgba(124, 201, 210, 0.025) 1px, transparent 1px) 0 0 / 100% 80px,
+        linear-gradient(90deg, rgba(124, 201, 210, 0.018) 1px, transparent 1px) 0 0 / 80px 100%,
+        var(--bg);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.85;
+    }
+    ::selection { color: #121719; background: var(--accent); }
+    a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(124, 201, 210, 0.28); transition: color .2s, border-color .2s; }
+    a:hover { color: var(--accent); border-color: var(--accent); }
+    .topbar {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 26px 40px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 13px; color: var(--ink); border: 0; }
+    .brand-mark {
+      position: relative; width: 28px; height: 32px;
+      clip-path: polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%);
+      background:
+        linear-gradient(90deg, transparent calc(50% - .7px), rgba(228,160,77,.95) calc(50% - .7px), rgba(228,160,77,.95) calc(50% + .7px), transparent calc(50% + .7px)),
+        linear-gradient(180deg, transparent 0 62%, rgba(228,160,77,.95) 62% 64%, transparent 64%),
+        #0c1719;
+      box-shadow: inset 0 0 0 1px rgba(144,178,181,.3);
+      flex: 0 0 auto;
+    }
+    .brand strong { display: block; font-size: 15px; font-weight: 650; letter-spacing: .18em; line-height: 1.1; }
+    .brand-copy { display: block; }
+    .brand-copy span { display: block; margin-top: 3px; color: var(--dim); font: 7px/1.2 var(--mono); letter-spacing: .24em; }
+    .top-actions { display: flex; align-items: center; gap: 22px; }
+    .top-actions a { border: 0; color: var(--muted); font: 9px/1.2 var(--mono); letter-spacing: .08em; }
+    .top-actions a:hover { color: var(--accent); }
+    .top-actions .back { color: var(--ink); border-bottom: 1px solid var(--line-strong); padding-bottom: 5px; }
+    main { max-width: 1320px; margin: 0 auto; padding: 0 40px 90px; }
+    .doc-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 48px;
+      padding: 74px 0 54px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .kicker { color: var(--accent); font: 9px/1.5 var(--mono); letter-spacing: .22em; text-transform: uppercase; }
+    .doc-hero h1 {
+      max-width: 870px;
+      margin: 18px 0 0;
+      font-size: clamp(38px, 5vw, 70px);
+      font-weight: 620;
+      line-height: 1.12;
+      letter-spacing: -.04em;
+    }
+    .doc-hero .lead {
+      max-width: 720px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 2;
+    }
+    .doc-meta {
+      align-self: end;
+      border-top: 1px solid var(--line);
+      padding-top: 17px;
+      color: var(--dim);
+      font: 8px/1.9 var(--mono);
+      letter-spacing: .06em;
+    }
+    .doc-meta b { display: block; color: var(--ink); font-weight: 400; }
+    .doc-meta em { font-style: normal; color: var(--dim); }
+    .doc-meta span { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; border-bottom: 1px solid rgba(157,183,184,.08); }
+    .layout { display: grid; grid-template-columns: 230px minmax(0, 920px); gap: 70px; align-items: start; padding-top: 58px; }
+    .toc { position: sticky; top: 30px; }
+    .toc-title { margin-bottom: 16px; color: var(--dim); font: 8px/1.4 var(--mono); letter-spacing: .16em; }
+    .toc a {
+      display: flex; gap: 10px; padding: 8px 0;
+      color: var(--dim); border: 0; border-bottom: 1px solid rgba(157,183,184,.08);
+      font-size: 10px; line-height: 1.5;
+    }
+    .toc a span { color: var(--faint); font: 7px/1.6 var(--mono); }
+    .toc a:hover { color: var(--accent); }
+    .prose { min-width: 0; }
+    .prose > p:first-of-type { color: var(--muted); font-size: 14px; }
+    .prose h2 {
+      display: flex; align-items: baseline; gap: 12px;
+      margin: 52px 0 18px; padding-top: 18px;
+      border-top: 1px solid var(--line-strong);
+      font-size: 24px; font-weight: 550; line-height: 1.4; letter-spacing: -.015em;
+    }
+    .prose h2 .section-no { color: var(--accent); font: 8px/1 var(--mono); letter-spacing: .08em; }
+    .prose h3 { margin: 30px 0 10px; color: var(--ink); font-size: 16px; font-weight: 550; }
+    .prose p { margin: 0 0 17px; color: var(--muted); font-size: 12.5px; line-height: 2; }
+    .prose strong { color: var(--ink); font-weight: 550; }
+    .prose code { padding: 2px 5px; color: var(--accent); background: rgba(228,160,77,.07); border: 1px solid rgba(228,160,77,.12); font: 10px/1.5 var(--mono); }
+    .prose ul, .prose ol { color: var(--muted); font-size: 12px; line-height: 1.9; padding-left: 22px; }
+    .prose li { margin: 5px 0; }
+    .prose blockquote {
+      margin: 24px 0; padding: 14px 18px;
+      border-left: 2px solid var(--accent);
+      background: rgba(228,160,77,.045);
+      color: var(--dim); font-size: 11px;
+    }
+    .table-wrap { overflow-x: auto; margin: 24px 0 28px; border: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+    .prose table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 10px; line-height: 1.65; }
+    .prose th, .prose td { padding: 10px 11px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .prose th { color: var(--ink); background: rgba(124,201,210,.045); font-weight: 500; white-space: nowrap; }
+    .prose td { color: var(--dim); }
+    .prose td:nth-child(5) { word-break: break-all; }
+    .prose tr:last-child td { border-bottom: 0; }
+    .prose th:last-child, .prose td:last-child { border-right: 0; }
+    .doc-footer {
+      display: flex; justify-content: space-between; gap: 30px;
+      max-width: 1320px; margin: 0 auto; padding: 26px 40px 38px;
+      border-top: 1px solid var(--line-strong);
+      color: var(--faint); font: 8px/1.7 var(--mono); letter-spacing: .06em;
+    }
+    .doc-footer a { color: var(--dim); border: 0; }
+    @media (max-width: 980px) {
+      .topbar { padding: 20px 24px; }
+      main { padding: 0 24px 60px; }
+      .doc-hero { grid-template-columns: 1fr; gap: 26px; padding: 45px 0 38px; }
+      .doc-meta { max-width: 360px; align-self: start; }
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 36px; }
+      .toc { display: none; }
+      .doc-footer { padding: 22px 24px 30px; flex-direction: column; gap: 10px; }
+    }
+    @media (max-width: 560px) {
+      body { line-height: 1.8; }
+      .topbar { align-items: flex-start; flex-direction: column; gap: 15px; }
+      .top-actions { gap: 16px; }
+      .brand strong { font-size: 13px; }
+      .doc-hero h1 { font-size: 34px; }
+      .doc-hero .lead { font-size: 12px; }
+      .prose h2 { font-size: 20px; margin-top: 38px; }
+      .prose p { font-size: 12px; }
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      .topbar, .toc, .doc-footer { display: none; }
+      main { padding: 0; max-width: none; }
+      .doc-hero { padding: 0 0 24px; border-bottom: 1px solid #ccc; }
+      .layout { display: block; padding: 20px 0 0; }
+      .prose p, .prose td, .prose li { color: #222; }
+      .prose h2 { border-color: #ccc; }
+      .table-wrap { border-color: #aaa; }
+      .prose table { min-width: 0; }
+      .prose th, .prose td { border-color: #bbb; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="返回 AXIS MOTORLAB">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-copy"><strong>AXIS / MOTORLAB</strong><span>ENGINEERING MEMO</span></span>
+    </a>
+    <nav class="top-actions">
+      <a href="/docs/literature.md" download>下载 Markdown</a>
+      <a class="back" href="/">返回 3D 档案 ↗</a>
+    </nav>
+  </header>
+  <main>
+    <section class="doc-hero">
+      <div>
+        <div class="kicker">DOC.AX-3D-2026 / MODELING BASIS · 建模依据</div>
+        <h1>YE3-132S-4 工程建模依据</h1>
+        <p class="lead">从额定参数、支承布置到绕组与冷却风路，记录本模型的设计假设、典型值取舍与可核对文献。目的在于说明“模型为什么这样建”，并界定它不能替代哪些制造文件。</p>
+      </div>
+      <aside class="doc-meta">
+        <span><em>DOCUMENT</em><b>建模说明 / V1.0</b></span>
+        <span><em>MODEL</em><b>YE3-132S-4</b></span>
+        <span><em>SOURCES</em><b>8 sections · 12 references</b></span>
+        <span><em>ENCODING</em><b>UTF-8 · HTML</b></span>
+      </aside>
+    </section>
+    <div class="layout">
+      <nav class="toc" aria-label="文档目录">
+        <div class="toc-title">CONTENTS / 目录</div>
+        <a href="#section-1"><span>01</span>对象与边界</a><a href="#section-2"><span>02</span>额定数据</a><a href="#section-3"><span>03</span>尺寸与质量</a><a href="#section-4"><span>04</span>轴承与支承</a><a href="#section-5"><span>05</span>绕组、转子与材料</a><a href="#section-6"><span>06</span>性能曲线</a><a href="#section-7"><span>07</span>局限</a><a href="#section-8"><span>08</span>文献来源</a>
+      </nav>
+      <article class="prose">
+        <p>本备忘录说明 <code>src/data/motor-data.js</code> 中额定参数、22 个零部件、性能曲线与安装尺寸的取值依据，供站点“建模依据”栏目引用。文中编号与数据层 <code>LITERATURE</code> 条目一一对应。</p>
+<h2 id="section-1"><span class="section-no">01</span>对象与边界</h2>
+<p>对象为 YE3-132S-4：5.5 kW、4 极、380 V/50 Hz 三相鼠笼式异步电动机，IC411、IP55、IM B3、S1 工作制、F 级绝缘（B 级温升）、IE3。技术条件按 GB/T 28575-2020[1]；5.5 kW 4 极的 IE3 效率限值为 89.6%，对应 GB 18613-2020 三级能效[2]，并与 IEC 60034-30-1 的 IE3 定义一致[6]。</p>
+<h2 id="section-2"><span class="section-no">02</span>额定数据</h2>
+<p>额定转矩按 T = 9550 × 5.5 / 1440 ≈ 36.5 N·m。铭牌电流 11.4 A 取自 GB/T 28575-2020 表值[1]；按 η = 89.6%、cosφ = 0.83 反算约 11.2 A，厂商样本为 11.2～11.6 A[10][11]，差异来自设计裕量与测量允差。转速取 1440 r/min（样本常见 1460～1470 r/min[10]），以与 36.5 N·m 转矩自洽。堵转电流 6.8 倍、堵转转矩 2.1 倍、最大转矩 2.3 倍取技术条件保证值；个别样本堵转电流达 7.9 倍，属电磁方案差异。</p>
+<h2 id="section-3"><span class="section-no">03</span>尺寸与质量</h2>
+<p>132S 机座安装尺寸取 A 216、B 140、C 89、D 38、E 80、F 10、G 33、H 132 mm，与 GB/T 28575-2020[1]、IEC 60072-1[7]、西门子与卧龙样本[8][9]一致；K 在样本中有 12～15 mm 的不同标注，本模型取 12 mm 并标为典型值。轴伸 D38×E80，配 10×8×70 平键。外形 464 × 345 × 275 mm（长×高×宽）为带风扇罩与接线盒状态的典型值，样本约 444～510 mm，仅供可视化。整机质量取 72 kg；卧龙同规格为 69 kg[10]，22 个零件合计约 73 kg（紧固件未单列、部分质量在部件间分摊），差异合理；铝机座版本更轻，不在本模型范围。</p>
+<h2 id="section-4"><span class="section-no">04</span>轴承与支承</h2>
+<p>前后轴承均取 6308 深沟球轴承（40 × 90 × 23 mm，C = 42.3 kN，约 0.63 kg）[12]，内圈与 φ40 k6 轴颈过盈、外圈与 φ90 H7 轴承室配合。前端为定位端，外圈由端盖与轴承外盖双向夹紧；后端为浮动端，外圈由波形弹簧预紧，以补偿轴与铁心的热伸长。润滑脂为锂基脂，填装量约为空腔的三分之一。</p>
+<h2 id="section-5"><span class="section-no">05</span>绕组、转子与材料</h2>
+<p>定子 36 槽、4 极、q = 3，采用单层交叉短距绕组（节距约 8/7 槽），380 V 时 △ 接，三相首尾经 6 端子接线盒引出；F 级绝缘（155 °C），槽绝缘为 0.25 mm NMN。部分厂商采用双层叠绕组，本模型取单层交叉式作为代表，三维绕组为示意性成型结构。转子为 28 槽铸铝鼠笼（部分同类样本采用 32 槽，本模型采用 28 槽），0.5 mm 50W600 硅钢片，斜 1 个定子槽距；定子铁心为 50W470、φ210/φ136、长 130 mm。机座与端盖 HT250，转轴 45 钢调质，风扇 PA66-GF30，油封 NBR，波形弹簧 65Mn。</p>
+<h2 id="section-6"><span class="section-no">06</span>性能曲线</h2>
+<p>曲线含 16 个转速点（0～1500 r/min）：堵转点电流 6.8 pu、转矩 2.1 pu；最大转矩 2.3 pu 出现在 1260 r/min（84% 同步转速）；额定点 1440 r/min、1.0 pu。效率与功率因数按 GB/T 1032-2023 的试验方法整理[3]，额定点分别为 89.6% 与 0.83；接近同步转速的末端点对应空载/惰行工况，效率与功率因数迅速下降。曲线为代表性数据，不是出厂试验报告。</p>
+<h2 id="section-7"><span class="section-no">07</span>局限</h2>
+<p>本模型服务于结构认知与可视化展示：尺寸、质量、间隙、绕组节距与材料牌号取自公开标准与样本的典型值，未获得制造商图纸；不同厂商的槽配合、气隙、风扇与接线盒结构会造成差异。选型、安装与验收应以铭牌、制造商安装尺寸图和出厂试验报告为准。URL 访问时间为 2026 年 10 月。</p>
+<h2 id="section-8"><span class="section-no">08</span>文献来源</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>文献 / 标准</th>
+<th>机构</th>
+<th>年份</th>
+<th>URL</th>
+<th>支撑内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>GB/T 28575-2020 YE3系列（IP55）三相异步电动机技术条件（机座号63～355）</td>
+<td>国家市场监督管理总局、国家标准化管理委员会</td>
+<td>2020</td>
+<td><a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=A24AF19F41465C2EE05397BE0A0A5E0D" target="_blank" rel="noreferrer">https://std.samr.gov.cn/gb/search/gbDetailed?id=A24AF19F41465C2EE05397BE0A0A5E0D</a></td>
+<td>型号、参数、尺寸、转矩/噪声/振动保证值与铭牌要求</td>
+</tr>
+<tr>
+<td>2</td>
+<td>GB 18613-2020 电动机能效限定值及能效等级</td>
+<td>国家市场监督管理总局、国家标准化管理委员会</td>
+<td>2020</td>
+<td><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=42E6A7FD8C7E4BD896221D92ABA1709B" target="_blank" rel="noreferrer">https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=42E6A7FD8C7E4BD896221D92ABA1709B</a></td>
+<td>5.5 kW 4 极三级能效（IE3）效率 89.6%</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GB/T 1032-2023 三相异步电动机试验方法</td>
+<td>国家市场监督管理总局、国家标准化管理委员会</td>
+<td>2023</td>
+<td><a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=46417B7B778C6036D40BEA7403A93733" target="_blank" rel="noreferrer">https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=46417B7B778C6036D40BEA7403A93733</a></td>
+<td>效率、功率因数、堵转与最大转矩的试验和换算</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GB/T 4942-2021 旋转电机整体结构的防护等级（IP代码）分级</td>
+<td>国家市场监督管理总局、国家标准化管理委员会</td>
+<td>2021</td>
+<td><a href="https://www.spc.org.cn/online/8b9e6fee13b0ff9478f2dd2d0c699b55.html" target="_blank" rel="noreferrer">https://www.spc.org.cn/online/8b9e6fee13b0ff9478f2dd2d0c699b55.html</a></td>
+<td>IP55 的定义与试验要求</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GB/T 1993-1993 旋转电机冷却方法</td>
+<td>国家技术监督局</td>
+<td>1993</td>
+<td><a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=fN8F3%2BbzhJ4%3D&amp;mode=p" target="_blank" rel="noreferrer">https://std.samr.gov.cn/gb/search/gbDetailed?id=fN8F3%2BbzhJ4%3D&amp;mode=p</a></td>
+<td>IC411 冷却方式代号</td>
+</tr>
+<tr>
+<td>6</td>
+<td>IEC 60034-30-1:2014 Efficiency classes of line operated AC motors (IE code)</td>
+<td>IEC</td>
+<td>2014</td>
+<td><a href="https://webstore.iec.ch/en/publication/136" target="_blank" rel="noreferrer">https://webstore.iec.ch/en/publication/136</a></td>
+<td>IE3 等级的国际定义与 89.6% 对照</td>
+</tr>
+<tr>
+<td>7</td>
+<td>IEC 60072-1:2022 Dimensions and output series — Frame numbers 56 to 400</td>
+<td>IEC</td>
+<td>2022</td>
+<td><a href="https://online.standard.no/en/iec-60072-1-2022-ed7" target="_blank" rel="noreferrer">https://online.standard.no/en/iec-60072-1-2022-ed7</a></td>
+<td>132S 机座尺寸体系</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Siemens ME81 Complete English 2021（Motion Control Drives）</td>
+<td>Siemens AG</td>
+<td>2021</td>
+<td><a href="https://cache.industry.siemens.com/dl/files/528/109751528/att_1088948/v1/motion-control-drives-ME81-complete-English-2021-11.pdf" target="_blank" rel="noreferrer">https://cache.industry.siemens.com/dl/files/528/109751528/att_1088948/v1/motion-control-drives-ME81-complete-English-2021-11.pdf</a></td>
+<td>132S 安装尺寸独立核对</td>
+</tr>
+<tr>
+<td>9</td>
+<td>YE3 系列高效率三相异步电动机样本</td>
+<td>卧龙电气驱动集团股份有限公司</td>
+<td>2018</td>
+<td><a href="https://www.wolong.com.cn/upload/2018/06/20/15294850237162adl67.pdf" target="_blank" rel="noreferrer">https://www.wolong.com.cn/upload/2018/06/20/15294850237162adl67.pdf</a></td>
+<td>132S 安装与外形尺寸</td>
+</tr>
+<tr>
+<td>10</td>
+<td>YE3 系列产品数据库：YE3_132S_4_5.5_380_50_IE3_B3_CNE</td>
+<td>卧龙电气驱动集团股份有限公司</td>
+<td>n.d.</td>
+<td><a href="https://database.wolong.com/index.php/Home/Index/detail.html?id=30296" target="_blank" rel="noreferrer">https://database.wolong.com/index.php/Home/Index/detail.html?id=30296</a></td>
+<td>11.2 A、1460 r/min、cosφ 0.83、69 kg</td>
+</tr>
+<tr>
+<td>11</td>
+<td>皖南电机 YE3-132S-4 5.5 kW 产品参数页</td>
+<td>安徽皖南电机股份有限公司（西域目录）</td>
+<td>n.d.</td>
+<td><a href="https://www.ehsy.com/product-BNY124" target="_blank" rel="noreferrer">https://www.ehsy.com/product-BNY124</a></td>
+<td>11.2 A、35.9 N·m、cosφ 0.83、B3/IP55/F 级</td>
+</tr>
+<tr>
+<td>12</td>
+<td>SKF 6308 单列深沟球轴承产品数据</td>
+<td>SKF Group</td>
+<td>n.d.</td>
+<td><a href="https://www.skf.com/es/products/rolling-bearings/ball-bearings/deep-groove-ball-bearings/productid-6308" target="_blank" rel="noreferrer">https://www.skf.com/es/products/rolling-bearings/ball-bearings/deep-groove-ball-bearings/productid-6308</a></td>
+<td>40×90×23 mm、C 42.3 kN、0.63 kg</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>说明：<code>n.d.</code> 表示在线样本未标注发布日期。所有厂商样本仅用于交叉核对典型值，不作为出厂验收依据。</p>
+</blockquote>
+
+      </article>
+    </div>
+  </main>
+  <footer class="doc-footer">
+    <span>AXIS MOTORLAB · INDUSTRIAL MOTION OBSERVATORY</span>
+    <span>工程可视化重建 · 非制造图纸 · 数据以铭牌与制造商文件为准</span>
+    <a href="#">返回顶部 ↑</a>
+  </footer>
+</body>
+</html>

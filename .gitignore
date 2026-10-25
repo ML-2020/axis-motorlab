@@ -1,0 +1,11 @@
+node_modules/
+dist/
+/blender/
+axis-motorlab-site.zip
+*.log
+cloudflare-login.log
+build-site.log
+test-integration.log
+.wrangler/
+screenshots/integration/
+screenshots/tmp/
