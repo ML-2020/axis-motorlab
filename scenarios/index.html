@@ -25,11 +25,11 @@
       <div class="hero-blueprint" aria-hidden="true"></div>
       <div class="hero-shade"></div>
       <div class="hero-inner">
-        <div class="eyebrow"><span></span> APPLICATION ARCHIVE / 应用档案 001—004</div>
+        <div class="eyebrow"><span></span> SINGLE APPLICATION / 单场景档案 001</div>
         <h1>电机使用<br><em>场景模拟</em></h1>
         <p>
-          YE3-132S-4 并非只存在于试验台上。它驱动泵、输送机、冷却风机和搅拌器，
-          在灌溉季的稻田、夜班产线、建筑屋顶与水处理池边持续运行。
+          YE3-132S-4 并非只存在于试验台上。它驱动稻田灌渠中的离心泵，
+          在灌溉季持续取水、送水，并承受扬程、阀门与水质带来的真实负载。
         </p>
         <div class="hero-spec">
           <span>5.5 kW</span><span>1440 r/min</span><span>11.1 A</span><span>36.5 N·m</span><span>IP55</span><span>IC411</span><span>IE3</span>
@@ -37,10 +37,9 @@
         <a class="scroll-cue" href="#applications"><span>四种现场</span><i></i></a>
       </div>
       <div class="hero-index">
-        <span>01 稻田泵站</span>
-        <span>02 室内产线</span>
-        <span>03 屋顶冷却</span>
-        <span>04 水处理搅拌</span>
+        <span>01 稻田灌溉泵站</span>
+        <span>P-04 / S1 CONTINUOUS</span>
+        <span>90 m³/h @ 12 m</span>
       </div>
     </section>
 
@@ -64,10 +63,10 @@
     <section class="applications" id="applications">
       <div class="section-head">
         <div>
-          <div class="eyebrow"><span></span> FOUR APPLICATIONS / 四种负载</div>
-          <h2>同一台电机，<br>四种工作现场。</h2>
+          <div class="eyebrow"><span></span> SINGLE SCENE / 单场景深模拟</div>
+          <h2>稻田灌溉泵站<br>使用模拟。</h2>
         </div>
-        <p>参考照片只用于研究设备结构，不在网站中展示。四组场景均由数字模型、程序化材质和现场尺度重建。</p>
+        <p>这一版只做一个场景：从使用类型、工况和灌渠取水开始，先把稻田泵站做对，再谈美学。</p>
       </div>
 
       <div class="rated-strip">
@@ -75,7 +74,7 @@
         <b>YE3-132S-4</b><b>5.5 kW</b><b>1440 r/min</b><b>11.1 A</b><b>36.5 N·m</b><b>IP55</b><b>IC411</b><b>IM B3</b><b>S1</b>
       </div>
 
-      <div class="application-grid">
+      <div class="application-grid single">
         <article class="application-card app-pump" data-app="pump">
           <div class="visual">
             <canvas class="scene3d" data-scene="pump" aria-label="离心泵与电机数字模型"></canvas>
@@ -96,88 +95,22 @@
               <div><span>FLOW</span><b data-live="pump-flow">90</b><em>m³/h</em></div>
               <div><span>HEAD</span><b>12</b><em>m</em></div>
               <div><span>CURRENT</span><b data-live="pump-current">9.8</b><em>A</em></div>
+              <div><span>LOAD</span><b id="pump-load">74</b><em>%</em></div>
             </div>
             <div class="tags"><span>稻田灌溉</span><span>灌渠取水</span><span>离心泵组</span></div>
             <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 联轴器 → 泵轴；泵组重量 → 公共底座 → 混凝土基础</div>
             <div class="mech-note"><span>MOUNTING</span>IEC 132S · 轴高 132 mm · 轴伸 Ø38 mm · 联轴器护罩 · 地脚 M12</div>
-          </div>
-        </article>
-
-        <article class="application-card app-conveyor" data-app="conveyor">
-          <div class="visual">
-            <canvas class="scene3d" data-scene="conveyor" aria-label="输送机数字模型"></canvas>
-            <div class="grade"></div>
-            <div class="visual-top"><span>02 / MATERIAL HANDLING</span><span class="live"><i></i>RUNNING</span></div>
-            <div class="hotspot" style="left:24%;top:47%"><span>DRIVE</span></div>
-            <div class="hotspot" style="left:56%;top:56%"><span>BELT / ROLLERS</span></div>
-            <svg class="flow" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-              <path class="flow-path" d="M10 38 C24 38 26 29 38 29 C50 29 52 34 64 34 C77 34 80 25 92 25" />
-            </svg>
-            <div class="visual-foot"><span>SHIFT A / INDOOR</span><span data-live="conveyor-time">14:20</span></div>
-          </div>
-          <div class="copy">
-            <div class="copy-head"><h3>室内滚筒线</h3><span>SCN-02 / INDOOR</span></div>
-            <p>这款是动力滚筒输送线，不是“滚筒 + 皮带”的混合体。电机经联轴器、减速机和链传动驱动主动滚筒，再由滚筒组摩擦输送纸箱。</p>
-            <div class="metrics">
-              <div><span>SPEED</span><b data-live="conveyor-belt">1.2</b><em>m/s</em></div>
-              <div><span>THROUGHPUT</span><b data-live="conveyor-rate">1,400</b><em>pcs/h</em></div>
-              <div><span>CURRENT</span><b data-live="conveyor-current">11.0</b><em>A</em></div>
+            <div class="pump-console">
+              <div class="console-head"><span>PUMP CONSOLE / 运行控制</span><b id="pump-status">RUNNING</b></div>
+              <div class="console-actions">
+                <button id="pump-start" class="active">启动</button>
+                <button id="pump-stop">停机</button>
+                <button id="pump-cutaway">剖视模式</button>
+              </div>
+              <label class="valve-control" for="valve-slider"><span>出口阀开度</span><b id="valve-readout">100%</b></label>
+              <input id="valve-slider" type="range" min="0" max="100" value="100" />
+              <div class="console-note" id="console-note">设计点 90 m³/h @ 12 m · 水力功率约 2.94 kW · 电机负载约 74%</div>
             </div>
-            <div class="tags"><span>皮带输送</span><span>减速驱动</span><span>包装线</span></div>
-            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 联轴器 → 减速机 → 链传动 → 主动滚筒 → 滚筒组 → 纸箱</div>
-            <div class="mech-note"><span>LAYOUT</span>滚筒 Ø50 mm · 节距约 100 mm · 带宽约 500 mm · 面速 1.2 m/s · 链轮罩 · 张紧轴承</div>
-          </div>
-        </article>
-
-        <article class="application-card app-cooling" data-app="cooling">
-          <div class="visual monochrome">
-            <canvas class="scene3d" data-scene="cooling" aria-label="冷却塔风机数字模型"></canvas>
-            <div class="grade"></div>
-            <div class="visual-top"><span>03 / AIR MOVEMENT</span><span class="live"><i></i>RUNNING</span></div>
-            <div class="hotspot" style="left:52%;top:55%"><span>AXIAL FAN</span></div>
-            <div class="hotspot" style="left:38%;top:32%"><span>DRIVE / MOTOR</span></div>
-            <svg class="flow" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-              <path class="flow-path" d="M4 46 C20 46 17 37 31 37 C47 37 44 27 61 27 C79 27 78 19 96 19" />
-            </svg>
-            <div class="visual-foot"><span>ROOFTOP / CONTINUOUS</span><span data-live="cooling-time">13:50</span></div>
-          </div>
-          <div class="copy">
-            <div class="copy-head"><h3>屋顶冷却</h3><span>SCN-03 / OUTDOOR</span></div>
-            <p>电机驱动方形冷却塔的轴流风机。风机护罩、格栅、检修开关与直驱/皮带传动布置决定冷却塔的维护空间。</p>
-            <div class="metrics">
-              <div><span>AIRFLOW</span><b data-live="cooling-airflow">20,000</b><em>m³/h</em></div>
-              <div><span>AIR TEMP</span><b data-live="cooling-temp">32</b><em>°C</em></div>
-              <div><span>CURRENT</span><b data-live="cooling-current">11.0</b><em>A</em></div>
-            </div>
-            <div class="tags"><span>轴流风机</span><span>冷却塔</span><span>排热</span></div>
-            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 直驱/皮带 → 风叶；轴向推力 → 轴承 → 塔体支架</div>
-            <div class="mech-note"><span>LAYOUT</span>风机直径约 1.2 m · 风量 20,000 m³/h · 风机护罩 · 检修开关 · 振动监测点</div>
-          </div>
-        </article>
-
-        <article class="application-card app-water" data-app="water">
-          <div class="visual">
-            <canvas class="scene3d" data-scene="water" aria-label="水处理搅拌数字模型"></canvas>
-            <div class="grade"></div>
-            <div class="visual-top"><span>04 / MIXING</span><span class="live"><i></i>RUNNING</span></div>
-            <div class="hotspot" style="left:25%;top:70%"><span>MIXER / TANK</span></div>
-            <div class="hotspot" style="left:42%;top:49%"><span>DRIVE</span></div>
-            <svg class="flow" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-              <path class="flow-path" d="M8 46 C22 46 24 38 38 38 C52 38 51 49 65 49 C79 49 81 41 93 41" />
-            </svg>
-            <div class="visual-foot"><span>WATER TREATMENT / WET</span><span data-live="water-time">09:15</span></div>
-          </div>
-          <div class="copy">
-            <div class="copy-head"><h3>水处理搅拌</h3><span>SCN-04 / OUTDOOR</span></div>
-            <p>电机经侧入式联轴器驱动搅拌叶轮。中心/侧入式驱动、桥架、刮臂、进出水管与检修栏杆共同构成处理池设备。</p>
-            <div class="metrics">
-              <div><span>MIXER</span><b data-live="water-rpm">148</b><em>rpm</em></div>
-              <div><span>BASIN Ø</span><b>2.4</b><em>m</em></div>
-              <div><span>CURRENT</span><b data-live="water-current">11.5</b><em>A</em></div>
-            </div>
-            <div class="tags"><span>侧入式搅拌</span><span>加药</span><span>水处理</span></div>
-            <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 侧入轴 → 叶轮；径向载荷 → 轴承座 → 池壁/桥架</div>
-            <div class="mech-note"><span>LAYOUT</span>池径约 2.4 m · 叶轮转速 148 r/min · 机械密封 · 桥架/栏杆高度 1.1 m</div>
           </div>
         </article>
       </div>

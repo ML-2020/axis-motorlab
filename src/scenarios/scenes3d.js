@@ -23,6 +23,7 @@ const M = {
   rice: new THREE.MeshStandardMaterial({ color: 0x5b7b42, roughness: 0.9 }),
   riceHead: new THREE.MeshStandardMaterial({ color: 0x9aa05f, roughness: 0.85 }),
   leaf: new THREE.MeshStandardMaterial({ color: 0x466e4c, roughness: 0.9 }),
+  ghostGreen: new THREE.MeshStandardMaterial({ color: 0x5fa06d, transparent: true, opacity: 0.16, depthWrite: false, roughness: 0.5 }),
   cardboard: new THREE.MeshStandardMaterial({ color: 0x9a7b50, roughness: 0.9 }),
   terminal: new THREE.MeshStandardMaterial({ color: 0x31332f, metalness: 0.35, roughness: 0.5 }),
   nameplate: new THREE.MeshStandardMaterial({ color: 0xd8c69b, metalness: 0.2, roughness: 0.5 }),
@@ -391,18 +392,27 @@ function makePumpSet() {
   const pump = new THREE.Group();
   pump.position.set(-0.46, 0.29, 0);
   const volute = cyl(pump, 0.235, 0.235, 0.2, M.green, 0, 0, 0, 0, 0, Math.PI / 2, true, 32);
-  add(pump, new THREE.TorusGeometry(0.235, 0.045, 10, 28), M.greenDark, 0.02, 0, 0, 0, Math.PI / 2, 0);
-  cyl(pump, 0.09, 0.09, 0.35, M.green, -0.25, 0, 0, 0, 0, Math.PI / 2, true, 18);
-  add(pump, new THREE.TorusGeometry(0.105, 0.026, 8, 20), M.greenDark, -0.43, 0, 0, 0, Math.PI / 2, 0);
-  cyl(pump, 0.08, 0.08, 0.26, M.green, 0, 0.24, 0, 0, 0, 0, true, 18);
-  add(pump, new THREE.TorusGeometry(0.095, 0.022, 8, 20), M.greenDark, 0, 0.38, 0, Math.PI / 2, 0, 0);
+  const ring = add(pump, new THREE.TorusGeometry(0.235, 0.045, 10, 28), M.greenDark, 0.02, 0, 0, 0, Math.PI / 2, 0);
+  const suction = cyl(pump, 0.09, 0.09, 0.35, M.green, -0.25, 0, 0, 0, 0, Math.PI / 2, true, 18);
+  const suctionRing = add(pump, new THREE.TorusGeometry(0.105, 0.026, 8, 20), M.greenDark, -0.43, 0, 0, 0, Math.PI / 2, 0);
+  const discharge = cyl(pump, 0.08, 0.08, 0.26, M.green, 0, 0.24, 0, 0, 0, 0, true, 18);
+  const dischargeRing = add(pump, new THREE.TorusGeometry(0.095, 0.022, 8, 20), M.greenDark, 0, 0.38, 0, Math.PI / 2, 0, 0);
   cyl(pump, 0.06, 0.06, 0.2, M.greenDark, 0.22, 0.17, 0, 0, 0, Math.PI / 2, true, 16);
+  // Internal impeller is exposed by the cutaway view.
+  const impeller = new THREE.Group();
+  cyl(impeller, 0.045, 0.045, 0.1, M.steel, 0, 0, 0, 0, 0, Math.PI / 2, true, 14);
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * TAU;
+    const blade = box(impeller, 0.025, 0.17, 0.055, M.steel, 0.01, Math.cos(a) * 0.09, Math.sin(a) * 0.09, a, 0, 0, false);
+    blade.rotation.x = a + 0.35;
+  }
+  pump.add(impeller);
   add(g, new THREE.CylinderGeometry(0.055, 0.055, 0.04, 16), M.steel, 0.14, 0.42, 0);
   add(g, new THREE.CircleGeometry(0.045, 20), M.nameplate, 0.14, 0.445, 0, -Math.PI / 2, 0, 0, false);
   g.add(pump);
   addLabel(g, 'PUMP P-04  /  90 m³·h⁻¹', 0.28, 0.055, -0.44, 0.32, 0.225);
   // Discharge gate-valve handwheel and flange bolts.
-  add(pump, new THREE.TorusGeometry(0.095, 0.014, 7, 20), M.yellow, 0.02, 0.41, 0, Math.PI / 2, 0, 0, false);
+  const valveWheel = add(pump, new THREE.TorusGeometry(0.095, 0.014, 7, 20), M.yellow, 0.02, 0.41, 0, Math.PI / 2, 0, 0, false);
   for (let i = 0; i < 8; i++) {
     const a = (i / 8) * Math.PI * 2;
     add(pump, new THREE.CylinderGeometry(0.012, 0.012, 0.035, 6), M.darkSteel, -0.43, Math.cos(a) * 0.105, Math.sin(a) * 0.105, 0, 0, Math.PI / 2, false);
@@ -424,7 +434,7 @@ function makePumpSet() {
     add(flow, new THREE.SphereGeometry(0.018, 6, 5), new THREE.MeshBasicMaterial({ color: 0x8ed6dd, transparent: true, opacity: 0.8 }), -0.3, 0.4 + i * 0.07, 0.02, 0, 0, 0, false);
   }
   g.add(flow);
-  g.userData = { needle, flow, pump: pump };
+  g.userData = { needle, flow, pump, impeller, valveWheel, casing: [volute, ring, suction, suctionRing, discharge, dischargeRing] };
   g.scale.setScalar(1.08);
   return g;
 }
@@ -652,6 +662,7 @@ class ReferenceScene {
     this.scene.add(shadow);
     this.time = 0;
     this.spin = 0;
+    this.pumpState = { running: true, valve: 1, cutaway: false };
     this.build();
     this.resize();
     new ResizeObserver(() => this.resize()).observe(canvas.parentElement);
@@ -663,6 +674,8 @@ class ReferenceScene {
       this.model = makePumpSet();
       this.model.position.set(0, 0, 0);
       this.scene.add(this.model);
+      this.casingMats = this.model.userData.casing.map((mesh) => mesh.material);
+      this.pump = this.model.userData;
       this.camera.position.set(2.35, 1.5, 3.15);
       this.camera.lookAt(0, 0.42, 0);
       this.camera.fov = 38;
@@ -703,16 +716,33 @@ class ReferenceScene {
     this.camera.updateProjectionMatrix();
   }
 
+  setPumpState(next) {
+    if (this.type !== 'pump') return;
+    this.pumpState = { ...this.pumpState, ...next };
+    if (this.pump?.casing && this.casingMats) {
+      this.pump.casing.forEach((mesh, i) => {
+        mesh.material = this.pumpState.cutaway ? M.ghostGreen : this.casingMats[i];
+      });
+      this.pump.impeller.visible = true;
+    }
+  }
+
   update(dt, now) {
     this.time = now;
     this.spin = (this.spin + dt * 4.2) % (Math.PI * 2);
     if (this.type === 'pump') {
+      const state = this.pumpState;
+      const flowFactor = state.running ? state.valve : 0;
+      const head = state.running ? 12 * (1 + 0.25 * (1 - state.valve)) : 0;
       this.model.rotation.z = Math.sin(this.time * 0.0018) * 0.002;
-      const { needle, flow } = this.model.userData;
-      needle.rotation.z = 0.5 + Math.sin(this.time * 0.0015) * 0.13;
+      const { needle, flow, impeller, valveWheel } = this.model.userData;
+      needle.rotation.z = 0.2 + Math.min(1, head / 15) * 1.1;
+      valveWheel.rotation.z = (1 - state.valve) * 2.4;
+      impeller.rotation.x += state.running ? dt * (2.5 + state.valve * 5.5) : 0;
+      flow.visible = state.running && state.valve > 0.02;
       flow.children.forEach((b, i) => {
-        b.position.y = 0.4 + ((this.time * 0.00012 + i / 6) % 1) * 0.38;
-        b.material.opacity = 0.3 + Math.sin(this.time * 0.003 + i) * 0.25;
+        b.position.y = 0.4 + ((this.time * 0.00014 * (0.25 + flowFactor) + i / 6) % 1) * 0.38;
+        b.material.opacity = 0.25 + flowFactor * 0.55;
       });
       if (this.scene.userData.rice) {
         this.scene.userData.rice.group.rotation.z = Math.sin(this.time * 0.0007) * 0.008;
@@ -741,6 +771,7 @@ class ReferenceScene {
 }
 
 const scenes = $$('.scene3d').map((canvas) => new ReferenceScene(canvas, canvas.dataset.scene));
+window.__axisPump = scenes.find((scene) => scene.type === 'pump');
 let last = performance.now();
 let acc = 0;
 function loop(now) {

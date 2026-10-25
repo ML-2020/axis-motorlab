@@ -27,8 +27,9 @@ body {
   overflow-x: hidden;
 }
 img { display: block; max-width: 100%; }
+button, input { font: inherit; color: inherit; }
+button { border: 0; background: none; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-button { font: inherit; }
 ::selection { background: var(--accent); color: #111; }
 
 .topbar {
@@ -203,6 +204,10 @@ h1 em { color: var(--accent); font-style: normal; }
 .section-head h2 { margin-top: 14px; font-size: clamp(34px, 4.2vw, 63px); line-height: .97; font-weight: 530; letter-spacing: -.065em; }
 .section-head > p { max-width: 370px; color: var(--muted); font-size: 10px; line-height: 1.85; text-align: right; }
 .application-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.application-grid.single { grid-template-columns: 1fr; }
+.single .visual { aspect-ratio: auto; height: clamp(420px, 52vw, 720px); }
+.single .metrics { grid-template-columns: repeat(4, 1fr); }
+.single .copy { padding: 20px 20px 22px; }
 .rated-strip {
   display: flex;
   flex-wrap: wrap;
@@ -384,6 +389,28 @@ h1 em { color: var(--accent); font-style: normal; }
   letter-spacing: .035em;
 }
 .mech-note span { display: inline-block; min-width: 57px; color: var(--accent); margin-right: 5px; }
+.pump-console {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: rgba(10, 15, 11, .6);
+}
+.console-head { display: flex; justify-content: space-between; color: var(--faint); font-family: var(--mono); font-size: 6px; letter-spacing: .08em; }
+.console-head b { color: var(--sage); font-weight: 400; }
+.console-actions { display: flex; gap: 6px; margin-top: 11px; }
+.console-actions button {
+  padding: 7px 13px;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: .04em;
+}
+.console-actions button:hover, .console-actions button.active { color: var(--accent); border-color: var(--accent); background: rgba(212, 162, 81, .08); }
+.valve-control { display: flex; justify-content: space-between; align-items: center; margin-top: 13px; color: var(--faint); font-family: var(--mono); font-size: 6.5px; letter-spacing: .04em; }
+.valve-control b { color: var(--muted); font-weight: 400; }
+#valve-slider { width: 100%; margin-top: 7px; accent-color: var(--accent); height: 3px; }
+.console-note { margin-top: 10px; color: var(--faint); font-family: var(--mono); font-size: 6px; line-height: 1.6; }
 .application-card:hover .visual img { filter: saturate(.95) contrast(1.05) brightness(.9); }
 
 .method { padding: 30px var(--gut) 52px; border-top: 1px solid var(--line); }
@@ -420,6 +447,9 @@ h1 em { color: var(--accent); font-style: normal; }
   .brief-lede { margin-top: 14px; text-align: left; }
   .brief-grid { grid-template-columns: 1fr 1fr; }
   .application-grid { grid-template-columns: 1fr; }
+  .application-grid.single { grid-template-columns: 1fr; }
+  .single .visual { height: clamp(300px, 70vw, 520px); }
+  .single .metrics { grid-template-columns: 1fr 1fr; }
   .visual { aspect-ratio: 16 / 10; }
   .method-head { grid-template-columns: 1fr; gap: 14px; }
   .method-grid { grid-template-columns: 1fr; }
