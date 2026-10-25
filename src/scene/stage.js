@@ -4,6 +4,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { clamp, lerp, makeCanvasTexture, PI2 } from '../model/utils.js';
 import { Motor } from '../model/motor.js';
 import { createApplications } from '../model/applications.js';
+import { createFactoryEnvironment } from './factory.js';
 
 const GHOST_IDS = new Set([
   'stator-frame',
@@ -122,6 +123,8 @@ export class Stage {
     this.setupScene();
     this.setupLights();
     this.setupFloor();
+    this.factory = createFactoryEnvironment();
+    this.scene.add(this.factory.root);
     this.setupCamera();
     this.setupEffects();
     this.bindEvents();
@@ -630,6 +633,7 @@ export class Stage {
     this.autoRotateWanted = !!preset.autoRotate;
     this.mode = name;
     if (this.applications) this.applications.root.visible = name === 'applications';
+    if (this.factory) this.factory.root.visible = !['explode', 'parts', 'data'].includes(name);
     if (immediate) {
       this.camera.position.set(...preset.pos);
       this.controls.target.set(...preset.target);
@@ -758,6 +762,9 @@ export class Stage {
 
     if (this.applications?.root.visible) {
       this.applications.update(dt, elapsed);
+    }
+    if (this.factory?.root.visible) {
+      this.factory.update(dt, elapsed);
     }
 
     if (this.cameraTween) {
