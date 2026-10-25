@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#050809" />
+  <meta name="description" content="AXIS MOTORLAB 场景实验室：YE3-132S-4 电机在户外泵站与室内产线中的天气、昼夜、延时与实时运行模拟。" />
+  <title>AXIS MOTORLAB · 场景实验室 / 户外与室内环境模拟</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <div class="stage">
+    <canvas id="scenario-canvas" aria-label="电机应用环境三维模拟"></canvas>
+    <div class="stage-vignette" aria-hidden="true"></div>
+    <div class="stage-grain" aria-hidden="true"></div>
+  </div>
+  <div class="weather-fx" aria-hidden="true">
+    <div class="weather-rain-layer"></div>
+    <div class="weather-mist"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="返回 AXIS MOTORLAB 主站">
+      <span class="brand-mark"><span>A</span></span>
+      <span class="brand-text"><strong>AXIS</strong><em>SCENARIO LAB</em></span>
+    </a>
+    <div class="top-meta">
+      <span>ENVIRONMENT SIMULATION / YE3-132S-4</span>
+      <a href="/">← 返回主站</a>
+    </div>
+  </header>
+
+  <main class="interface">
+    <section class="intro">
+      <div class="eyebrow"><span></span> APPLIED ENVIRONMENTS / 应用环境</div>
+      <h1>让电机，<br>进入<em>天气与时间</em>。</h1>
+      <p class="lede">
+        同一台 YE3-132S-4，在同一套控制逻辑下，进入户外泵站与室内产线。
+        切换天气、拖动时间，观察它在延时与实时运行中的状态。
+      </p>
+
+      <div class="scenario-tabs" role="tablist" aria-label="应用场景">
+        <button class="scenario-tab active" data-scenario="outdoor" role="tab" aria-selected="true">
+          <span class="tab-index">01</span>
+          <span class="tab-name">户外泵站<em>OUTDOOR PUMP STATION</em></span>
+          <span class="tab-mark">↗</span>
+        </button>
+        <button class="scenario-tab" data-scenario="indoor" role="tab" aria-selected="false">
+          <span class="tab-index">02</span>
+          <span class="tab-name">室内产线<em>INDOOR ASSEMBLY LINE</em></span>
+          <span class="tab-mark">↗</span>
+        </button>
+      </div>
+
+      <div class="scenario-copy">
+        <div class="copy-label"><span id="scenario-code">SCN-01</span><i></i><span id="scenario-status">PUMPING / CONTINUOUS</span></div>
+        <p id="scenario-description">户外泵站。离心泵从低位水池取水，经出口管路送入管网。天气、湿度与昼夜温差影响环境温度与电机负载。</p>
+      </div>
+    </section>
+
+    <aside class="hud" aria-label="环境模拟控制">
+      <div class="hud-head">
+        <span>ENV CONTROL</span>
+        <span class="live-indicator"><i></i><b id="mode-label">TIME-LAPSE</b></span>
+      </div>
+
+      <div class="clock-panel">
+        <div class="clock-time" id="clock">14:00</div>
+        <div class="clock-meta"><span id="clock-date">OCT 26 / 2026</span><span id="sun-label">SUN / 42°</span></div>
+        <div class="clock-dial" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="control-block">
+        <span class="control-label">WEATHER / 天气</span>
+        <div class="weather-buttons" role="group" aria-label="天气">
+          <button data-weather="clear" class="active"><i class="weather-sun"></i>晴 CLEAR</button>
+          <button data-weather="overcast"><i class="weather-cloud"></i>阴 OVERCAST</button>
+          <button data-weather="rain"><i class="weather-rain"></i>雨 RAIN</button>
+        </div>
+      </div>
+
+      <div class="control-block">
+        <div class="slider-head"><span class="control-label">TIME OF DAY / 时间</span><b id="time-readout">14:00</b></div>
+        <input id="time-slider" class="time-slider" type="range" min="0" max="1439" value="840" aria-label="一天中的时间" />
+        <div class="slider-ticks"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+      </div>
+
+      <div class="mode-switch" role="group" aria-label="时间模式">
+        <button id="mode-timelapse" class="active">延时 TIMELAPSE</button>
+        <button id="mode-realtime">实时 REAL-TIME</button>
+      </div>
+
+      <div class="telemetry">
+        <div class="telemetry-head"><span>OPERATING POINT</span><span id="telemetry-state">RUNNING</span></div>
+        <div class="telemetry-grid">
+          <div><span>LOAD</span><b id="metric-load">78</b><em>%</em></div>
+          <div><span>AMBIENT</span><b id="metric-temp">26</b><em>°C</em></div>
+          <div><span id="metric-a-label">FLOW</span><b id="metric-a">42</b><em id="metric-a-unit">m³/h</em></div>
+          <div><span>CURRENT</span><b id="metric-current">11.2</b><em>A</em></div>
+        </div>
+        <div class="telemetry-note" id="telemetry-note">延时模拟 · 1 秒 ≈ 20 分钟</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <span>AXIS MOTORLAB / SCENARIO LAB</span>
+    <span>工程场景模拟 · 非真实天气或现场数据</span>
+    <a href="/blender/">Blender Film ↗</a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/scenarios/main.js"></script>
+</body>
+</html>

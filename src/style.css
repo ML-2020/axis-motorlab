@@ -2299,6 +2299,7 @@ body[data-chapter="anatomy"] .hotspot-layer {
   font-size: 7px;
   letter-spacing: 0.08em;
 }
+.application-actions { margin-top: 20px; pointer-events: auto; }
 .application-stamp {
   position: absolute;
   right: var(--gutter);
