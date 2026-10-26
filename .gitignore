@@ -12,3 +12,5 @@ test-integration.log
 .wrangler/
 screenshots/integration/
 screenshots/tmp/
+
+docs/concepts/tokenhub/generated/

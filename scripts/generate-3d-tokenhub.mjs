@@ -112,7 +112,7 @@ await fs.writeFile(path.join(outDir, `${id}.json`), JSON.stringify({
   model,
   taskId: id,
   status: result.status,
-  result: items.map((item) => ({ type: item.type, preview_image_url: item.preview_image_url || null, url: '<redacted signed URL; downloaded>' })),
+  result: items.map((item) => ({ type: item.type, preview_image_url: '<redacted signed URL; downloaded>', url: '<redacted signed URL; downloaded>' })),
   files: { model: path.relative(root, glbPath), preview: previewPath ? path.relative(root, previewPath) : null },
 }, null, 2));
 console.log(`saved ${path.relative(root, glbPath)}`);

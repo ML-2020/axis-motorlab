@@ -36,6 +36,7 @@ const apiKey = process.env.ARK_API_KEY;
 const model = process.env.ARK_IMAGE_MODEL || 'doubao-seedream-5-0-lite-260128';
 const baseUrl = (process.env.ARK_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
 const mode = argValue('--mode') || 'wide';
+const customPrompt = argValue('--prompt');
 const refPath = argValue('--ref');
 const dryRun = process.argv.includes('--dry-run');
 const count = Number(argValue('--count') || 1);
@@ -120,8 +121,8 @@ async function requestOne(prompt, index, reference) {
   return file;
 }
 
-const prompt = prompts[mode];
-if (!prompt) throw new Error(`Unknown mode "${mode}". Use wide or close.`);
+const prompt = customPrompt || prompts[mode];
+if (!prompt) throw new Error(`Unknown mode "${mode}". Use wide, close, or pass --prompt.`);
 if (mode === 'close' && !refPath) {
   console.warn('No --ref supplied; close view will be generated without a reference image.');
 }
