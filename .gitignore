@@ -3,6 +3,9 @@ dist/
 /blender/
 axis-motorlab-site.zip
 *.log
+.env
+.env.*
+!.env.example
 cloudflare-login.log
 build-site.log
 test-integration.log
