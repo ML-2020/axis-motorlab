@@ -1,0 +1,16 @@
+{
+  "mode": "discharge",
+  "model": "doubao-seedream-5-0-flash-260915",
+  "prompt": "Close-up of the blue gate valve, metal handwheel, pressure gauge, bolted flanges and galvanized discharge pipe above the green pump casing, wet concrete, paddy field background, dawn light, same pump station, realistic industrial materials, 85 mm lens, no text, no watermark, no people, 16:9.",
+  "reference": "docs\\concepts\\selected\\paddy-close.png",
+  "request": {
+    "size": "2K",
+    "response_format": "url",
+    "watermark": false
+  },
+  "returned": {
+    "url": "<redacted signed URL; download completed>",
+    "size": "2816x1584"
+  },
+  "file": "docs\\concepts\\generated\\discharge-2026-10-26T18-32-43-843Z-01.png"
+}

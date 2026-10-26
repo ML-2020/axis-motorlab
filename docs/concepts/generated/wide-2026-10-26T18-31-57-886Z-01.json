@@ -1,0 +1,16 @@
+{
+  "mode": "wide",
+  "model": "doubao-seedream-5-0-flash-260915",
+  "prompt": "Photorealistic industrial documentary photograph of a small rice paddy irrigation pump station in southern China at overcast dawn. Horizontal end-suction centrifugal pump with green casing and black 5.5 kW motor on a wet concrete pad, yellow coupling guard, galvanized suction pipe with cylindrical strainer in an irrigation canal, discharge pipe with blue gate valve and pressure gauge, flooded rice paddies, wet muddy bunds, small corrugated shelter with electrical cabinet on the right, distant tree line and low mountains, warm low sun breaking through thin clouds, 35 mm lens, eye level, three-quarter view, realistic industrial materials, no text, no watermark, no people, no aerial view, 16:9.",
+  "reference": null,
+  "request": {
+    "size": "2K",
+    "response_format": "url",
+    "watermark": false
+  },
+  "returned": {
+    "url": "<redacted signed URL; download completed>",
+    "size": "2816x1584"
+  },
+  "file": "docs\\concepts\\generated\\wide-2026-10-26T18-31-57-886Z-01.png"
+}

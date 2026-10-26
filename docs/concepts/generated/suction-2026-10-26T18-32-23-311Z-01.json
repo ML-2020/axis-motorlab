@@ -1,0 +1,16 @@
+{
+  "mode": "suction",
+  "model": "doubao-seedream-5-0-flash-260915",
+  "prompt": "Close-up three-quarter detail of the galvanized suction elbow, bolted flange and cylindrical perforated strainer entering the irrigation canal, green pump casing edge, wet concrete pad, shallow muddy water, early morning soft light, same pump station, realistic industrial materials, 85 mm lens, no text, no watermark, no people, 16:9.",
+  "reference": "docs\\concepts\\selected\\paddy-close.png",
+  "request": {
+    "size": "2K",
+    "response_format": "url",
+    "watermark": false
+  },
+  "returned": {
+    "url": "<redacted signed URL; download completed>",
+    "size": "2816x1584"
+  },
+  "file": "docs\\concepts\\generated\\suction-2026-10-26T18-32-23-311Z-01.png"
+}

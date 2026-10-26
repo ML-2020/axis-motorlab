@@ -1,0 +1,16 @@
+{
+  "mode": "drive",
+  "model": "doubao-seedream-5-0-flash-260915",
+  "prompt": "Close-up of the black finned 5.5 kW motor, yellow perforated coupling guard, pump bearing housing, green common baseplate and bolted feet, wet concrete, paddy field background, dawn light, same pump station, realistic industrial materials, 85 mm lens, no text, no watermark, no people, 16:9.",
+  "reference": "docs\\concepts\\selected\\paddy-close.png",
+  "request": {
+    "size": "2K",
+    "response_format": "url",
+    "watermark": false
+  },
+  "returned": {
+    "url": "<redacted signed URL; download completed>",
+    "size": "2816x1584"
+  },
+  "file": "docs\\concepts\\generated\\drive-2026-10-26T18-33-04-401Z-01.png"
+}

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /scenarios/
 
 Sitemap: https://axis-motorlab.pages.dev/sitemap.xml
