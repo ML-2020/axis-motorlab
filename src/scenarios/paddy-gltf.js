@@ -4,6 +4,8 @@ import '@fontsource/ibm-plex-mono/500.css';
 import './photo.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as DATA from '../data/motor-data.js';
+import { Motor } from '../model/motor.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -34,12 +36,14 @@ sun.shadow.camera.bottom = -8;
 sun.shadow.bias = -0.0005;
 scene.add(sun, sun.target);
 
-camera.position.set(3.6, 2.35, 4.35);
-camera.lookAt(0, 0.55, 0);
-camera.fov = 36;
+camera.position.set(2.8, 1.9, 3.4);
+camera.lookAt(0.05, 0.45, 0);
+camera.fov = 34;
 camera.updateProjectionMatrix();
 
 let model = null;
+let detailedMotor = null;
+let motorSpin = 0;
 let impeller = null;
 let valveWheel = null;
 let gaugeNeedle = null;
@@ -51,6 +55,8 @@ const loader = new GLTFLoader();
 loader.load('/models/paddy_pump_station.glb', (gltf) => {
   model = gltf.scene;
   scene.add(model);
+  model.updateMatrixWorld(true);
+  const motorParts = [];
   model.traverse((obj) => {
     if (!obj.isMesh) return;
     obj.castShadow = true;
@@ -58,7 +64,33 @@ loader.load('/models/paddy_pump_station.glb', (gltf) => {
     if (obj.name === 'PumpCasing' || obj.name === 'PumpSuction' || obj.name === 'PumpDischarge') {
       casing.push(obj);
     }
+    if (obj.name.startsWith('Motor') || obj.name.startsWith('AnchorPlate')) {
+      motorParts.push(obj);
+    }
   });
+  const motorBox = new THREE.Box3();
+  motorParts.forEach((part) => motorBox.expandByObject(part));
+  const targetCenter = motorBox.getCenter(new THREE.Vector3());
+  const targetMinY = motorBox.min.y;
+  motorParts.forEach((part) => { part.visible = false; });
+  // Use the same 22-part Motor model as the main dossier, so the application
+  // scene cannot drift into a visibly different motor.
+  detailedMotor = new Motor(renderer, DATA);
+  detailedMotor.root.rotation.y = Math.PI / 2;
+  scene.add(detailedMotor.root);
+  detailedMotor.root.updateMatrixWorld(true);
+  const detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
+  const detailSize = detailBox.getSize(new THREE.Vector3());
+  const scale = Math.min(1.15, Math.max(0.78, (motorBox.max.x - motorBox.min.x) / detailSize.x));
+  detailedMotor.root.scale.setScalar(scale);
+  detailedMotor.root.updateMatrixWorld(true);
+  const scaledBox = new THREE.Box3().setFromObject(detailedMotor.root);
+  const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+  detailedMotor.root.position.x += targetCenter.x - scaledCenter.x;
+  detailedMotor.root.position.z += targetCenter.z - scaledCenter.z;
+  detailedMotor.root.position.y += targetMinY - scaledBox.min.y;
+  detailedMotor.setSpin(0);
+  window.__detailedMotor = detailedMotor;
   impeller = model.getObjectByName('Impeller');
   valveWheel = model.getObjectByName('ValveWheel');
   gaugeNeedle = model.getObjectByName('GaugeNeedle');
@@ -182,6 +214,10 @@ function animate(now) {
     if (impeller) impeller.rotation.x += pumpState.running ? step * (2.5 + pumpState.valve * 5.5) : 0;
     if (valveWheel) valveWheel.rotation.z = (1 - pumpState.valve) * 2.4;
     if (gaugeNeedle) gaugeNeedle.rotation.z = 0.1 + Math.min(1, (pumpState.running ? 12 * (1 + .25 * (1 - pumpState.valve)) : 0) / 15) * 1.1;
+    if (detailedMotor) {
+      motorSpin = (motorSpin + (pumpState.running ? step * (4.0 + pumpState.valve * 3.0) : 0)) % (Math.PI * 2);
+      detailedMotor.setSpin(motorSpin);
+    }
   }
   renderer.render(scene, camera);
 }

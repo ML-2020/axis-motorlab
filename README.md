@@ -31,7 +31,8 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 - 源场景：`blender/paddy_pump_station.blend`；
 - Web 资产：`public/models/paddy_pump_station.glb`；
 - 建模内容：泵组、电机、联轴器护罩、吸入滤网、出口阀、管道、混凝土泵台、田埂、稻株、灌渠、棚架和树木；
-- 命名对象：`PumpCasing`、`PumpSuction`、`PumpDischarge`、`Impeller`、`ValveWheel`、`GaugeNeedle`，用于网页端剖视和动画。
+- 命名对象：`PumpCasing`、`PumpSuction`、`PumpDischarge`、`Impeller`、`ValveWheel`、`GaugeNeedle`，用于网页端剖视和动画；
+- 电机不再使用 GLB 里的简化替身：网页隐藏粗模电机，直接实例化主站同一个 22 部件 `Motor`，保证产品外观一致。
 
 ### 使用类型与工况
 
