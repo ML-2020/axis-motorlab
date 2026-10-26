@@ -26,6 +26,36 @@ def material(name, color, metallic=0.0, roughness=0.5, alpha=1.0):
         m.use_transparency_overlap = False
     return m
 
+def textured_material(name, texture_dir, prefix):
+    """CC0 PBR texture material. Images are packed into the exported GLB."""
+    m = material(name, (0.5, 0.5, 0.5), 0.0, 0.9)
+    nodes = m.node_tree.nodes
+    links = m.node_tree.links
+    bsdf = nodes.get("Principled BSDF")
+
+    def image(file_name, non_color=False):
+        path = os.path.join(ROOT, "blender", "assets", "textures", texture_dir, file_name)
+        img = bpy.data.images.load(path, check_existing=True)
+        if non_color:
+            img.colorspace_settings.name = "Non-Color"
+        node = nodes.new("ShaderNodeTexImage")
+        node.image = img
+        node.interpolation = "Linear"
+        return node
+
+    diffuse = image(f"{prefix}_diff_1k.jpg")
+    links.new(diffuse.outputs["Color"], bsdf.inputs["Base Color"])
+
+    rough = image(f"{prefix}_rough_1k.jpg", True)
+    links.new(rough.outputs["Color"], bsdf.inputs["Roughness"])
+
+    normal = image(f"{prefix}_nor_gl_1k.jpg", True)
+    normal_node = nodes.new("ShaderNodeNormalMap")
+    normal_node.inputs["Strength"].default_value = 0.85
+    links.new(normal.outputs["Color"], normal_node.inputs["Color"])
+    links.new(normal_node.outputs["Normal"], bsdf.inputs["Normal"])
+    return m
+
 MAT = {
     "concrete": material("Concrete", (0.36, 0.38, 0.34), 0.0, 0.88),
     "earth": material("Earth", (0.20, 0.17, 0.11), 0.0, 0.96),
@@ -44,6 +74,10 @@ MAT = {
     "leaf": material("LeafGreen", (0.10, 0.24, 0.11), 0.0, 0.82),
     "label": material("Label", (0.65, 0.56, 0.36), 0.1, 0.5),
 }
+
+# Real CC0 PBR textures from Poly Haven, packed into the GLB.
+MAT["concrete"] = textured_material("ConcretePBR", "anti_slip_concrete", "anti_slip_concrete")
+MAT["earth"] = textured_material("MudPBR", "aerial_mud_1", "aerial_mud_1")
 
 def select_only(obj):
     bpy.ops.object.select_all(action="DESELECT")

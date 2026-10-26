@@ -1,0 +1,22 @@
+id,category,asset,source_type,source_candidate,license,dimensions_m,priority,status,notes
+ENV-01,environment,paddy water surface,Blender/manual,self-authored,project,10.2x7.4,high,blockout,needs normal/ripple map
+ENV-02,environment,mud bund,CC0 texture,Poly Haven aerial_mud_1,CC0,3.2x2.2,high,implemented,packed into GLB
+ENV-03,environment,rice plants,Blender geometry nodes,self-authored,project,variable,high,blockout,needs variants and wind
+ENV-04,environment,weeds,CC0 model,Poly Haven grass assets,CC0,variable,medium,not started,scatter near bunds
+ENV-05,environment,HDRI sky,CC0 HDRI,Poly Haven HDRI,CC0,n/a,high,not started,replace RoomEnvironment
+ENV-06,environment,shed,Blender/manual,self-authored,project,2.4x1.7x2.1,medium,blockout,needs rust/roof detail
+ENV-07,environment,trees,CC0 model/Poly Haven,CC0,variable,medium,not started,background LOD
+CIV-01,civil,concrete pad,Blender/manual + CC0 texture,Poly Haven anti_slip_concrete,CC0,3.2x2.2x0.12,high,implemented,texture packed into GLB
+CIV-02,civil,drainage channel,Blender/manual,self-authored,project,0.2x0.18,medium,not started,low side of pad
+CIV-03,civil,anchor bolts and shims,Blender/manual,self-authored,project,M12,high,blockout,align to baseplate holes
+P-01,pump,common baseplate,Blender/manual,self-authored,project,1.55x0.62x0.09,high,blockout,channel rails added
+P-02,pump,end-suction pump casing,manufacturer CAD/manual,unknown manufacturer CAD,license unknown,0.55x0.5x0.5,high,blockout,needs real casing/flanges
+P-03,pump,shaft and bearing housing,manufacturer CAD/manual,unknown,license unknown,0.3x0.25,high,blockout,needs exact centerline
+P-04,pump,coupling,standard component,SKF/Flender-style,license unknown,0.15x0.15,high,blockout,three-part coupling
+P-05,pump,coupling guard,Blender/manual,self-authored,project,0.3x0.28x0.18,high,blockout,needs slots and fasteners
+P-06,pump,gate valve,standard component,valve library,license unknown,0.2x0.2,high,blockout,body/stem/wheel added
+P-07,pump,check valve,standard component,valve library,license unknown,DN125,medium,not started,downstream of pump
+P-08,pump,pressure gauge,standard component,instrument library,license unknown,0.1,medium,blockout,needs dial/needle
+P-09,pump,suction strainer,Blender/manual,self-authored,project,0.3x0.3,high,blockout,needs mesh pattern
+P-10,piping,flanges/bolts/elbows,standard component,pipe fitting library,license unknown,DN125/DN150,high,blockout,bolts added
+M-01,motor,YE3-132S-4,Three.js model,src/model/motor.js,project,0.6x0.32x0.32,high,implemented,not exported in GLB
