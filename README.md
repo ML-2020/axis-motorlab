@@ -33,8 +33,10 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 - 建模内容：泵组、电机、联轴器护罩、吸入滤网、出口阀、管道、混凝土泵台、田埂、稻株、灌渠、棚架和树木；
 - 命名对象：`PumpCasing`、`PumpSuction`、`PumpDischarge`、`Impeller`、`ValveWheel`、`GaugeNeedle`，用于网页端剖视和动画；
 - 电机不再使用 GLB 里的简化替身：网页隐藏粗模电机，直接实例化主站同一个 22 部件 `Motor`，保证产品外观一致；
-- 电机轴心按泵轴中心对齐，132S 轴高约 132 mm；若泵组底座更高，网页生成钢制转接台，而不是让电机悬空；
-- 使用 RoomEnvironment PMREM 环境反射，并对泵壳、管道、底座、水体和地面做 PBR 金属度/粗糙度校正。
+- Blender 场景导出 `Anchor_Motor_Mount`：电机位置和姿态直接来自该锚点，不再由 Three.js 猜测坐标；
+- 机械约束集中在 `src/data/mechanical-constraints.js`（轴高 132 mm、轴径 38 mm、联轴器间隙 3 mm、IM B3）；
+- 使用 RoomEnvironment PMREM 环境反射，并通过 `enforceIndustrialMaterials()` 强制金属/混凝土/水面的 PBR 参数与阴影；
+- 协作规范见根目录 `AI_COLLABORATION_RULES.md`。
 
 ### 使用类型与工况
 

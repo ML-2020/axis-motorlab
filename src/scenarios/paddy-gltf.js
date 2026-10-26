@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import * as DATA from '../data/motor-data.js';
 import { Motor } from '../model/motor.js';
+import { IEC_132S_SPECS } from '../data/mechanical-constraints.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -73,64 +74,25 @@ loader.load('/models/paddy_pump_station.glb', (gltf) => {
       motorParts.push(obj);
     }
   });
-  const motorBox = new THREE.Box3();
-  motorParts.forEach((part) => motorBox.expandByObject(part));
-  const oldMotorCenter = motorBox.getCenter(new THREE.Vector3());
-  const pumpCasing = model.getObjectByName('PumpCasing');
-  const pumpBox = new THREE.Box3();
-  if (pumpCasing) pumpBox.expandByObject(pumpCasing);
-  const pumpCenter = pumpBox.getCenter(new THREE.Vector3());
   motorParts.forEach((part) => { part.visible = false; });
-  // Use the same 22-part Motor model as the main dossier, so the application
-  // scene cannot drift into a visibly different motor.
+
+  const anchor = model.getObjectByName(IEC_132S_SPECS.anchorName);
+  if (!anchor) {
+    console.error(`Missing ${IEC_132S_SPECS.anchorName} in paddy_pump_station.glb`);
+    document.body.classList.add('asset-error');
+    return;
+  }
+  window.__motorMountAnchor = anchor;
+
+  // Use the same 22-part Motor model as the main dossier. Its position and
+  // orientation are copied from the Blender anchor; no guessed coordinates.
   detailedMotor = new Motor(renderer, DATA);
-  detailedMotor.root.rotation.y = Math.PI / 2;
   detailedMotor.root.scale.setScalar(1);
   scene.add(detailedMotor.root);
+  detailedMotor.root.position.copy(anchor.getWorldPosition(new THREE.Vector3()));
+  detailedMotor.root.quaternion.copy(anchor.getWorldQuaternion(new THREE.Quaternion()));
   detailedMotor.root.updateMatrixWorld(true);
-  // Constraint: motor shaft axis = pump shaft axis. The Motor root's y is its
-  // 132 mm shaft height, so feet are 132 mm below the shaft centre.
-  const shaftY = pumpCenter.y;
-  detailedMotor.root.position.set(oldMotorCenter.x, shaftY, oldMotorCenter.z);
-  detailedMotor.root.updateMatrixWorld(true);
-  let detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
-  const detailCenter = detailBox.getCenter(new THREE.Vector3());
-  detailedMotor.root.position.x += oldMotorCenter.x - detailCenter.x;
-  detailedMotor.root.position.z += oldMotorCenter.z - detailCenter.z;
-  // If the borrowed pump set sits higher than the 132S motor feet, build a
-  // visible steel adapter pedestal instead of letting the motor float.
-  detailedMotor.root.updateMatrixWorld(true);
-  detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
-  const pedestalTop = detailBox.min.y;
-  const pedestalBottom = motorBox.min.y;
-  if (pedestalTop > pedestalBottom + 0.015) {
-    const ped = new THREE.Mesh(
-      new THREE.BoxGeometry(0.52, pedestalTop - pedestalBottom, 0.38),
-      new THREE.MeshStandardMaterial({ color: 0x303635, metalness: 0.7, roughness: 0.45 }),
-    );
-    ped.name = 'MotorAdapterPedestal';
-    ped.position.set(oldMotorCenter.x, (pedestalTop + pedestalBottom) / 2, oldMotorCenter.z);
-    ped.castShadow = true;
-    ped.receiveShadow = true;
-    scene.add(ped);
-  }
-  model.traverse((obj) => {
-    if (!obj.isMesh || !obj.material) return;
-    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-    mats.forEach((mat) => {
-      if (!mat.isMeshStandardMaterial) return;
-      if (/Pump|Pipe|Skid|Gear|ShedPost|Gauge/.test(obj.name)) {
-        mat.metalness = Math.max(mat.metalness, 0.55);
-        mat.roughness = Math.min(mat.roughness, 0.42);
-      }
-      if (/PaddyEarth|PumpPad|Bund|ShedFloor/.test(obj.name)) {
-        mat.metalness = 0.02;
-        mat.roughness = 0.94;
-      }
-      mat.envMapIntensity = 1.15;
-      mat.needsUpdate = true;
-    });
-  });
+  enforceIndustrialMaterials(model);
   detailedMotor.setSpin(0);
   window.__detailedMotor = detailedMotor;
   impeller = model.getObjectByName('Impeller');
@@ -144,6 +106,29 @@ loader.load('/models/paddy_pump_station.glb', (gltf) => {
   console.error('Paddy model failed to load', error);
   document.body.classList.add('asset-error');
 });
+
+function enforceIndustrialMaterials(root) {
+  root.traverse((child) => {
+    if (!child.isMesh) return;
+    child.castShadow = true;
+    child.receiveShadow = true;
+    if (!child.material) return;
+    const mats = Array.isArray(child.material) ? child.material : [child.material];
+    mats.forEach((mat) => {
+      if (!mat.isMeshStandardMaterial) return;
+      if (/metal|pump|pipe|skid|base|gear|gauge/i.test(child.name)) {
+        mat.metalness = Math.max(mat.metalness, 0.55);
+        mat.roughness = Math.min(Math.max(mat.roughness, 0.34), 0.5);
+      }
+      if (/earth|pad|bund|floor|concrete/i.test(child.name)) {
+        mat.metalness = 0.02;
+        mat.roughness = 0.94;
+      }
+      mat.envMapIntensity = 1.15;
+      mat.needsUpdate = true;
+    });
+  });
+}
 
 function applyPumpState() {
   if (!model) return;

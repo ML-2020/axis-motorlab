@@ -1,4 +1,4 @@
-﻿import bpy, math, random, os
+import bpy, math, random, os
 from mathutils import Vector, Euler
 
 ROOT = r"C:\Users\18313\Documents\deepseek-harness\default-workspace"
@@ -146,7 +146,8 @@ for name, x, y, z, sx, sy, sz in [
 base_z = 0.12
 box("Skid", 0.1, 0.1, base_z + 0.045, 1.55, 0.62, 0.09, MAT["dark_steel"], 0.015)
 box("SkidTop", 0.1, 0.1, base_z + 0.092, 1.42, 0.5, 0.014, MAT["black"], 0.006)
-shaft_z = base_z + 0.37
+# 132S shaft centre = common-base top + 132 mm IEC shaft height.
+shaft_z = 0.351
 # motor
 cyl("MotorBarrel", 0.38, 0.1, shaft_z, 0.175, 0.46, MAT["black"], axis="X", verts=40, bevel_w=0.008)
 for i in range(15):
@@ -304,6 +305,17 @@ rice = bpy.context.object
 rice.name = "RiceField"
 # remove template
 bpy.data.objects.remove(plant, do_unlink=True)
+
+# ---------------------------------------------------------------------------
+# Machine-readable mounting anchor for the Three.js assembly.
+# ---------------------------------------------------------------------------
+bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.38, 0.1, shaft_z), rotation=(0, math.pi / 2, 0))
+anchor = bpy.context.object
+anchor.name = "Anchor_Motor_Mount"
+anchor["mounting_type"] = "IM_B3"
+anchor["shaft_height_m"] = 0.132
+anchor["shaft_diameter_m"] = 0.038
+anchor["coupling_gap_m"] = 0.003
 
 # Make sun and camera for a preview render, not included in glTF export.
 sun_data = bpy.data.lights.new("Sun", type="SUN")
