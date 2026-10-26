@@ -18,6 +18,20 @@ import path from 'node:path';
 
 const root = process.cwd();
 const outDir = path.join(root, 'docs', 'concepts', 'generated');
+
+// Load a local .env without adding a dependency. Never commit .env.
+try {
+  const envText = await fs.readFile(path.join(root, '.env'), 'utf8');
+  for (const line of envText.split(/\r?\n/)) {
+    const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    if (!match) continue;
+    const value = match[2].replace(/^['"]|['"]$/g, '');
+    if (process.env[match[1]] === undefined) process.env[match[1]] = value;
+  }
+} catch {
+  // .env is optional; environment variables still work.
+}
+
 const apiKey = process.env.ARK_API_KEY;
 const model = process.env.ARK_IMAGE_MODEL || 'doubao-seedream-5-0-lite-260128';
 const baseUrl = (process.env.ARK_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
