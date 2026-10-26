@@ -36,6 +36,8 @@ YE3-132S-4 三相异步电动机 · 交互式三维工程档案与应用场景�
 - Blender 场景导出 `Anchor_Motor_Mount`：电机位置和姿态直接来自该锚点，不再由 Three.js 猜测坐标；
 - 机械约束集中在 `src/data/mechanical-constraints.js`（轴高 132 mm、轴径 38 mm、联轴器间隙 3 mm、IM B3）；
 - 使用 RoomEnvironment PMREM 环境反射，并通过 `enforceIndustrialMaterials()` 强制金属/混凝土/水面的 PBR 参数与阴影；
+- 泵组新增法兰螺栓、阀体/阀杆/手轮、底座槽钢、地脚螺栓、调平垫铁、排水塞和多个机械锚点；3D 场景文字标注已移除；
+- 当前资产等级为 **Mechanical Accurate Mockup**；它还不是 PBR 贴图级 Production Asset；
 - 协作规范见根目录 `AI_COLLABORATION_RULES.md`。
 
 ### 使用类型与工况

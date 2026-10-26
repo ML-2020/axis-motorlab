@@ -6,7 +6,19 @@
 
 ---
 
-## 1. 禁止在 Three.js 里捏造工业几何体
+## 1. 资产等级
+
+本项目区分三级资产，禁止混用描述：
+
+1. **Technical Blockout**：只用于布局、锚点、碰撞和交互验证，不得作为最终展示资产；
+2. **Mechanical Accurate Mockup**：尺寸、轴系、法兰、底座、管件连接可信，允许暂缺贴图；
+3. **Production Asset**：具备 PBR、倒角、螺栓、焊缝、AO、磨损和真实环境细节。
+
+当前 `/scenarios/` 的泵站资产定位为 **Mechanical Accurate Mockup**，不是 Production Asset。不得在汇报或页面文案中把它描述成写实工业资产。
+
+---
+
+## 2. 禁止在 Three.js 里捏造工业几何体
 
 - 禁止用 `BoxGeometry`、`CylinderGeometry`、`SphereGeometry` 等基础几何体临时拼工业部件（泵、电机、管道、底座、阀门、法兰、棚架等）。
 - 复杂视觉元素必须在 Blender 中完成，并导出为 `.glb`。

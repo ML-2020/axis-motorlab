@@ -108,6 +108,19 @@ def pipe(name, a, b, radius, mat):
     bevel(obj, 0.002)
     return obj
 
+def bolt_circle(prefix, center, radius, count, axis, mat, depth=0.018, head_radius=0.008):
+    cx, cy, cz = center
+    for i in range(count):
+        a = (i / count) * math.tau
+        if axis == "X":
+            x, y, z = cx, cy + math.cos(a) * radius, cz + math.sin(a) * radius
+        elif axis == "Y":
+            x, y, z = cx + math.cos(a) * radius, cy, cz + math.sin(a) * radius
+        else:
+            x, y, z = cx + math.cos(a) * radius, cy + math.sin(a) * radius, cz
+        cyl(f"{prefix}_Bolt{i}", x, y, z, head_radius, depth, mat, axis=axis, verts=8, bevel_w=0.001)
+        cyl(f"{prefix}_Nut{i}", x, y, z, head_radius * 1.45, depth * 0.55, MAT["dark_steel"], axis=axis, verts=6, bevel_w=0.001)
+
 def text_mesh(name, body, x, y, z, size=0.06, rot=(math.pi/2, 0, -math.pi/2), mat=None):
     bpy.ops.object.text_add(location=(x, y, z), rotation=rot)
     obj = bpy.context.object
@@ -170,7 +183,6 @@ for x in (0.2, 0.55):
     for y in (-0.14, 0.36):
         box("MotorFoot", x, y, base_z + 0.115, 0.13, 0.09, 0.15, MAT["dark_steel"], 0.006)
         box("AnchorPlate", x, y - 0.03, base_z + 0.205, 0.085, 0.04, 0.018, MAT["steel"], 0.002)
-text_mesh("MotorNameplate", "YE3-132S-4\n5.5 kW  1440 r/min\nIP55  IM B3  S1", 0.38, -0.07, shaft_z - 0.005, 0.045, (math.pi/2, 0, 0), MAT["label"])
 # pump
 pump_x = -0.65
 cyl("PumpCasing", pump_x, 0.1, shaft_z, 0.235, 0.22, MAT["green"], axis="X", verts=40, bevel_w=0.008)
@@ -213,7 +225,29 @@ cyl("GaugeBody", pump_x + 0.12, 0.1, shaft_z + 0.53, 0.085, 0.035, MAT["dark_ste
 cyl("GaugeNeedle", pump_x + 0.12, 0.074, shaft_z + 0.53, 0.006, 0.06, MAT["yellow"], axis="Y", verts=8, bevel_w=0.0)
 # valve wheel on discharge
 torus("ValveWheel", pump_x, 0.1, shaft_z + 0.58, 0.105, 0.016, MAT["yellow"], axis="Z")
-text_mesh("PumpNameplate", "P-04  /  90 m3/h  /  12 m", pump_x, 0.055, shaft_z + 0.02, 0.055, (math.pi/2, 0, 0), MAT["label"])
+# gate valve body, stem and packing gland
+cyl("GateValveBody", pump_x, 0.1, shaft_z + 0.50, 0.115, 0.18, MAT["green_dark"], axis="Z", verts=24, bevel_w=0.004)
+torus("GateValveFlangeLow", pump_x, 0.1, shaft_z + 0.41, 0.105, 0.018, MAT["green_dark"], axis="Z")
+torus("GateValveFlangeHigh", pump_x, 0.1, shaft_z + 0.59, 0.105, 0.018, MAT["green_dark"], axis="Z")
+cyl("ValveStem", pump_x, 0.1, shaft_z + 0.64, 0.014, 0.16, MAT["steel"], axis="Z", verts=10, bevel_w=0.001)
+cyl("ValveGland", pump_x, 0.1, shaft_z + 0.60, 0.034, 0.04, MAT["steel"], axis="Z", verts=12, bevel_w=0.001)
+# flange bolt groups
+bolt_circle("SuctionFlangeBolt", (pump_x - 0.565, 0.1, shaft_z), 0.078, 8, "X", MAT["steel"])
+bolt_circle("DischargeFlangeBolt", (pump_x, 0.1, shaft_z + 0.455), 0.075, 8, "Z", MAT["steel"])
+bolt_circle("ValveFlangeBolt", (pump_x, 0.1, shaft_z + 0.595), 0.078, 8, "Z", MAT["steel"])
+# coupling guard fasteners
+for x in (-0.3, -0.06):
+    for z in (-0.055, 0.055):
+        box("GuardScrew", x, 0.1, shaft_z + z, 0.018, 0.3, 0.018, MAT["steel"], 0.001)
+# baseplate rails, grout pads and holding-down bolts
+for y in (-0.2, 0.4):
+    box("BaseRail", 0.1, y, base_z + 0.07, 1.68, 0.12, 0.16, MAT["dark_steel"], 0.012)
+for x in (-0.55, 0.1, 0.75):
+    for y in (-0.28, 0.48):
+        cyl("HoldingDownBolt", x, y, base_z + 0.05, 0.018, 0.24, MAT["steel"], axis="Z", verts=10, bevel_w=0.001)
+        cyl("LevelingShim", x, y, base_z + 0.012, 0.055, 0.012, MAT["steel"], axis="Z", verts=12, bevel_w=0.001)
+# casing drain plug
+cyl("PumpDrainPlug", pump_x, 0.1, shaft_z - 0.245, 0.026, 0.055, MAT["steel"], axis="Z", verts=10, bevel_w=0.001)
 
 # ---------------------------------------------------------------------------
 # Suction and discharge piping
@@ -235,7 +269,6 @@ for x in (-3.9, -1.9):
         box("ShedPost", x, y, 1.05, 0.1, 0.1, 1.9, MAT["dark_steel"], 0.004)
 box("ShedRoof", -2.9, -1.75, 2.05, 2.6, 1.95, 0.12, MAT["roof"], 0.008)
 box("ShedDoor", -2.9, -0.91, 0.75, 0.7, 0.04, 1.15, MAT["dark_steel"], 0.004)
-text_mesh("PaddyLabel", "PADDY IRRIGATION / P-04", -2.9, -0.88, 1.35, 0.11, (math.pi/2, 0, 0), MAT["label"])
 
 # ---------------------------------------------------------------------------
 # Trees and a simple paddy bund / field edge
@@ -316,6 +349,19 @@ anchor["mounting_type"] = "IM_B3"
 anchor["shaft_height_m"] = 0.132
 anchor["shaft_diameter_m"] = 0.038
 anchor["coupling_gap_m"] = 0.003
+
+for anchor_name, loc in [
+    ("Anchor_Baseplate_TopSurface", (0.1, 0.1, 0.219)),
+    ("Anchor_Motor_Base", (0.38, 0.1, 0.219)),
+    ("Anchor_Motor_Shaft_End", (0.69, 0.1, shaft_z)),
+    ("Anchor_Pump_Shaft_Center", (pump_x, 0.1, shaft_z)),
+    ("Anchor_Coupling_Center", (-0.18, 0.1, shaft_z)),
+    ("Anchor_Suction_Centerline", (-1.35, 0.1, shaft_z)),
+    ("Anchor_Discharge_Centerline", (pump_x, 0.1, shaft_z + 0.74)),
+]:
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=loc)
+    a = bpy.context.object
+    a.name = anchor_name
 
 # Make sun and camera for a preview render, not included in glTF export.
 sun_data = bpy.data.lights.new("Sun", type="SUN")

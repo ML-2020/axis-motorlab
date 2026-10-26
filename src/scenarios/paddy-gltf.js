@@ -42,9 +42,9 @@ sun.shadow.camera.bottom = -8;
 sun.shadow.bias = -0.0005;
 scene.add(sun, sun.target);
 
-camera.position.set(2.8, 1.9, 3.4);
-camera.lookAt(0.05, 0.45, 0);
-camera.fov = 34;
+camera.position.set(2.35, 1.62, 2.95);
+camera.lookAt(0.05, 0.4, 0);
+camera.fov = 32;
 camera.updateProjectionMatrix();
 
 let model = null;
