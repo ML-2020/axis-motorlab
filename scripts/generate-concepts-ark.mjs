@@ -65,7 +65,6 @@ async function requestOne(prompt, index, reference) {
     response_format: 'url',
     output_format: 'png',
     watermark: false,
-    sequential_image_generation: 'disabled',
   };
   if (reference) body.image = await dataUrl(reference);
 
