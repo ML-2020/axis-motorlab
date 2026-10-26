@@ -1,0 +1,16 @@
+{
+  "mode": "close",
+  "model": "doubao-seedream-5-0-flash-260915",
+  "prompt": "Same pump station, same overcast dawn light and wet paddy environment. Close three-quarter front view of the pump set: green end-suction pump casing, black finned 5.5 kW motor, yellow coupling guard, green common baseplate, bolted suction flange, blue gate valve, pressure gauge, galvanized discharge pipe, wet concrete pad with mud and water stains, realistic industrial materials, 50 mm lens, eye level, no text, no watermark, no people, 16:9.",
+  "reference": "docs\\concepts\\generated\\wide-2026-10-26T13-22-42-844Z-02.png",
+  "request": {
+    "size": "2K",
+    "response_format": "url",
+    "watermark": false
+  },
+  "returned": {
+    "url": "<redacted signed URL; download completed>",
+    "size": "2816x1584"
+  },
+  "file": "docs\\concepts\\generated\\close-2026-10-26T13-23-13-539Z-01.png"
+}
