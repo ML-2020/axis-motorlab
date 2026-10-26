@@ -4,6 +4,7 @@ import '@fontsource/ibm-plex-mono/500.css';
 import './photo.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import * as DATA from '../data/motor-data.js';
 import { Motor } from '../model/motor.js';
 
@@ -21,6 +22,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, 1, 0.03, 80);
+const pmrem = new THREE.PMREMGenerator(renderer);
+const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
+scene.environment = env.texture;
+pmrem.dispose();
 const hemi = new THREE.HemisphereLight(0xc8d6c7, 0x27281d, 0.9);
 scene.add(hemi);
 const ambient = new THREE.AmbientLight(0xb5b9a6, 0.32);
@@ -70,25 +75,62 @@ loader.load('/models/paddy_pump_station.glb', (gltf) => {
   });
   const motorBox = new THREE.Box3();
   motorParts.forEach((part) => motorBox.expandByObject(part));
-  const targetCenter = motorBox.getCenter(new THREE.Vector3());
-  const targetMinY = motorBox.min.y;
+  const oldMotorCenter = motorBox.getCenter(new THREE.Vector3());
+  const pumpCasing = model.getObjectByName('PumpCasing');
+  const pumpBox = new THREE.Box3();
+  if (pumpCasing) pumpBox.expandByObject(pumpCasing);
+  const pumpCenter = pumpBox.getCenter(new THREE.Vector3());
   motorParts.forEach((part) => { part.visible = false; });
   // Use the same 22-part Motor model as the main dossier, so the application
   // scene cannot drift into a visibly different motor.
   detailedMotor = new Motor(renderer, DATA);
   detailedMotor.root.rotation.y = Math.PI / 2;
+  detailedMotor.root.scale.setScalar(1);
   scene.add(detailedMotor.root);
   detailedMotor.root.updateMatrixWorld(true);
-  const detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
-  const detailSize = detailBox.getSize(new THREE.Vector3());
-  const scale = Math.min(1.15, Math.max(0.78, (motorBox.max.x - motorBox.min.x) / detailSize.x));
-  detailedMotor.root.scale.setScalar(scale);
+  // Constraint: motor shaft axis = pump shaft axis. The Motor root's y is its
+  // 132 mm shaft height, so feet are 132 mm below the shaft centre.
+  const shaftY = pumpCenter.y;
+  detailedMotor.root.position.set(oldMotorCenter.x, shaftY, oldMotorCenter.z);
   detailedMotor.root.updateMatrixWorld(true);
-  const scaledBox = new THREE.Box3().setFromObject(detailedMotor.root);
-  const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-  detailedMotor.root.position.x += targetCenter.x - scaledCenter.x;
-  detailedMotor.root.position.z += targetCenter.z - scaledCenter.z;
-  detailedMotor.root.position.y += targetMinY - scaledBox.min.y;
+  let detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
+  const detailCenter = detailBox.getCenter(new THREE.Vector3());
+  detailedMotor.root.position.x += oldMotorCenter.x - detailCenter.x;
+  detailedMotor.root.position.z += oldMotorCenter.z - detailCenter.z;
+  // If the borrowed pump set sits higher than the 132S motor feet, build a
+  // visible steel adapter pedestal instead of letting the motor float.
+  detailedMotor.root.updateMatrixWorld(true);
+  detailBox = new THREE.Box3().setFromObject(detailedMotor.root);
+  const pedestalTop = detailBox.min.y;
+  const pedestalBottom = motorBox.min.y;
+  if (pedestalTop > pedestalBottom + 0.015) {
+    const ped = new THREE.Mesh(
+      new THREE.BoxGeometry(0.52, pedestalTop - pedestalBottom, 0.38),
+      new THREE.MeshStandardMaterial({ color: 0x303635, metalness: 0.7, roughness: 0.45 }),
+    );
+    ped.name = 'MotorAdapterPedestal';
+    ped.position.set(oldMotorCenter.x, (pedestalTop + pedestalBottom) / 2, oldMotorCenter.z);
+    ped.castShadow = true;
+    ped.receiveShadow = true;
+    scene.add(ped);
+  }
+  model.traverse((obj) => {
+    if (!obj.isMesh || !obj.material) return;
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    mats.forEach((mat) => {
+      if (!mat.isMeshStandardMaterial) return;
+      if (/Pump|Pipe|Skid|Gear|ShedPost|Gauge/.test(obj.name)) {
+        mat.metalness = Math.max(mat.metalness, 0.55);
+        mat.roughness = Math.min(mat.roughness, 0.42);
+      }
+      if (/PaddyEarth|PumpPad|Bund|ShedFloor/.test(obj.name)) {
+        mat.metalness = 0.02;
+        mat.roughness = 0.94;
+      }
+      mat.envMapIntensity = 1.15;
+      mat.needsUpdate = true;
+    });
+  });
   detailedMotor.setSpin(0);
   window.__detailedMotor = detailedMotor;
   impeller = model.getObjectByName('Impeller');
