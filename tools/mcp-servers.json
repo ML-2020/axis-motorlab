@@ -1,0 +1,21 @@
+{
+  "servers": {
+    "hyper3d": {
+      "type": "http",
+      "url": "https://api.hyper3d.com/api/mcp",
+      "auth": "hyper3d-cli"
+    },
+    "spline": {
+      "type": "stdio",
+      "command": "C:\\Users\\18313\\AppData\\Local\\Programs\\Spline\\Spline.exe",
+      "args": ["C:\\Users\\18313\\AppData\\Local\\Programs\\Spline\\resources\\spline-mcp.cjs"],
+      "env": { "ELECTRON_RUN_AS_NODE": "1" }
+    },
+    "tripo": {
+      "type": "stdio",
+      "command": "C:\\Users\\18313\\AppData\\Roaming\\npm\\tripo.cmd",
+      "args": ["mcp"],
+      "shell": true
+    }
+  }
+}
