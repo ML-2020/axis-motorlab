@@ -4,6 +4,7 @@ import '@fontsource/ibm-plex-mono/500.css';
 import './photo.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import * as DATA from '../data/motor-data.js';
 import { Motor } from '../model/motor.js';
@@ -24,9 +25,18 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, 1, 0.03, 80);
 const pmrem = new THREE.PMREMGenerator(renderer);
-const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
-scene.environment = env.texture;
-pmrem.dispose();
+const roomEnv = pmrem.fromScene(new RoomEnvironment(), 0.04);
+scene.environment = roomEnv.texture;
+// CC0 HDRI: Poly Haven / spruit_sunrise (2k). Replaced asynchronously.
+new RGBELoader().load('/hdri/spruit-sunrise-2k.hdr', (hdr) => {
+  hdr.mapping = THREE.EquirectangularReflectionMapping;
+  const hdriEnv = pmrem.fromEquirectangular(hdr);
+  scene.environment = hdriEnv.texture;
+  hdr.dispose();
+  roomEnv.dispose();
+}, undefined, () => {
+  // Keep the RoomEnvironment fallback if the HDRI cannot load.
+});
 const hemi = new THREE.HemisphereLight(0xc8d6c7, 0x27281d, 0.9);
 scene.add(hemi);
 const ambient = new THREE.AmbientLight(0xb5b9a6, 0.32);
