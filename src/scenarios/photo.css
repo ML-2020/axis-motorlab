@@ -451,6 +451,83 @@ h1 em { color: var(--accent); font-style: normal; }
 .static-console { background: rgba(10, 15, 11, .42); }
 .module-flow-push { animation: modulePush 20s ease-in-out infinite alternate; transform-origin: 52% 48%; }
 
+/* Local motion layers: no whole-frame AI video, no camera jitter */
+.water-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: .26;
+  mix-blend-mode: screen;
+  background:
+    repeating-linear-gradient(105deg,
+      transparent 0 14px,
+      rgba(184, 224, 224, .16) 14px 17px,
+      transparent 17px 36px);
+  background-size: 220% 100%;
+  animation: waterSlide 7s linear infinite;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0 48%, #000 66%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0 48%, #000 66%, #000 100%);
+}
+.water-layer.water-left { clip-path: polygon(0 42%, 57% 47%, 57% 100%, 0 100%); }
+.water-layer.water-right { clip-path: polygon(46% 38%, 100% 32%, 100% 100%, 46% 100%); }
+@keyframes waterSlide { to { background-position: 220px 0, 0 0; } }
+
+.fan-rotor {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: conic-gradient(from 0deg,
+    transparent 0 14deg,
+    rgba(228, 235, 226, .34) 14deg 22deg,
+    transparent 22deg 46deg,
+    rgba(228, 235, 226, .22) 46deg 53deg,
+    transparent 53deg 78deg,
+    rgba(228, 235, 226, .34) 78deg 86deg,
+    transparent 86deg 112deg,
+    rgba(228, 235, 226, .2) 112deg 119deg,
+    transparent 119deg 148deg,
+    rgba(228, 235, 226, .32) 148deg 156deg,
+    transparent 156deg 184deg,
+    rgba(228, 235, 226, .2) 184deg 191deg,
+    transparent 191deg 220deg,
+    rgba(228, 235, 226, .32) 220deg 228deg,
+    transparent 228deg 250deg,
+    rgba(228, 235, 226, .2) 250deg 257deg,
+    transparent 257deg 286deg,
+    rgba(228, 235, 226, .32) 286deg 294deg,
+    transparent 294deg 320deg,
+    rgba(228, 235, 226, .2) 320deg 327deg,
+    transparent 327deg 360deg);
+  clip-path: circle(20% at 82% 42%);
+  transform-origin: 82% 42%;
+  animation: fanSpin 6.5s linear infinite;
+  opacity: .48;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(circle at 82% 42%, transparent 0 18%, #000 23% 62%, transparent 72%);
+  mask-image: radial-gradient(circle at 82% 42%, transparent 0 18%, #000 23% 62%, transparent 72%);
+}
+@keyframes fanSpin { to { transform: rotate(360deg); } }
+
+.belt-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: .48;
+  mix-blend-mode: multiply;
+  background:
+    repeating-linear-gradient(112deg,
+      transparent 0 18px,
+      rgba(7, 9, 7, .5) 18px 22px,
+      transparent 22px 40px);
+  background-size: 240% 100%;
+  clip-path: polygon(2% 66%, 94% 22%, 100% 31%, 18% 83%);
+  animation: beltSlide 1.8s linear infinite;
+}
+@keyframes beltSlide { to { background-position: 240px 0; } }
+
 .scene-modules { padding: 28px var(--gut) 34px; border-top: 1px solid var(--line); }
 .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
 .module-group-label {
