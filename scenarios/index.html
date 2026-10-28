@@ -84,11 +84,14 @@
 
       <div class="application-grid single">
         <article class="application-card app-pump" data-app="pump">
-          <div class="visual">
-            <canvas class="scene3d" data-scene="pump" aria-label="离心泵与电机数字模型"></canvas>
+          <div class="visual visual-video">
+            <video class="scenario-video" autoplay muted loop playsinline preload="metadata" poster="/media/paddy-i2v-poster.jpg">
+              <source src="/media/paddy-i2v.webm" type="video/webm" />
+              <source src="/media/paddy-i2v.mp4" type="video/mp4" />
+            </video>
             <div class="grade"></div>
             <div class="visual-top"><span>PADDY INTAKE / P-04</span><span class="live"><i></i>RUNNING</span></div>
-            <div class="visual-foot"><span>IRRIGATION SEASON / DAWN · 35 MM</span><span data-live="pump-time">06:40</span></div>
+            <div class="visual-foot"><span>IRRIGATION SEASON / DAWN · 35 MM</span><span>AI PREVIS / 5.2 S LOOP</span></div>
           </div>
           <div class="copy">
             <div class="copy-head"><h3>稻田灌溉泵</h3><span>SCN-01 / PADDY</span></div>
@@ -102,20 +105,120 @@
             <div class="tags"><span>稻田灌溉</span><span>灌渠取水</span><span>离心泵组</span></div>
             <div class="mech-note"><span>LOAD PATH</span>电机转矩 → 联轴器 → 泵轴；泵组重量 → 公共底座 → 混凝土基础</div>
             <div class="mech-note"><span>MOUNTING</span>IEC 132S · 轴高 132 mm · 轴伸 Ø38 mm · 联轴器护罩 · 地脚 M12</div>
-            <div class="pump-console">
-              <div class="console-head"><span>PUMP CONSOLE / 运行控制</span><b id="pump-status">RUNNING</b></div>
-              <div class="console-actions">
-                <button id="pump-start" class="active">启动</button>
-                <button id="pump-stop">停机</button>
-                <button id="pump-cutaway">剖视模式</button>
-              </div>
-              <label class="valve-control" for="valve-slider"><span>出口阀开度</span><b id="valve-readout">100%</b></label>
-              <input id="valve-slider" type="range" min="0" max="100" value="100" />
-              <div class="console-note" id="console-note">设计点 90 m³/h @ 12 m · 水力功率约 2.94 kW · 电机负载约 74%</div>
+            <div class="pump-console static-console">
+              <div class="console-head"><span>PUMP CONSOLE / 运行状态</span><b>RUNNING · S1</b></div>
+              <div class="console-note">设计点 90 m³/h @ 12 m · 水力功率约 2.94 kW · 电机负载约 74%</div>
+              <div class="console-note">本区为 AI 图生视频预演，运行控制已移至下方场景模块说明。</div>
             </div>
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="scene-modules" id="scenes">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span></span> APPLICATION MODULES / 场景模块</div>
+          <h2>同一台电机，<br>四种取水边界。</h2>
+        </div>
+        <p>YE3-132S-4 的 5.5 kW / 4P / S1 是共同驱动端；不同场景改变的是泵型、管路、介质和运行制度，不是电机本体。</p>
+      </div>
+
+      <div class="module-grid">
+        <article class="module-card module-paddy">
+          <div class="module-visual">
+            <span class="module-index">01</span>
+            <svg viewBox="0 0 400 220" aria-hidden="true">
+              <path class="m-line" d="M0 168 H400" />
+              <path class="m-line" d="M24 120 H84 M148 120 H228 M292 120 H376" />
+              <rect class="m-field" x="24" y="142" width="88" height="24" />
+              <rect class="m-field" x="132" y="142" width="88" height="24" />
+              <rect class="m-field" x="240" y="142" width="88" height="24" />
+              <circle class="m-pump" cx="116" cy="120" r="24" />
+              <rect class="m-motor" x="144" y="104" width="66" height="32" rx="4" />
+              <path class="m-accent" d="M82 120 C82 152 92 168 116 168 C140 168 148 152 148 120" />
+              <path class="m-dash" d="M116 96 V40 H250" />
+              <circle class="m-dot" cx="250" cy="40" r="4" />
+              <text x="28" y="206">PADDY / S1 CONTINUOUS</text>
+            </svg>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>稻田灌溉</h3><span>SCN-01 / 90 m³/h @ 12 m</span></div>
+            <p>卧式端吸离心泵从灌渠取水，经滤网、出口阀和田间管网送入稻田。连续灌溉季、潮湿泥水、低维护窗口是主要边界。</p>
+            <div class="module-meta"><span>泵型 <b>端吸离心</b></span><span>运行 <b>S1 连续</b></span><span>防护 <b>IP55</b></span></div>
+            <div class="tags"><span>灌渠取水</span><span>湿泥泵台</span><span>晨光预演</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-greenhouse">
+          <div class="module-visual">
+            <span class="module-index">02</span>
+            <svg viewBox="0 0 400 220" aria-hidden="true">
+              <path class="m-line" d="M42 168 H358" />
+              <path class="m-line" d="M70 168 V94 Q200 28 330 94 V168" />
+              <path class="m-line" d="M70 94 Q200 160 330 94" />
+              <path class="m-dash" d="M110 150 H292 M142 150 V126 M190 150 V126 M238 150 V126 M286 150 V126" />
+              <rect class="m-pump" x="106" y="132" width="42" height="18" rx="3" />
+              <rect class="m-motor" x="148" y="132" width="46" height="18" rx="3" />
+              <path class="m-accent" d="M110 132 V112 H74 V96" />
+              <circle class="m-dot" cx="74" cy="96" r="4" />
+              <text x="70" y="206">GREENHOUSE / SEASONAL BOOSTER</text>
+            </svg>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>大棚滴灌增压</h3><span>SCN-02 / 25–40 m³/h @ 35–45 m</span></div>
+            <p>清水经叠片或网式过滤器后进入滴灌主管，泵组按阀门分区轮灌。启停频繁、含气、过滤器压差是主要运行变量。</p>
+            <div class="module-meta"><span>泵型 <b>多级/增压</b></span><span>运行 <b>轮灌</b></span><span>介质 <b>清水</b></span></div>
+            <div class="tags"><span>滴灌</span><span>过滤器</span><span>分区轮灌</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-aquaculture">
+          <div class="module-visual">
+            <span class="module-index">03</span>
+            <svg viewBox="0 0 400 220" aria-hidden="true">
+              <ellipse class="m-field" cx="206" cy="150" rx="164" ry="38" />
+              <path class="m-line" d="M42 150 H98 M158 150 H248 M308 150 H370" />
+              <rect class="m-pump" x="102" y="128" width="46" height="22" rx="3" />
+              <rect class="m-motor" x="148" y="128" width="56" height="22" rx="3" />
+              <path class="m-accent" d="M206 128 V96 H284" />
+              <circle class="m-dot" cx="284" cy="96" r="4" />
+              <path class="m-dash" d="M80 184 Q96 166 112 184 T144 184 M236 184 Q252 166 268 184 T300 184" />
+              <text x="42" y="206">AQUACULTURE / LOW HEAD LOOP</text>
+            </svg>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>鱼塘循环增氧</h3><span>SCN-03 / 180–300 m³/h @ 3–6 m</span></div>
+            <p>低扬程、大流量循环，取表层水经曝气或射流后回塘。连续运行、潮湿、含盐或富营养水体要求防腐与可清理叶轮。</p>
+            <div class="module-meta"><span>泵型 <b>低扬程循环</b></span><span>运行 <b>连续</b></span><span>环境 <b>潮湿</b></span></div>
+            <div class="tags"><span>鱼塘</span><span>循环水</span><span>曝气</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-drainage">
+          <div class="module-visual">
+            <span class="module-index">04</span>
+            <svg viewBox="0 0 400 220" aria-hidden="true">
+              <path class="m-line" d="M52 56 H348" />
+              <path class="m-dash" d="M76 18 l-16 22 M124 18 l-16 22 M172 18 l-16 22 M220 18 l-16 22 M268 18 l-16 22 M316 18 l-16 22" />
+              <path class="m-line" d="M92 56 V154 Q92 178 116 178 H284 Q308 178 308 154 V56" />
+              <rect class="m-pump" x="150" y="146" width="48" height="20" rx="3" />
+              <rect class="m-motor" x="198" y="146" width="56" height="20" rx="3" />
+              <path class="m-accent" d="M174 146 V92 H270" />
+              <circle class="m-dot" cx="270" cy="92" r="4" />
+              <text x="92" y="206">DRAINAGE / INTERMITTENT DUTY</text>
+            </svg>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>田间排涝</h3><span>SCN-04 / 150–250 m³/h @ 6–10 m</span></div>
+            <p>雨季集中排水，集水井液位触发启停。介质含泥、含草，泵型要抗堵塞；电机按潮湿户外和间歇负载校核。</p>
+            <div class="module-meta"><span>泵型 <b>抗堵塞</b></span><span>运行 <b>间歇</b></span><span>介质 <b>泥水</b></span></div>
+            <div class="tags"><span>排涝</span><span>集水井</span><span>液位控制</span></div>
+          </div>
+        </article>
+      </div>
+
+      <p class="module-disclaimer">以上为应用场景解释，不是选型结果。流量/扬程为示意范围；实际泵型、叶轮、管径、NPSH、启动方式和电机负载必须按现场曲线校核。</p>
     </section>
 
     <section class="observations">
@@ -164,6 +267,5 @@
     <a href="/">返回主站 ↗</a>
   </footer>
 
-  <script type="module" src="/src/scenarios/paddy-gltf.js"></script>
 </body>
 </html>
