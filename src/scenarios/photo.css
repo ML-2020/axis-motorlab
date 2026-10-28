@@ -449,6 +449,7 @@ h1 em { color: var(--accent); font-style: normal; }
 }
 .visual-video::before { z-index: 3; }
 .static-console { background: rgba(10, 15, 11, .42); }
+.module-flow-push { animation: modulePush 20s ease-in-out infinite alternate; transform-origin: 52% 48%; }
 
 .scene-modules { padding: 28px var(--gut) 34px; border-top: 1px solid var(--line); }
 .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
