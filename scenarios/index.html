@@ -119,12 +119,13 @@
       <div class="section-head">
         <div>
           <div class="eyebrow"><span></span> APPLICATION MODULES / 场景模块</div>
-          <h2>同一台电机，<br>四种取水边界。</h2>
+          <h2>同一台电机，<br>十种负载边界。</h2>
         </div>
-        <p>YE3-132S-4 的 5.5 kW / 4P / S1 是共同驱动端；不同场景改变的是泵型、管路、介质和运行制度，不是电机本体。</p>
+        <p>YE3-132S-4 的 5.5 kW / 4P / S1 是共同驱动端；从泵、风机到输送、搅拌，改变的是被驱动机械、管路、介质和运行制度。</p>
       </div>
 
       <div class="module-grid">
+        <div class="module-group-label"><span>01</span> 农业与水务 / AGRICULTURE &amp; WATER</div>
         <article class="module-card module-paddy">
           <div class="module-visual">
             <span class="module-index">01</span>
@@ -188,9 +189,106 @@
             <div class="tags"><span>排涝</span><span>集水井</span><span>液位控制</span></div>
           </div>
         </article>
+        <div class="module-group-label"><span>02</span> 建筑与环保 / BUILDING &amp; ENVIRONMENT</div>
+        <article class="module-card module-chiller">
+          <div class="module-visual">
+            <span class="module-index">05</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/chiller-poster.jpg">
+              <source src="/media/chiller.webm" type="video/webm" />
+              <source src="/media/chiller.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>冷冻水循环</h3><span>SCN-05 / 30–60 m³/h @ 25–35 m</span></div>
+            <p>中央空调冷冻水一次/二次泵，长期连续运行。变频后按温差或压差调节，泵组振动和轴封泄漏是巡检重点。</p>
+            <div class="module-meta"><span>泵型 <b>离心循环泵</b></span><span>运行 <b>S1 连续</b></span><span>环境 <b>室内机房</b></span></div>
+            <div class="tags"><span>冷冻水</span><span>中央空调</span><span>变频循环</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-cooling">
+          <div class="module-visual">
+            <span class="module-index">06</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/cooling-tower-poster.jpg">
+              <source src="/media/cooling-tower.webm" type="video/webm" />
+              <source src="/media/cooling-tower.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>冷却塔风机</h3><span>SCN-06 / 5.5 kW · 1440 r/min</span></div>
+            <p>皮带或直联驱动冷却塔轴流风机，属于平方转矩负载。户外湿热、漂水、长期连续运行，轴承和皮带张力是主要维护点。</p>
+            <div class="module-meta"><span>负载 <b>轴流风机</b></span><span>运行 <b>S1 连续</b></span><span>环境 <b>户外湿热</b></span></div>
+            <div class="tags"><span>冷却塔</span><span>轴流风机</span><span>皮带传动</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-sewage">
+          <div class="module-visual">
+            <span class="module-index">07</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/sewage-poster.jpg">
+              <source src="/media/sewage.webm" type="video/webm" />
+              <source src="/media/sewage.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>污水提升</h3><span>SCN-07 / 20–50 m³/h @ 10–20 m</span></div>
+            <p>集水井液位控制启停，介质含纤维和颗粒。泵型要抗堵塞，电机按潮湿井筒、间歇运行和可能的反转冲击校核。</p>
+            <div class="module-meta"><span>泵型 <b>抗堵污水泵</b></span><span>运行 <b>间歇</b></span><span>环境 <b>潮湿井筒</b></span></div>
+            <div class="tags"><span>污水提升</span><span>集水井</span><span>液位控制</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-aeration">
+          <div class="module-visual">
+            <span class="module-index">08</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/aeration-poster.jpg">
+              <source src="/media/aeration.webm" type="video/webm" />
+              <source src="/media/aeration.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>曝气风机</h3><span>SCN-08 / 5–15 m³/min @ 40–60 kPa</span></div>
+            <p>生化池曝气用罗茨或离心风机，连续运行、出口压力波动。电机按恒转矩负载选型，需校核启动电流、出口温度和消音器阻力。</p>
+            <div class="module-meta"><span>设备 <b>罗茨/离心风机</b></span><span>运行 <b>S1 连续</b></span><span>环境 <b>潮湿机房</b></span></div>
+            <div class="tags"><span>曝气</span><span>生化池</span><span>恒转矩</span></div>
+          </div>
+        </article>
+
+        <div class="module-group-label"><span>03</span> 通用工业 / GENERAL INDUSTRY</div>
+        <article class="module-card module-conveyor">
+          <div class="module-visual">
+            <span class="module-index">09</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/conveyor-poster.jpg">
+              <source src="/media/conveyor.webm" type="video/webm" />
+              <source src="/media/conveyor.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>皮带输送</h3><span>SCN-09 / 5.5 kW + 减速机</span></div>
+            <p>轻中型散料输送，电机经减速机驱动头轮。带载启动和物料堆积会放大启动转矩，需校核启动方式与减速机服务系数。</p>
+            <div class="module-meta"><span>负载 <b>恒转矩输送</b></span><span>启动 <b>带载</b></span><span>环境 <b>粉尘/户外</b></span></div>
+            <div class="tags"><span>皮带机</span><span>减速机</span><span>带载启动</span></div>
+          </div>
+        </article>
+
+        <article class="module-card module-mixer">
+          <div class="module-visual">
+            <span class="module-index">10</span>
+            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/mixer-poster.jpg">
+              <source src="/media/mixer.webm" type="video/webm" />
+              <source src="/media/mixer.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="module-copy">
+            <div class="copy-head"><h3>搅拌机</h3><span>SCN-10 / 5.5 kW + 减速机</span></div>
+            <p>水处理或液体混合的立式搅拌，电机经减速机驱动桨叶。启动惯量、液体黏度和沉渣会显著改变启动转矩。</p>
+            <div class="module-meta"><span>负载 <b>搅拌/混合</b></span><span>启动 <b>重载</b></span><span>环境 <b>潮湿</b></span></div>
+            <div class="tags"><span>搅拌</span><span>水处理</span><span>重载启动</span></div>
+          </div>
+        </article>
       </div>
 
-      <p class="module-disclaimer">以上为应用场景解释，不是选型结果。流量/扬程为示意范围；实际泵型、叶轮、管径、NPSH、启动方式和电机负载必须按现场曲线校核。</p>
+      <p class="module-disclaimer">以上为应用场景解释，不是选型结果。流量、扬程、压力、启动转矩和惯量均为示意范围；实际泵型、叶轮、管径、NPSH、减速机、启动方式和电机负载必须按现场曲线校核。</p>
     </section>
 
     <section class="observations">
