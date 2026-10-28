@@ -101,8 +101,7 @@ a { color: inherit; text-decoration: none; }
   transform: rotate(-12deg);
 }
 .hero-image { position: absolute; inset: 0; z-index: -2; }
-.hero-image img,
-.hero-image video {
+.hero-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -111,7 +110,16 @@ a { color: inherit; text-decoration: none; }
   animation: heroDrift 26s ease-in-out infinite alternate;
   transform: scale(1.04);
 }
-.hero-image video { display: block; }
+.hero-image video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 46%;
+  filter: saturate(.72) contrast(1.06) brightness(.8);
+  transform: none;
+  animation: none;
+}
 @keyframes heroDrift {
   from { transform: scale(1.04) translate3d(0, 0, 0); }
   to { transform: scale(1.13) translate3d(-1.2%, -1%, 0); }
