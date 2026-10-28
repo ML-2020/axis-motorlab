@@ -443,11 +443,23 @@ h1 em { color: var(--accent); font-style: normal; }
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 2;
   pointer-events: none;
   background:
+    linear-gradient(180deg, rgba(5, 8, 5, .2), transparent 34%, rgba(5, 8, 5, .56)),
     repeating-linear-gradient(90deg, transparent 0 63px, rgba(184, 193, 167, .045) 63px 64px),
     repeating-linear-gradient(0deg, transparent 0 63px, rgba(184, 193, 167, .035) 63px 64px);
-  opacity: .8;
+  opacity: .85;
+}
+.module-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  filter: saturate(.82) contrast(1.04) brightness(.86);
 }
 .module-index {
   position: absolute;
