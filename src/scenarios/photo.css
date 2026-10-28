@@ -484,6 +484,34 @@ h1 em { color: var(--accent); font-style: normal; }
   object-position: center 48%;
   filter: saturate(.82) contrast(1.04) brightness(.86);
 }
+.module-composite .module-still,
+.module-composite .sky-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  animation: modulePush 18s ease-in-out infinite alternate;
+  transform-origin: 52% 48%;
+}
+.module-composite .module-still {
+  z-index: 1;
+  filter: saturate(.82) contrast(1.04) brightness(.86);
+}
+.module-composite .sky-overlay {
+  z-index: 2;
+  object-position: center 12%;
+  opacity: .3;
+  mix-blend-mode: screen;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 7%, #000 26%, transparent 43%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 7%, #000 26%, transparent 43%);
+  pointer-events: none;
+}
+@keyframes modulePush {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.075) translate3d(-.5%, -.25%, 0); }
+}
 .module-index {
   position: absolute;
   z-index: 3;
