@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Generate paddy pump concept images with Volcengine Ark / Seedream.
  *
  * Required:
  *   ARK_API_KEY
  *
  * Optional:
- *   ARK_IMAGE_MODEL  (default: doubao-seedream-5-0-lite-260128)
+ *   ARK_IMAGE_MODEL  (default: doubao-seedream-5-0-flash-260915)
  *   ARK_BASE_URL     (default: https://ark.cn-beijing.volces.com/api/v3)
  *
  * Usage:
@@ -33,7 +33,7 @@ try {
 }
 
 const apiKey = process.env.ARK_API_KEY;
-const model = process.env.ARK_IMAGE_MODEL || 'doubao-seedream-5-0-lite-260128';
+const model = process.env.ARK_IMAGE_MODEL || 'doubao-seedream-5-0-flash-260915';
 const baseUrl = (process.env.ARK_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
 const mode = argValue('--mode') || 'wide';
 const customPrompt = argValue('--prompt');
