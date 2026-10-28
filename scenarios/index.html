@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -25,9 +25,10 @@
     <section class="hero">
       <div class="hero-blueprint" aria-hidden="true"></div>
       <div class="hero-image" aria-hidden="true">
-        <video autoplay muted loop playsinline poster="/media/paddy-hero-1080-poster.jpg">
-          <source src="/media/paddy-hero-1080.webm" type="video/webm" />
-          <source src="/media/paddy-hero-1080.mp4" type="video/mp4" />
+        <img src="/media/paddy-hero-still.jpg" alt="稻田灌溉泵站" />
+        <video class="hero-sky" autoplay muted loop playsinline preload="metadata">
+          <source src="/media/sky-timelapse.webm" type="video/webm" />
+          <source src="/media/sky-timelapse.mp4" type="video/mp4" />
         </video>
       </div>
       <div class="hero-shade"></div>
@@ -127,11 +128,12 @@
       <div class="module-grid">
         <div class="module-group-label"><span>01</span> 农业与水务 / AGRICULTURE &amp; WATER</div>
         <article class="module-card module-paddy">
-          <div class="module-visual">
+          <div class="module-visual module-composite">
             <span class="module-index">01</span>
-            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/paddy-hero-1080-poster.jpg">
-              <source src="/media/paddy-hero-1080.webm" type="video/webm" />
-              <source src="/media/paddy-hero-1080.mp4" type="video/mp4" />
+            <img class="module-still" src="/media/paddy-hero-still.jpg" alt="稻田灌溉泵站" />
+            <video class="sky-overlay" autoplay muted loop playsinline preload="metadata">
+              <source src="/media/sky-timelapse.webm" type="video/webm" />
+              <source src="/media/sky-timelapse.mp4" type="video/mp4" />
             </video>
           </div>
           <div class="module-copy">
@@ -160,11 +162,12 @@
         </article>
 
         <article class="module-card module-aquaculture">
-          <div class="module-visual">
+          <div class="module-visual module-composite">
             <span class="module-index">03</span>
-            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/aquaculture-push-1080-poster.jpg">
-              <source src="/media/aquaculture-push-1080.webm" type="video/webm" />
-              <source src="/media/aquaculture-push-1080.mp4" type="video/mp4" />
+            <img class="module-still" src="/media/aquaculture-still.jpg" alt="鱼塘循环增氧泵站" />
+            <video class="sky-overlay" autoplay muted loop playsinline preload="metadata">
+              <source src="/media/sky-timelapse.webm" type="video/webm" />
+              <source src="/media/sky-timelapse.mp4" type="video/mp4" />
             </video>
           </div>
           <div class="module-copy">
@@ -176,11 +179,12 @@
         </article>
 
         <article class="module-card module-drainage">
-          <div class="module-visual">
+          <div class="module-visual module-composite">
             <span class="module-index">04</span>
-            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/drainage-push-1080-poster.jpg">
-              <source src="/media/drainage-push-1080.webm" type="video/webm" />
-              <source src="/media/drainage-push-1080.mp4" type="video/mp4" />
+            <img class="module-still" src="/media/drainage-still.jpg" alt="田间排涝泵站" />
+            <video class="sky-overlay" autoplay muted loop playsinline preload="metadata">
+              <source src="/media/sky-timelapse.webm" type="video/webm" />
+              <source src="/media/sky-timelapse.mp4" type="video/mp4" />
             </video>
           </div>
           <div class="module-copy">
@@ -192,12 +196,9 @@
         </article>
         <div class="module-group-label"><span>02</span> 建筑与环保 / BUILDING &amp; ENVIRONMENT</div>
         <article class="module-card module-chiller">
-          <div class="module-visual">
+          <div class="module-visual module-composite">
             <span class="module-index">05</span>
-            <video class="module-video" autoplay muted loop playsinline preload="metadata" poster="/media/chiller-dry-poster.jpg">
-              <source src="/media/chiller-dry.webm" type="video/webm" />
-              <source src="/media/chiller-dry.mp4" type="video/mp4" />
-            </video>
+            <img class="module-still" src="/media/chiller-still.jpg" alt="冷冻水循环泵组" />
           </div>
           <div class="module-copy">
             <div class="copy-head"><h3>冷冻水循环</h3><span>SCN-05 / 30–60 m³/h @ 25–35 m</span></div>

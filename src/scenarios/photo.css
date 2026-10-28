@@ -107,8 +107,8 @@ a { color: inherit; text-decoration: none; }
   object-fit: cover;
   object-position: center 46%;
   filter: saturate(.72) contrast(1.06) brightness(.8);
-  animation: heroDrift 26s ease-in-out infinite alternate;
-  transform: scale(1.04);
+  animation: heroPush 24s ease-in-out infinite alternate;
+  transform: scale(1.03);
 }
 .hero-image video {
   display: block;
@@ -119,6 +119,21 @@ a { color: inherit; text-decoration: none; }
   filter: saturate(.72) contrast(1.06) brightness(.8);
   transform: none;
   animation: none;
+}
+.hero-image .hero-sky {
+  position: absolute;
+  inset: 0;
+  object-position: center 15%;
+  opacity: .26;
+  mix-blend-mode: screen;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 8%, #000 27%, transparent 42%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 8%, #000 27%, transparent 42%);
+  animation: heroPush 24s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes heroPush {
+  from { transform: scale(1.03) translate3d(0, 0, 0); }
+  to { transform: scale(1.075) translate3d(-.35%, -.2%, 0); }
 }
 @keyframes heroDrift {
   from { transform: scale(1.04) translate3d(0, 0, 0); }
